@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
+import javax.servlet.FilterConfig;
 import java.io.IOException;
 
 //@WebFilter(filterName = "authFilter",urlPatterns = "/*")
