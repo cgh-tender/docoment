@@ -3,6 +3,7 @@ package cn.com.demo;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class FileReadWrit {
 
@@ -14,9 +15,9 @@ public class FileReadWrit {
         FileWriter fw = null;
         InputStreamReader reader = null;
         try{
-            fw = new FileWriter("C:\\Users\\HaiDar\\Desktop\\bbb.txt");
+            fw = new FileWriter("C:\\Users\\HaiDar\\Desktop\\aaa.txt");
             char[] tempchars = new char[1000];
-            reader = new InputStreamReader(new FileInputStream(new File("C:\\Users\\HaiDar\\Desktop\\aaa.txt")), Charset.forName("GBK"));
+            reader = new InputStreamReader(new FileInputStream(new File("C:\\Users\\HaiDar\\Desktop\\bbb.txt")), StandardCharsets.UTF_8);
             int charread = 0;
             while ((charread = reader.read(tempchars)) != -1){
                 for(int i = 0;i < charread;i++) {
