@@ -1,0 +1,9 @@
+data :
+  item:
+    name: aaa
+    item:
+      - /world
+      - /hello
+  item1:
+    - /world
+    - /hello
