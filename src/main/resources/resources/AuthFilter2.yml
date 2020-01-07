@@ -1,0 +1,10 @@
+data:
+  item:
+    name: bbb
+    item:
+      - world2
+      - hello2
+    BB: bb
+  item1:
+    - world2
+    - hello2

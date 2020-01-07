@@ -1,5 +1,6 @@
 package cn.com;
 
+import cn.com.filter.utils.SpringContextUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,6 +16,7 @@ public class SpringBootDomeApplication {
 
 	public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(SpringBootDomeApplication.class, args);
+        SpringContextUtil.setApplicationContext(context);
     }
 
 

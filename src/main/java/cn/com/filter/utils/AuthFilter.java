@@ -1,12 +1,9 @@
 package cn.com.filter.utils;
 
 
-import cn.com.utils.AuthFilterItemProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j;
 import org.springframework.core.annotation.Order;
 
-import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.FilterConfig;
 import javax.servlet.annotation.WebFilter;
@@ -18,19 +15,16 @@ import java.util.List;
 
 @WebFilter(filterName = "authFilter",urlPatterns = "/*")
 @Order(2)
+@Log4j
 public class AuthFilter implements Filter {
-
-    private static Logger logger = LoggerFactory.getLogger(AuthFilter.class);
 
     private List<String>  items;
 
-//    @Resource
-//    private AuthFilterItemProperties authFilterItemProperties;
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+//        AuthFilterItemProperties authFilterItemProperties = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
 //        logger.info(String.valueOf(authFilterItemProperties.getItem()));
-        logger.info("init AuthFilter");
+        log.info("init AuthFilter");
 
     }
 
@@ -54,13 +48,13 @@ public class AuthFilter implements Filter {
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
 
-        logger.info("s");
+        log.info("s");
         filterChain.doFilter(servletRequest,servletResponse);
         return;
     }
 
     @Override
     public void destroy() {
-        logger.info("destroy");
+        log.info("destroy");
     }
 }

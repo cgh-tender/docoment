@@ -6,6 +6,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface YmlPropertySourceComponent {
-    String name() default "";
+    String name() default "ymlPropertySourceComponent";
     String[] value();
 }

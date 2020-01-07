@@ -43,11 +43,9 @@ public class YmlPropertySourceAnnotationBeanPostProcessor extends InstantiationA
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
         YmlPropertySourceComponent ymlPropertySource = AnnotationUtils.findAnnotation(bean.getClass(), YmlPropertySourceComponent.class);
-        Map<String, List<Resource>> ymlPropertySourceMap = new LinkedHashMap<>();
+        List<Resource> resources = new ArrayList<>();
         if (ymlPropertySource != null) {
             String[] value = ymlPropertySource.value();
-            String name = ymlPropertySource.name();
-            List<Resource> resources = new ArrayList<>();
             Arrays.stream(value).forEach(location -> {
                 Resource resource = resourceLoader.getResource(location);
                 try {
@@ -58,20 +56,17 @@ public class YmlPropertySourceAnnotationBeanPostProcessor extends InstantiationA
                     System.out.println(MessageFormat.format("file {0} not found.",location));
                 }
             });
-            ymlPropertySourceMap.put(name, resources);
         }
-        if (!ymlPropertySourceMap.isEmpty()) {
-            System.out.println("beanName: "+beanName+" 执行..postProcessAfterInstantiation 加载配置文件");
-            ymlPropertySourceMap.forEach((name, resources) -> {
+        if (!resources.isEmpty()){
+            resources.forEach((resource) -> {
                 YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
-                yamlPropertiesFactoryBean.setResources(resources.toArray(new Resource[resources.size()]));
-                PropertiesPropertySource propertiesPropertySource = new PropertiesPropertySource(resources.get(0).toString(), yamlPropertiesFactoryBean.getObject());
+                yamlPropertiesFactoryBean.setResources(resource);
+                PropertiesPropertySource propertiesPropertySource = new PropertiesPropertySource(resource.toString(), yamlPropertiesFactoryBean.getObject());
                 ConfigurableEnvironment configurableEnvironment = (ConfigurableEnvironment) environment;
                 MutablePropertySources propertySources = configurableEnvironment.getPropertySources();
-                if (propertySources.get(resources.get(0).toString()) != null){
-                    propertySources.remove(resources.get(0).toString());
+                if (propertySources.get(resource.toString()) == null){
+                    propertySources.addLast(propertiesPropertySource);
                 }
-                propertySources.addLast(propertiesPropertySource);
             });
         }
         return true;
