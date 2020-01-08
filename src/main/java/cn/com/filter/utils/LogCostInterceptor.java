@@ -18,15 +18,19 @@ public class LogCostInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info(request.getRequestURI());
-        log.info(request.getMethod());
-        log.info(request.getRemoteAddr());
-        log.info(request.getHeader("TOKEN"));
-        log.info("Interceptor cost="+(System.currentTimeMillis()-start));
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        String addr = request.getRemoteAddr();
+        String token = request.getHeader("TOKEN");
+        long time = (System.currentTimeMillis() - start)/1000;
+//        log.info("当前请求 [ " + uri + " ] - 请求类型 [ " + method + " ] - 请求 IP [ " + addr + " ] - 请求用时 [ " + time + " ]");
+        String s = "当前请求 [ %s ] - 请求类型 [ %s ] - 请求 IP [ %s ] - 请求用时 [ %ss ]";
+        log.info(String.format(s, uri,method,addr,time));
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        log.info(11111);
 
     }
 }

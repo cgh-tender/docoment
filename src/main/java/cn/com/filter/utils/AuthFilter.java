@@ -48,7 +48,7 @@ public class AuthFilter implements Filter {
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
 
-        log.info("s");
+        log.info(String.format(" [authFilter] - currentURL : %s ",currentURL));
         filterChain.doFilter(servletRequest,servletResponse);
         return;
     }

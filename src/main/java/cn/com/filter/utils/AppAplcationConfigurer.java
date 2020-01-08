@@ -25,7 +25,7 @@ public class AppAplcationConfigurer extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/image/**")
-                .addResourceLocations("classpath/images/");
+                .addResourceLocations("classpath:/images/");
     }
 
     @Override
