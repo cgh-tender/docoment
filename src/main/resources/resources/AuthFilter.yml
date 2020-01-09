@@ -2,10 +2,10 @@ data:
   hashAlgorithmName: MD5
   filterChainDefinitionMap: {
     /css/**: anon,
-      /fonts/**: anon,
-      /img/**: anon,
-      /js/**: anon,
-      /html/**: anon,
-      /login/**: anon,
-      /logout: logout
+    /fonts/**: anon,
+    /img/**: anon,
+    /js/**: anon,
+    /html/**: anon,
+    /login/**: anon,
+    /logout: logout
   }

@@ -1,6 +1,5 @@
 package cn.com;
 
-import cn.com.utils.AuthFilterItemProperties;
 import lombok.extern.log4j.Log4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 @EnableWebMvc
 @ServletComponentScan("cn.com")
-@EnableConfigurationProperties(value = {AuthFilterItemProperties.class})
+@EnableConfigurationProperties
 @Log4j
 public class SpringBootDomeApplication {
 

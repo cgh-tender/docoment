@@ -3,6 +3,8 @@ package cn.com;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -22,6 +24,8 @@ public class SpringContextUtil implements ApplicationContextAware {
     public static final String SALT = "chenguohai";
     @NonNull
     public static final String hashAlgorithmName = "md5";
+    @NonNull
+    public static final int hashIterations = 2;
 
     @Getter
     private static ApplicationContext applicationContext;
@@ -65,5 +69,18 @@ public class SpringContextUtil implements ApplicationContextAware {
         return (contentTypeHeader != null && contentTypeHeader.contains("application/json"))
                 || (acceptHeader != null && acceptHeader.contains("application/json"))
                 || "XMLHttpRequest".equalsIgnoreCase(xRequestedWith);
+    }
+
+    public static String md5(String password){
+        return md5(password,SALT);
+    }
+
+    public static String md5(String password, String salt){
+        return md5(password,salt,hashIterations);
+    }
+
+    public static String md5(String password, String salt,int hashIterations){
+        SimpleHash result = new SimpleHash(hashAlgorithmName.toUpperCase(), password, ByteSource.Util.bytes(salt), hashIterations);
+        return result.toString();
     }
 }

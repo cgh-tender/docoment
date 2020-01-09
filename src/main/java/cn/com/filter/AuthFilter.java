@@ -23,6 +23,7 @@ public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         AuthFilterItemProperties bean = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
+        log.info(SpringContextUtil.md5("1",SpringContextUtil.SALT));
         log.info("init AuthFilter");
     }
 
