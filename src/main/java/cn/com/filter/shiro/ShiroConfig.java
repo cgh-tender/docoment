@@ -1,6 +1,6 @@
 package cn.com.filter.shiro;
 
-import cn.com.entity.Permission;
+import cn.com.SpringContextUtil;
 import cn.com.filter.shiro.base.MyDefaultWebSubjectFactory;
 import cn.com.filter.shiro.base.ShiroRealm;
 import cn.com.filter.shiro.filter.MyCredentialsMatcher;
@@ -14,18 +14,14 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Configuration
 @Log4j
-@Order(3)
 public class ShiroConfig {
     /**
      * <p> 凭证匹配器
@@ -50,13 +46,17 @@ public class ShiroConfig {
     @Bean
     public ShiroRealm shiroRealm(){
         ShiroRealm myRealm = new ShiroRealm();
-        String hashAlgorithmName = "md5";
-        if (StringUtils.equals(hashAlgorithmName.toUpperCase(),"MD5")){
-            log.info(">>>>>>>>>>>>>>>ShiroRealm 注入 MD5 加密<<<<<<<<<<<<<");
-            myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        if (StringUtils.isNotBlank(SpringContextUtil.hashAlgorithmName)){
+            if (StringUtils.equals(SpringContextUtil.hashAlgorithmName.toUpperCase(),"MD5")){
+                log.info(">>>>>>>>>>>>>>>ShiroRealm 注入 MD5 加密<<<<<<<<<<<<<");
+                myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+            }else {
+                log.info(">>>>>>>>>>>>>>>ShiroRealm 注入自定义加密<<<<<<<<<<<<<");
+                myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
+            }
         }else {
-            log.info(">>>>>>>>>>>>>>>ShiroRealm 注入自定义加密<<<<<<<<<<<<<");
-            myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
+            log.info(">>>>>>>>>>>>>>>ShiroRealm 默认 MD5 加密 <<<<<<<<<<<<<");
+            myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         }
         log.info(">>>>>>>>>>>>>>>ShiroRealm注册完成<<<<<<<<<<<<<");
         return myRealm;
@@ -79,7 +79,6 @@ public class ShiroConfig {
 
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
-        log.info(">>>>>>>>>>>>>>>shiroFilterFactoryBean<<<<<<<<<<<<<");
         MyShiroFilterFactoryBean shiroFilterFactoryBean = new MyShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
         //拦截器.
@@ -90,7 +89,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/img/**", "anon");
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/html/**", "anon");
-        filterChainDefinitionMap.put("/hello/**", "anon");
+        filterChainDefinitionMap.put("/login/**", "anon");
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/logout", "logout");
         //<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
@@ -107,6 +106,7 @@ public class ShiroConfig {
         filterHashMap.put("authc",new MyFormAuthenticationFilter());
         filterHashMap.put("shiroFilter",new ShiroFilter());
         shiroFilterFactoryBean.setFilters(filterHashMap);
+        log.info(">>>>>>>>>>>>>>>shiroFilterFactoryBean注册完成<<<<<<<<<<<<<");
         return shiroFilterFactoryBean;
     }
 

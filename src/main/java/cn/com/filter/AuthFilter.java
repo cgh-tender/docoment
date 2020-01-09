@@ -1,6 +1,7 @@
-package cn.com.filter.utils;
+package cn.com.filter;
 
 
+import cn.com.SpringContextUtil;
 import cn.com.utils.AuthFilterItemProperties;
 import lombok.extern.log4j.Log4j;
 
@@ -22,7 +23,6 @@ public class AuthFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         AuthFilterItemProperties bean = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
-        items = bean.getItem();
         log.info("init AuthFilter");
     }
 

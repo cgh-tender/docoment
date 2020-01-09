@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 
-//@ControllerAdvice
-//@ResponseBody
+@ControllerAdvice
+@ResponseBody
 @Log4j
 public class BaseExceptions {
     private static final String logExceptionFormat = "Capture Exception By BaseExceptions: Code: %s Detail: %s";

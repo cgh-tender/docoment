@@ -1,11 +1,11 @@
 data:
-  item:
-    name: aaa
-    item:
-      - world1
-      - hello1
-    hashAlgorithmName : MD5
-    AA: aa
-  item1:
-    - world1
-    - hello1
+  hashAlgorithmName: MD5
+  filterChainDefinitionMap: {
+    /css/**: anon,
+      /fonts/**: anon,
+      /img/**: anon,
+      /js/**: anon,
+      /html/**: anon,
+      /login/**: anon,
+      /logout: logout
+  }

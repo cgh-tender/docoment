@@ -15,6 +15,12 @@ public class MyCredentialsMatcher extends SimpleCredentialsMatcher {
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
         log.info(">>>>>>>>>>>>>>>验证密码对比<<<<<<<<<<<<<");
-        return super.doCredentialsMatch(token, info);
+        if (super.doCredentialsMatch(token, info)){
+            log.info(">>>>>>>>>>>>>>>验证密码对比成功<<<<<<<<<<<<<");
+            return true;
+        }else {
+            log.info(">>>>>>>>>>>>>>>验证密码对比失败<<<<<<<<<<<<<");
+            return false;
+        }
     }
 }

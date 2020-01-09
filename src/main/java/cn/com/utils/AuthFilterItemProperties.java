@@ -2,17 +2,18 @@ package cn.com.utils;
 
 import cn.com.utils.interfaceRun.YmlPropertySourceComponent;
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
+import java.util.Map;
 
-@Component
+@Configuration
 @YmlPropertySourceComponent(value = {"classpath:/resources/AuthFilter.yml","classpath:auth.properties"})
-@ConfigurationProperties(prefix = "data.item")
+@ConfigurationProperties(prefix = "data")
 @Data
+@Log4j
 public class AuthFilterItemProperties {
-    private List<String> item;
-    private String name;
+    private Map<String,String> filterChainDefinitionMap;
     private String hashAlgorithmName;
 }

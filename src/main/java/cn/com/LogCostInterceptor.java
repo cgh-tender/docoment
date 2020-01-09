@@ -1,4 +1,4 @@
-package cn.com.filter.utils;
+package cn.com;
 
 import lombok.extern.log4j.Log4j;
 import org.springframework.web.servlet.HandlerInterceptor;

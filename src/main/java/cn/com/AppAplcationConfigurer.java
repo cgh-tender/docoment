@@ -1,5 +1,6 @@
-package cn.com.filter.utils;
+package cn.com;
 
+import cn.com.filter.AuthFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,8 +2,7 @@ package cn.com.filter.shiro.base;
 
 import cn.com.entity.User;
 import cn.com.entity.UserRole;
-import cn.com.filter.utils.SpringContextUtil;
-import cn.com.support.Constants;
+import cn.com.SpringContextUtil;
 import lombok.extern.log4j.Log4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -79,11 +78,19 @@ public class ShiroRealm extends AuthorizingRealm {
         log.info("登录验证");
         String userName = (String) token.getPrincipal();
         User user = new User();
+        user.setUserName("admin");
+        user.setPassword("1");
         return new SimpleAuthenticationInfo(
                 user, //这里传入的是user对象，比对的是用户名，直接传入用户名也没错，但是在授权部分就需要自己重新从数据库里取权限
                 user.getPassword(), //密码
-                ByteSource.Util.bytes(Constants.SALT),//salt=username+salt
+                ByteSource.Util.bytes(SpringContextUtil.SALT),//salt=username+salt
                 getName()  //realm name
         );
+    }
+
+    @Override
+    protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
+        log.info("密码匹配");
+        super.assertCredentialsMatch(token, info);
     }
 }

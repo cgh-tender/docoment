@@ -1,7 +1,7 @@
 package cn.com.filter.shiro.filter;
 
 import cn.com.filter.shiro.base.MyShiroFilterFactoryBean;
-import cn.com.filter.utils.SpringContextUtil;
+import cn.com.SpringContextUtil;
 import lombok.extern.log4j.Log4j;
 import org.apache.shiro.web.filter.AccessControlFilter;
 

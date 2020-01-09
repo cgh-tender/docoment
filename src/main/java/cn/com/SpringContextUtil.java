@@ -1,4 +1,4 @@
-package cn.com.filter.utils;
+package cn.com;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -17,8 +16,12 @@ import java.util.Objects;
 
 @Component
 @Log4j
-@Order(2)
 public class SpringContextUtil implements ApplicationContextAware {
+
+    public static final String TOKEN = "TOKEN";
+    public static final String SALT = "chenguohai";
+    @NonNull
+    public static final String hashAlgorithmName = "md5";
 
     @Getter
     private static ApplicationContext applicationContext;
