@@ -1,8 +1,8 @@
 package cn.com.filter.utils;
 
 
+import cn.com.utils.AuthFilterItemProperties;
 import lombok.extern.log4j.Log4j;
-import org.springframework.core.annotation.Order;
 
 import javax.servlet.*;
 import javax.servlet.FilterConfig;
@@ -14,18 +14,16 @@ import java.io.IOException;
 import java.util.List;
 
 @WebFilter(filterName = "authFilter",urlPatterns = "/*")
-@Order(2)
 @Log4j
 public class AuthFilter implements Filter {
 
     private List<String>  items;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-//        AuthFilterItemProperties authFilterItemProperties = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
-//        logger.info(String.valueOf(authFilterItemProperties.getItem()));
+    public void init(FilterConfig filterConfig) {
+        AuthFilterItemProperties bean = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
+        items = bean.getItem();
         log.info("init AuthFilter");
-
     }
 
     @Override
@@ -38,7 +36,7 @@ public class AuthFilter implements Filter {
         HttpSession session = request.getSession(false);
 
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,DELETE,PUT,HEAD");
+        response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with,content-type,requesttype,UUID,TOKEN,MENUCODE");
         response.setHeader("Access-Control-Max-Age", "3628800");
@@ -47,7 +45,6 @@ public class AuthFilter implements Filter {
         response.setDateHeader("Expires", -10);
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
-
         log.info(String.format(" [authFilter] - currentURL : %s ",currentURL));
         filterChain.doFilter(servletRequest,servletResponse);
         return;

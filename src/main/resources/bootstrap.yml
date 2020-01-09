@@ -1,0 +1,14 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /dome
+
+logging:
+  level:
+    com.netflix.discovery: 'off'
+    org.springframework.cloud: 'debug'
+
+spring:
+  cloud:
+    config:
+      enabled: off

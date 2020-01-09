@@ -1,10 +1,10 @@
-package cn.com.filter.shiro;
+package cn.com.filter.shiro.base;
 
 import cn.com.entity.User;
 import cn.com.entity.UserRole;
+import cn.com.filter.utils.SpringContextUtil;
 import cn.com.support.Constants;
 import lombok.extern.log4j.Log4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -19,10 +19,43 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/***
+ * <p> TODO
+ * @author Haidar
+ * @date 2020/1/9 11:20
+ *
+ *
+ *                                                    __----~~~~~~~~~~~------___
+ *                                   .  .   ~~//====......          __--~ ~~
+ *                   -.            \_|//     |||\\  ~~~~~~::::... /~
+ *                ___-==_       _-~o~  \/    |||  \\            _/~~-
+ *        __---~~~.==~||\=_    -_--~/_-~|-   |\\   \\        _/~
+ *    _-~~     .=~    |  \\-_    '-~7  /-   /  ||    \      /
+ *  .~       .~       |   \\ -_    /  /-   /   ||      \   /
+ * /  ____  /         |     \\ ~-_/  /|- _/   .||       \ /
+ * |~~    ~~|--~~~~--_ \     ~==-/   | \~--===~~        .\
+ *          '         ~-|      /|    |-~\~~       __--~~
+ *                      |-~~-_/ |    |   ~\_   _-~            /\
+ *                           /  \     \__   \/~                \__
+ *                       _--~ _/ | .-~~____--~-/                  ~~==.
+ *                      ((->/~   '.|||' -_|    ~~-/ ,              . _||
+ *                                 -_     ~\      ~~---l__i__i__i--~~_/
+ *                                 _-~-__   ~)  \--______________--~~
+ *                               //.-~~~-~_--~- |-------~~~~~~~~
+ *                                      //.-~~~--\
+ */
 @Log4j
 public class ShiroRealm extends AuthorizingRealm {
+    /**
+     * <p> 为当前登录成功的用户授予权限和分配角色
+     * @return AuthorizationInfo
+     * @author Haidar
+     * @date 2020/1/9 11:19
+     **/
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        log.info(SpringContextUtil.getRequest().getRequestURI());
+        log.info("授权");
         Object principal = principalCollection.getPrimaryPrincipal();
         Set<String> roles = new HashSet<String>();
         User user = new User();
@@ -35,8 +68,15 @@ public class ShiroRealm extends AuthorizingRealm {
         return info;
     }
 
+    /**
+     * <p> 验证当前登录的用户，获取认证信息
+     * @return AuthenticationInfo
+     * @author Haidar
+     * @date 2020/1/9 11:19
+     **/
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        log.info("登录验证");
         String userName = (String) token.getPrincipal();
         User user = new User();
         return new SimpleAuthenticationInfo(

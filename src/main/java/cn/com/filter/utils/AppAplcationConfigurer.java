@@ -1,7 +1,9 @@
 package cn.com.filter.utils;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -39,6 +41,11 @@ public class AppAplcationConfigurer extends WebMvcConfigurationSupport {
         bean.setFilter(new AuthFilter());
         bean.addUrlPatterns("/*");
         return bean;
+    }
+
+    @Bean
+    public RequestContextListener requestContextListener(){
+        return new RequestContextListener();
     }
 
 }

@@ -23,7 +23,7 @@ import java.text.MessageFormat;
 import java.util.*;
 
 @Configuration
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(1)
 public class YmlPropertySourceAnnotationBeanPostProcessor extends InstantiationAwareBeanPostProcessorAdapter implements EnvironmentAware, ResourceLoaderAware {
 
     private Environment environment;
