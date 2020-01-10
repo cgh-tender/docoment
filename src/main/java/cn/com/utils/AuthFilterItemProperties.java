@@ -14,4 +14,5 @@ import java.util.Map;
 public class AuthFilterItemProperties {
     private Map<Object,Object> filterChainDefinitionMap;
     private String hashAlgorithmName;
+    private int isSeparation;
 }

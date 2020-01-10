@@ -92,5 +92,6 @@ public class ShiroRealm extends AuthorizingRealm {
     protected void assertCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
         log.info("密码匹配");
         super.assertCredentialsMatch(token, info);
+        
     }
 }

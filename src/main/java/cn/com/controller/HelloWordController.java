@@ -21,7 +21,7 @@ public class HelloWordController {
     @RequestMapping("/world")
     @ResponseBody
     public String getHelloWordMedole(){
-        log.info(authFilterItemProperties.toString());
+//        log.info(authFilterItemProperties.toString());
         return "Hello World";
     }
 

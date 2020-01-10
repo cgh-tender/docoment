@@ -1,6 +1,6 @@
 package cn.com.support;
 
-import cn.com.entity.ExceptionResult;
+import cn.com.entity.Result;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
@@ -115,7 +115,7 @@ public class BaseExceptions {
     private <R extends Throwable> String resultFormat(Integer code, R ex) {
         ex.printStackTrace();
         log.error(String.format(logExceptionFormat, code, ex.getMessage()));
-        return ExceptionResult.failed(code, ex.getMessage());
+        return Result.failed(code, ex.getMessage());
     }
 
 }

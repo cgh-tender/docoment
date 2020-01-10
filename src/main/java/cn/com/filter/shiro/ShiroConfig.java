@@ -3,12 +3,9 @@ package cn.com.filter.shiro;
 import cn.com.SpringContextUtil;
 import cn.com.filter.shiro.base.MyDefaultWebSubjectFactory;
 import cn.com.filter.shiro.base.ShiroRealm;
-import cn.com.filter.shiro.filter.MyCredentialsMatcher;
-import cn.com.filter.shiro.filter.MyFormAuthenticationFilter;
+import cn.com.filter.shiro.filter.*;
 import cn.com.filter.shiro.base.MyShiroFilterFactoryBean;
-import cn.com.filter.shiro.filter.ShiroFilter;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -23,6 +20,7 @@ import java.util.Map;
 @Configuration
 @Log4j
 public class ShiroConfig {
+
     /**
      * <p> 凭证匹配器
      * @return HashedCredentialsMatcher
@@ -32,8 +30,8 @@ public class ShiroConfig {
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher(){
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName("md5");//散列算法:这里使用MD5算法;
-        hashedCredentialsMatcher.setHashIterations(2);//散列的次数，比如散列两次，相当于 md5(md5(""));
+        hashedCredentialsMatcher.setHashAlgorithmName(SpringContextUtil.hashAlgorithmName.getName());
+        hashedCredentialsMatcher.setHashIterations(SpringContextUtil.hashIterations);
         hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
         return hashedCredentialsMatcher;
     }
@@ -47,16 +45,11 @@ public class ShiroConfig {
     @Bean
     public ShiroRealm shiroRealm(){
         ShiroRealm myRealm = new ShiroRealm();
-        if (StringUtils.isNotBlank(SpringContextUtil.hashAlgorithmName)){
-            if (StringUtils.equals(SpringContextUtil.hashAlgorithmName.toUpperCase(),"MD5")){
-                log.info(">>>>>>>>>>>>>>>ShiroRealm 注入 MD5 加密<<<<<<<<<<<<<");
-                myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
-            }else {
-                log.info(">>>>>>>>>>>>>>>ShiroRealm 注入自定义加密<<<<<<<<<<<<<");
-                myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
-            }
-        }else {
-            log.info(">>>>>>>>>>>>>>>ShiroRealm 默认 MD5 加密 <<<<<<<<<<<<<");
+        log.info(">>>>>>>>>>>>>>>ShiroRealm注入加密<<<<<<<<<<<<<");
+        String name = SpringContextUtil.hashAlgorithmName.getName();
+        if (name.equals("MY")){
+            myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
+        }else{
             myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         }
         log.info(">>>>>>>>>>>>>>>ShiroRealm注册完成<<<<<<<<<<<<<");
@@ -104,6 +97,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         HashMap<String, Filter> filterHashMap = new HashMap<>();
+        filterHashMap.put("logout",new AuthLogoutFilter());
         filterHashMap.put("authc",new MyFormAuthenticationFilter());
         filterHashMap.put("shiroFilter",new ShiroFilter());
         shiroFilterFactoryBean.setFilters(filterHashMap);
