@@ -1,6 +1,5 @@
 data:
-  isSeparation: 0 #
-  isSeparationDESC: isSeparation 0(两者) 1(session) 2(not session)
+  isSeparation: 1 # 0(两者) 1(session) 2(notSession)
   hashAlgorithmName: MD5
   filterChainDefinitionMap: {
     /css/**: anon,

@@ -4,7 +4,9 @@ package cn.com.filter;
 import cn.com.SpringContextUtil;
 import cn.com.utils.AuthFilterItemProperties;
 import lombok.extern.log4j.Log4j;
+import org.springframework.http.MediaType;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.FilterConfig;
 import javax.servlet.annotation.WebFilter;
@@ -22,8 +24,8 @@ public class AuthFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
-//        AuthFilterItemProperties bean = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
-//        log.info(SpringContextUtil.md5("1",SpringContextUtil.SALT));
+        AuthFilterItemProperties authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
+        log.info("系统以 [" + SpringContextUtil.hashAlgorithmName.getName()+"] 加密方式进行验证,Shiro的验证方式为 [" + authFilterItemProperties.getIsSeparationDesc() + "] ");
         log.info("init AuthFilter");
     }
 
@@ -41,6 +43,8 @@ public class AuthFilter implements Filter {
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Headers", "x-requested-with,content-type,requesttype,UUID,TOKEN,MENUCODE");
         response.setHeader("Access-Control-Max-Age", "3628800");
+        response.setHeader("Accept", String.valueOf(MediaType.APPLICATION_JSON));
+        response.setHeader("Content-Type", "application/json;charset=UTF-8");
 
         // 禁止浏览器缓存所有动态页面
         response.setDateHeader("Expires", -10);

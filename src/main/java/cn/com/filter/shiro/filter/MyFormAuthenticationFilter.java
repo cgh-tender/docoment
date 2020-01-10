@@ -22,12 +22,8 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
             boolean separation = SpringContextUtil.isSeparation(servletRequest);
             if (separation){
                 if (!super.isAccessAllowed(request, response, mappedValue)){
-                    try {
-                        SpringContextUtil.write(servletResponse, RestStatus.LOGOUT.getName(),RestStatus.LOGOUT.getCode());
-                        log.info("MyFormAuthenticationFilter 登录验证未通过");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    SpringContextUtil.write(servletResponse,RestStatus.LOGOUT.getName(),RestStatus.LOGOUT.getCode());
+                    log.info("MyFormAuthenticationFilter 登录验证未通过");
                     return false;
                 }
             }else{

@@ -19,7 +19,7 @@ public class ShiroFilter extends AccessControlFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         log.info("onAccessDenied");
-        MyShiroFilterFactoryBean myShiroFilterFactoryBean = (MyShiroFilterFactoryBean) SpringContextUtil.getBean(MyShiroFilterFactoryBean.class);
+        MyShiroFilterFactoryBean myShiroFilterFactoryBean = SpringContextUtil.getBean(MyShiroFilterFactoryBean.class);
         Map<String, String> chainDefinitionMap = myShiroFilterFactoryBean.getFilterChainDefinitionMap();
         log.info(chainDefinitionMap);
         return true;

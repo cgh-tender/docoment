@@ -39,7 +39,7 @@ public class AuthLogoutFilter extends LogoutFilter {
             e.printStackTrace();
         }
 //        issueRedirect(request,response,redirectUrl);
-        SpringContextUtil.write(servletResponse,"登出成功",200);
+        SpringContextUtil.write("登出成功",200);
         // 是否向下进行走 过滤器
         return false;
     }

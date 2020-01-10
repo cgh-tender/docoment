@@ -1,7 +1,6 @@
 package cn.com;
 
 import cn.com.entity.AuthHashAlgorithmName;
-import cn.com.entity.Result;
 import cn.com.utils.AuthFilterItemProperties;
 import lombok.Getter;
 import lombok.NonNull;
@@ -16,24 +15,28 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Objects;
 
 @Component
 @Log4j
-public class SpringContextUtil implements ApplicationContextAware {
+public class SpringContextUtil<T> implements ApplicationContextAware {
 
     public static AuthFilterItemProperties authFilterItemProperties;
 
     public static final String TOKEN = "TOKEN";
+    //加密盐
     public static final String SALT = "chenguohai";
-    @NonNull
-    public static final AuthHashAlgorithmName hashAlgorithmName = AuthHashAlgorithmName.MY;
-    @NonNull
+    //加密方式
+    @NotNull
+    public static final AuthHashAlgorithmName hashAlgorithmName = AuthHashAlgorithmName.MD5;
+    //加密次数
+    @NotNull
     public static final int hashIterations = 2;
 
     @Getter
@@ -44,12 +47,12 @@ public class SpringContextUtil implements ApplicationContextAware {
         SpringContextUtil.applicationContext = args0;
     }
 
-    public static Object getBean(@NonNull String name){
-        return applicationContext.getBean(name);
+    public static <T> T getBean(@NonNull String name){
+        return (T )applicationContext.getBean(name);
     }
 
     //通过类型获取上下文中的bean
-    public static Object getBean(@NonNull Class<?> requiredType){
+    public static <T> T getBean(@NonNull Class<T> requiredType){
         return applicationContext.getBean(requiredType);
     }
 
@@ -58,7 +61,12 @@ public class SpringContextUtil implements ApplicationContextAware {
     }
 
     public static HttpServletResponse getResponse(){
-        return ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getResponse();
+        HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getResponse();
+        if (null != response){
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json;charset=utf-8");
+        }
+        return response;
     }
 
     public static boolean isAjax(HttpServletRequest req) {
@@ -80,30 +88,50 @@ public class SpringContextUtil implements ApplicationContextAware {
                 || "XMLHttpRequest".equalsIgnoreCase(xRequestedWith);
     }
 
-    public static String md5(String password){
-        return md5(password,SALT);
+    public static String enc(String password){
+        return enc(password,SALT);
     }
 
-    public static String md5(String password, String salt){
-        return md5(password,salt,hashIterations);
+    public static String enc(String password, String salt){
+        return enc(password,salt,hashIterations);
     }
 
-    public static String md5(String password, String salt,int hashIterations){
-
+    public static String enc(String password, String salt,int hashIterations){
         SimpleHash result = new SimpleHash(hashAlgorithmName.getName(), password, ByteSource.Util.bytes(salt), hashIterations);
-
         return result.toString();
     }
 
-    public static void write(HttpServletResponse response,String message,int code) throws IOException {
-        String success = Result.success(code, message);
-        response.setStatus(200);
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json;charset=utf-8");
-        PrintWriter writer = response.getWriter();
-        writer.write(success);
-        writer.flush();
-        writer.close();
+    public static void write(String success) {
+        write(success,200);
+    }
+
+    public static void write(String success, int statusCode) {
+        write(getResponse(), success, statusCode);
+    }
+
+    public synchronized static void write(HttpServletResponse response,String success, int statusCode) {
+        response.setStatus(statusCode);
+        ServletOutputStream os = null;
+        try {
+            os = response.getOutputStream();
+            os.write(success.getBytes());
+        } catch (IOException e) {
+            try {
+                throw new IOException("SpringContextUtil 写回数据出现异常");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }finally {
+            if (null != os){
+                try {
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
     /**
@@ -114,7 +142,7 @@ public class SpringContextUtil implements ApplicationContextAware {
      **/
     public static boolean isSeparation(HttpServletRequest request) throws Exception{
         if (authFilterItemProperties == null){
-            authFilterItemProperties = (AuthFilterItemProperties) SpringContextUtil.getBean(AuthFilterItemProperties.class);
+            authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
         }
         int separation = authFilterItemProperties.getIsSeparation();
         if (separation == 0){

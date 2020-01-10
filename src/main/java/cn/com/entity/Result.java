@@ -1,5 +1,6 @@
 package cn.com.entity;
 
+import cn.com.SpringContextUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
@@ -12,53 +13,64 @@ public class Result<T> implements Serializable {
     private boolean success;
     private String message; //消息提示
     private T data; //返回的数据
+    private String type;
 
     private Result(){}
 
-    public Result(int code,boolean success,String msg,T t){
+    public Result(int code,boolean success,String msg,T t,String type){
         this.code = code;
         this.success = success;
         this.message = msg;
         this.data = t;
+        this.type = type;
     }
 
-    public static String success() {
-        return success(true,"成功");
+    public static void success() {
+        success(true,"成功");
     }
 
-    public static String success(int code,String msg){
-        return success(code,true,msg);
+    public static void success(String msg) {
+        success(true,msg);
     }
 
-    public static String success(boolean success,String msg) {
-        return success(200,success,msg);
+    public static void success(int code,String msg){
+        success(code,true,msg);
     }
 
-    public static String success(int code, boolean success,String msg) {
-        return success(code,success,msg,null);
+    public static void success(boolean success,String msg) {
+        success(200,success,msg);
     }
 
-    public static<T> String success(int code, boolean success,String msg, T t) {
-        return JSON.toJSONString(new Result(code,success,msg,t));
+    public static void success(int code, boolean success,String msg) {
+        success(code,success,msg,null);
     }
 
-    public static String failed() {
-        return failed(true,"失败");
+    public static<T> void success(int code, boolean success,String msg, T t) {
+        SpringContextUtil.write(JSON.toJSONString(new Result(code,success,msg,t,"info")));
     }
 
-    public static String failed(int code,String msg){
-        return failed(code,false,msg);
+    public static void failed() {
+        failed(false,"失败");
+    }
+    public static void failed(String msg) {
+        failed(false,msg);
+    }
+    public static void failed(String msg,String type) {
+        failed(false,msg);
+    }
+    public static void failed(int code,String msg){
+        failed(code,false,msg);
     }
 
-    public static String failed(boolean success,String msg) {
-        return failed(-1,success,msg);
+    public static void failed(boolean success,String msg) {
+        failed(-1,success,msg);
     }
 
-    public static String failed(int code, boolean success,String msg) {
-        return failed(code,success,msg,null);
+    public static void failed(int code, boolean success,String msg) {
+        failed(code,success,msg,null);
     }
 
-    public static<T> String failed(int code, boolean success,String msg, T t) {
-        return JSON.toJSONString(new Result(code,success,msg,t));
+    public static<T> void failed(int code, boolean success,String msg, T t) {
+        SpringContextUtil.write(JSON.toJSONString(new Result(code,success,msg,t,"error")));
     }
 }
