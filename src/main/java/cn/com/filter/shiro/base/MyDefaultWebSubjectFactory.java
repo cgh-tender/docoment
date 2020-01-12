@@ -10,7 +10,9 @@ import org.apache.shiro.web.subject.WebSubject;
 import org.apache.shiro.web.subject.WebSubjectContext;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Log4j
 public class MyDefaultWebSubjectFactory extends DefaultWebSubjectFactory {
@@ -25,10 +27,11 @@ public class MyDefaultWebSubjectFactory extends DefaultWebSubjectFactory {
         }
         WebSubjectContext webSubjectContext = (WebSubjectContext)context;
         HttpServletRequest request = (HttpServletRequest) webSubjectContext.getServletRequest();
+        HttpServletResponse response = (HttpServletResponse) webSubjectContext.getServletResponse();
         boolean separation = false;
         if (!context.isAuthenticated()) {
             try {
-                separation = SpringContextUtil.isSeparation(request);
+                separation = SpringContextUtil.isSeparation(request,response);
                 this.storageEvaluator.setSessionStorageEnabled(separation);
                 context.setSessionCreationEnabled(separation);
             } catch (Exception e) {

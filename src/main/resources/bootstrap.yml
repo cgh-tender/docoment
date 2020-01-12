@@ -12,3 +12,23 @@ spring:
   cloud:
     config:
       enabled: off
+
+data:
+  isSeparation: 2
+  hashAlgorithmName: MD5
+  filterChainDefinitionMap: {
+    /css/**: anon,
+    /fonts/**: anon,
+    /img/**: anon,
+    /js/**: anon,
+    /html/**: anon,
+    /login/**: anon,
+    /logout: logout
+  }
+  LOGIN: login
+  INDEX: index
+  PAGE302: 302
+  PAGE404: 404
+  PAGE500: 500
+  items:
+    - /frontend

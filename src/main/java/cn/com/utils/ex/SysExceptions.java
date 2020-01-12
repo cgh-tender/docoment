@@ -1,6 +1,5 @@
 package cn.com.utils.ex;
 
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.converter.HttpMessageNotReadableException;

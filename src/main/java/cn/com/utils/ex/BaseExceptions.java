@@ -3,9 +3,6 @@ package cn.com.utils.ex;
 import cn.com.SpringContextUtil;
 import cn.com.entity.Result;
 import lombok.extern.log4j.Log4j;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 
 @Log4j
 public class BaseExceptions {

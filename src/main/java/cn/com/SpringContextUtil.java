@@ -2,6 +2,7 @@ package cn.com;
 
 import cn.com.entity.AuthHashAlgorithmName;
 import cn.com.utils.AuthFilterItemProperties;
+import cn.com.utils.ex.AppConfigException;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
@@ -16,11 +17,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -105,12 +107,19 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
         write(success,200);
     }
 
+    public static void write(HttpServletResponse response,String success) {
+        write(response, success,200);
+    }
+
     public static void write(String success, int statusCode) {
         write(getResponse(), success, statusCode);
     }
 
     public synchronized static void write(HttpServletResponse response,String success, int statusCode) {
+        if (response == null)throw new NullPointerException("write response is null");
         response.setStatus(statusCode);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=utf-8");
         ServletOutputStream os = null;
         try {
             os = response.getOutputStream();
@@ -129,7 +138,6 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
@@ -140,23 +148,75 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
      * @author Haidar
      * @date 2020/1/10 15:16
      **/
-    public static boolean isSeparation(HttpServletRequest request) throws Exception{
+    public static boolean isSeparation(HttpServletRequest request,HttpServletResponse response) throws AppConfigException {
         if (authFilterItemProperties == null){
             authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
         }
         int separation = authFilterItemProperties.getIsSeparation();
+        String bo = response.getHeader("separation");
+        if (!StringUtils.isBlank(bo)){
+            return Boolean.parseBoolean(bo);
+        }
         if (separation == 0){
+            String uri = request.getRequestURI();
             String token = request.getHeader("TOKEN");
+            List<String> items = authFilterItemProperties.getItems();
             if (StringUtils.isNotBlank(token)) {
+                response.addHeader("separation","false");
                 return Boolean.FALSE;
-            } else {
-                return Boolean.TRUE;
             }
+            for (String item : items) {
+                if (uri.contains(item)) {
+                    response.addHeader("separation","false");
+                    return Boolean.FALSE;
+                }
+            }
+            response.addHeader("separation","true");
+            return Boolean.TRUE;
         }else if(separation == 1){
+            response.addHeader("separation","true");
             return Boolean.TRUE;
         }else if (separation == 2){
+            response.addHeader("separation","false");
             return Boolean.FALSE;
         }
-        throw new Exception("请配置 isSeparation 属性");
+        throw new AppConfigException("请配置 isSeparation 属性");
     }
+    public static int getStatus(HttpServletRequest request) {
+        Integer status = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        if (status != null) {
+            return status;
+        }
+        return 500;
+    }
+    public static int getStatus(HttpServletResponse response) {
+        return response.getStatus();
+    }
+
+    public static void clearCookie(){
+        HttpServletRequest request = getRequest();
+        HttpServletResponse response = getResponse();
+        Cookie[] cookies = request.getCookies();
+        if (cookies!=null){
+            for (Cookie c: cookies) {
+                Cookie cookie = new Cookie(c.getName(),null);
+                cookie.setSecure(false);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+        }
+    }public static void clearCookie(HttpServletRequest request,HttpServletResponse response){
+        Cookie[] cookies = request.getCookies();
+        log.info("cookies : " + cookies);
+        if (cookies!=null){
+            for (Cookie c: cookies) {
+                Cookie cookie = new Cookie(c.getName(),null);
+                cookie.setSecure(false);
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+        }
+        request.setAttribute("Cookie","");
+    }
+
 }

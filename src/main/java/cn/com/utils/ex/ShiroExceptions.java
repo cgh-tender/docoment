@@ -77,4 +77,22 @@ public class ShiroExceptions extends BaseExceptions {
         resultFormat(25,ex.getMessage());
     }
 
+    //没有登录
+    @ExceptionHandler({LogOutException.class})
+    public void logOutException(LogOutException ex){
+        resultFormat(26,"登录异常:请重新登录");
+    }
+
+    //登录异常IP不一致问题
+    @ExceptionHandler({LogIPException.class})
+    public void logIPException(LogIPException ex){
+        resultFormat(27,"登录异常:IP不一致问题与申请不一致问题");
+    }
+    //登录异常IP不一致问题
+    @ExceptionHandler({AppConfigException.class})
+    public void appConfigException(AppConfigException ex){
+        resultFormat(28,"登录异常:配置文件出现异常");
+    }
+
+
 }

@@ -1,16 +1,15 @@
 package cn.com.filter.shiro.filter;
 
 import cn.com.SpringContextUtil;
-import cn.com.entity.RestStatus;
+import cn.com.utils.ex.LogOutException;
 import lombok.extern.log4j.Log4j;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Log4j
 public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
@@ -18,21 +17,18 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
-        try {
-            boolean separation = SpringContextUtil.isSeparation(servletRequest);
-            if (separation){
-                if (!super.isAccessAllowed(request, response, mappedValue)){
-                    SpringContextUtil.write(servletResponse,RestStatus.LOGOUT.getName(),RestStatus.LOGOUT.getCode());
-                    log.info("MyFormAuthenticationFilter 登录验证未通过");
-                    return false;
-                }
-            }else{
-                return true;
+        boolean separation = SpringContextUtil.isSeparation(servletRequest,servletResponse);
+        log.info("MyFormAuthenticationFilter isAccessAllowed");
+        if (separation){
+            boolean b = super.isAccessAllowed(request, response, mappedValue);
+            Subject subject = this.getSubject(request, response);
+            subject.getSession();
+            log.info(b);
+            if (!b){
+                throw new LogOutException("请重新登录");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return false;
+        return true;
     }
 
     @Override
