@@ -28,12 +28,15 @@ import java.util.Objects;
 @Component
 @Log4j
 public class SpringContextUtil<T> implements ApplicationContextAware {
+    public static final Long serialVersionUID = 24L;
 
     public static AuthFilterItemProperties authFilterItemProperties;
 
     public static final String TOKEN = "TOKEN";
     //加密盐
     public static final String SALT = "chenguohai";
+    //token 加密盐
+    public static final String TOKENSALT = "chenguohai";
     //加密方式
     @NotNull
     public static final AuthHashAlgorithmName hashAlgorithmName = AuthHashAlgorithmName.MD5;
