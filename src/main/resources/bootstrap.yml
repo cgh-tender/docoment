@@ -13,6 +13,17 @@ spring:
     config:
       enabled: off
 
+system:
+  salt: 'chenguohai'
+  expireMinute: 60 # 系统超时时长
+
+shiro:
+  token:
+    tokeSubject: 'TOKEN'
+    tokenSalt: 'chenguohai_chenguohai_chenguohai' # bytes >= 256 or char >= 32
+    alg: 'PairKey'  # SecretKey OR PairKey OR MyKey alg: 'SecretKey'  # SecretKey OR PairKey OR MyKey
+    tokenExpireMinute: 1 # token 刷新
+
 data:
   isSeparation: 2
   hashAlgorithmName: MD5

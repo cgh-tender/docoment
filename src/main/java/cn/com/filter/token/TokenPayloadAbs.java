@@ -12,9 +12,10 @@ import java.io.Serializable;
 public abstract class TokenPayloadAbs implements Serializable {
     public Long serialVersionUID = SpringContextUtil.serialVersionUID;
 
-    public Long UUID;
-    public String IP;
-    public JwtType type;
+    public Long UUID; // 每个 Token 唯一
+    public String IP; // 申请每个 Token 地址
+    public JwtType type; // 申请的类型
+    public String alg;//Token 加密方式
 
     public TokenPayloadAbs(){}
     /**
@@ -28,14 +29,5 @@ public abstract class TokenPayloadAbs implements Serializable {
 
     public static  <T extends TokenPayloadAbs> T getObject(T obj){
         return obj;
-    }
-
-    @Override
-    public String toString() {
-        return "TokenPayloadAbs{" +
-                "UUID=" + UUID +
-                ", IP='" + IP + '\'' +
-                ", type=" + type +
-                '}';
     }
 }

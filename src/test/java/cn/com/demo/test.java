@@ -17,12 +17,16 @@ public class test {
 //        System.out.println(result.toString());
 //        SimpleHash result1 = new SimpleHash("MD2", password, ByteSource.Util.bytes(SALT), hashIterations);
 //        System.out.println(result1.toString());
-        Date date = new Date();
-        System.out.println(date);
-        long time = date.getTime();
-        System.out.println(time);
-        Date date1 = new Date(time+10000);
-        System.out.println(date1);
+//        Date date = new Date();
+//        System.out.println(date);
+//        long time = date.getTime();
+//        System.out.println(time);
+//        Date date1 = new Date(time+10000);
+//        System.out.println(date1);
+        String a = "1234567890_1234567890_1234567890";
+        String b = "1216562132540313600";
+        System.out.println(a.getBytes().length);
+        System.out.println(b.getBytes().length);
 
     }
 }

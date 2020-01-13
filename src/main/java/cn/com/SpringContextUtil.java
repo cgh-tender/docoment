@@ -3,6 +3,7 @@ package cn.com;
 import cn.com.entity.AuthHashAlgorithmName;
 import cn.com.utils.AuthFilterItemProperties;
 import cn.com.utils.ex.AppConfigException;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
@@ -10,9 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,18 +27,30 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-@Component
+@Configuration
 @Log4j
+@Data
 public class SpringContextUtil<T> implements ApplicationContextAware {
     public static final Long serialVersionUID = 24L;
 
     public static AuthFilterItemProperties authFilterItemProperties;
-
-    public static final String TOKEN = "TOKEN";
-    //加密盐
-    public static final String SALT = "chenguohai";
+    @Value("${shiro.token.tokeSubject}")
+    private String tokeSubject;
     //token 加密盐
-    public static final String TOKENSALT = "chenguohai";
+    @Value("${shiro.token.tokenSalt}")
+    private String tokenSalt;
+    // Token 加密方式
+    @Value("${shiro.token.alg}")
+    private String alg;
+    //Token 刷新时间
+    @Value("${shiro.token.tokenExpireMinute}")
+    private int tokenExpireMinute;
+    //系统密码加密盐
+    @Value("${system.salt}")
+    private String salt;
+    //系统超时时常
+    @Value("${system.expireMinute}")
+    private int expireMinute;
     //加密方式
     @NotNull
     public static final AuthHashAlgorithmName hashAlgorithmName = AuthHashAlgorithmName.MD5;
@@ -93,9 +107,9 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
                 || "XMLHttpRequest".equalsIgnoreCase(xRequestedWith);
     }
 
-    public static String enc(String password){
-        return enc(password,SALT);
-    }
+//    public static String enc(String password){
+//        return enc(password,this.SALT);
+//    }
 
     public static String enc(String password, String salt){
         return enc(password,salt,hashIterations);

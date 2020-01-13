@@ -23,7 +23,7 @@ public class SpringSuperController implements Serializable {
         User user = null;
         try {
             HttpServletRequest request = getRequest();
-            String token = request.getHeader(SpringContextUtil.TOKEN);
+            String token = request.getHeader("TOKEN");
             if (StringUtils.isNoneBlank(token)){
 
             }else {
