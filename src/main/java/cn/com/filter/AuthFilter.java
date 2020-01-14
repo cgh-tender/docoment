@@ -27,7 +27,7 @@ public class AuthFilter implements Filter {
         AuthFilterItemProperties authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
         log.info("系统以 [" + SpringContextUtil.hashAlgorithmName.getName()+"] 加密方式进行验证,Shiro的验证方式为 [" + authFilterItemProperties.getIsSeparation() +" - "+ authFilterItemProperties.getIsSeparationDesc() + "] ");
         log.info("init AuthFilter");
-    }
+}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

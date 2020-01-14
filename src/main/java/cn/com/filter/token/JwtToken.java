@@ -4,7 +4,6 @@ import cn.com.SpringContextUtil;
 import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.Data;
 import lombok.extern.log4j.Log4j;
 
 import javax.crypto.SecretKey;

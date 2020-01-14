@@ -27,7 +27,8 @@ public abstract class TokenPayloadAbs implements Serializable {
         this.IP = request.getRemoteAddr();
     }
 
-    public static  <T extends TokenPayloadAbs> T getObject(T obj){
-        return obj;
+    public static <R> R getObject(Class<R> r,TokenPayloadAbs abs){
+        return (R) abs;
     }
+
 }
