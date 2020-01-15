@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /**
  * https://blog.csdn.net/weixin_44100514/article/details/99741328
@@ -135,6 +137,8 @@ public class SnowFlake {
         long id = 0L;
         try {
             InetAddress ip = InetAddress.getLocalHost();
+
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
             NetworkInterface network = NetworkInterface.getByInetAddress(ip);
             if (network == null) {
                 id = 1L;
@@ -144,6 +148,30 @@ public class SnowFlake {
                         | (0x0000FF00 & (((long) mac[mac.length - 2]) << 8))) >> 6;
                 id = id % (maxDatacenterId + 1);
             }
+        } catch (NullPointerException ne){
+            try {
+                Enumeration<NetworkInterface> ni = NetworkInterface.getNetworkInterfaces();
+                while(ni.hasMoreElements()){
+                    NetworkInterface netI = ni.nextElement();
+
+                    byte[] bytes = netI.getHardwareAddress();
+                    if(netI.isUp() && netI != null && bytes != null && bytes.length == 6){
+                        StringBuffer sb = new StringBuffer();
+                        for(byte b:bytes){
+                            //与11110000作按位与运算以便读取当前字节高4位
+                            sb.append(Integer.toHexString((b&240)>>4));
+                            //与00001111作按位与运算以便读取当前字节低4位
+                            sb.append(Integer.toHexString(b&15));
+                            sb.append("-");
+                        }
+                        sb.deleteCharAt(sb.length()-1);
+//                        return sb.toString().toUpperCase();
+                    }
+                }
+            } catch (SocketException e) {
+                e.printStackTrace();
+            }
+            return id;
         } catch (Exception e) {
             System.out.println(" getDatacenterId: " + e.getMessage());
         }

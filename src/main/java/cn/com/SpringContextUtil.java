@@ -24,7 +24,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Configuration
@@ -234,6 +237,24 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
             }
         }
         request.setAttribute("Cookie","");
+    }
+
+    public static Map<String, Object> object2Map(Object obj) {
+        Map<String, Object> map = new HashMap<>();
+        if (obj == null) {
+            return map;
+        }
+        Class clazz = obj.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                map.put(field.getName(), field.get(obj));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 
 }
