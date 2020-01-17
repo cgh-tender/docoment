@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-@YmlPropertySourceComponent(value = {"classpath:auth.properties"})
+//@YmlPropertySourceComponent(value = {"classpath:auth.properties"})
 @ConfigurationProperties(prefix = "data")
 @Data
 @Log4j
@@ -27,6 +27,8 @@ public class AuthFilterItemProperties {
     @NotNull private String PAGE302;
     private List<String> items;
     public void setIsSeparation(int isSeparation) {
+        log.info(22222222);
+        log.info(isSeparation);
         this.isSeparation = isSeparation;
         this.isSeparationDesc = isSeparationEnum.getDesc(isSeparation);
     }

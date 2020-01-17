@@ -36,11 +36,11 @@ shiro:
   token:
     tokeSubject: 'TOKEN'
     tokenSalt: 'chenguohai_chenguohai_chenguohai' # bytes >= 256 or char >= 32
-    alg: 'PairKey'  # SecretKey OR PairKey OR MyKey alg: 'SecretKey'  # SecretKey OR PairKey OR MyKey
+    alg: 'SecretKey'  # SecretKey OR PairKey OR MyKey alg: 'SecretKey'  # SecretKey OR PairKey OR MyKey
     tokenExpireMinute: 1 # token 刷新
 
 data:
-  isSeparation: 2
+  isSeparation: 1
   hashAlgorithmName: MD5
   filterChainDefinitionMap: {
     /css/**: anon,
@@ -49,6 +49,7 @@ data:
     /js/**: anon,
     /html/**: anon,
     /login/**: anon,
+    /hello/world : anon,
     /logout: logout
   }
   LOGIN: login

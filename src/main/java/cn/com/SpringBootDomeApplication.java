@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @EnableWebMvc
-@ServletComponentScan("cn.com")
+@ServletComponentScan("cn.com.**")
 @EnableConfigurationProperties
 @Log4j
 public class SpringBootDomeApplication {

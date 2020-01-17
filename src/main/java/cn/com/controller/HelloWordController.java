@@ -1,5 +1,6 @@
 package cn.com.controller;
 
+import cn.com.SimpleService.AServiceFactory;
 import cn.com.utils.AuthFilterItemProperties;
 import cn.com.utils.testPropertite;
 import lombok.extern.log4j.Log4j;
@@ -14,6 +15,9 @@ import javax.annotation.Resource;
 @Log4j
 public class HelloWordController {
     @Resource
+    private AServiceFactory aServiceFactory;
+
+    @Resource
     private testPropertite properties;
     @Resource
     private AuthFilterItemProperties authFilterItemProperties;
@@ -21,6 +25,8 @@ public class HelloWordController {
     @RequestMapping("/world")
     @ResponseBody
     public String getHelloWordMedole(){
+        aServiceFactory.getInstance("oracle").create();
+
 //        log.info(authFilterItemProperties.toString());
         return "Hello World";
     }
