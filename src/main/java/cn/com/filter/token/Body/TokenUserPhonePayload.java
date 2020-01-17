@@ -12,10 +12,6 @@ import java.util.Map;
 @Log4j
 public class TokenUserPhonePayload extends TokenPayloadAbs {
 
-    public TokenUserPhonePayload(){
-        super();
-    }
-
     public TokenUserPhonePayload(String Phone, HttpServletRequest request) {
         super(TokenUserPhonePayload.class, request);
         this.Phone = Phone;

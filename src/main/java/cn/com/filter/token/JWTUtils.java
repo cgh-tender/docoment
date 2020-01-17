@@ -2,20 +2,15 @@ package cn.com.filter.token;
 
 import cn.com.SpringContextUtil;
 import cn.com.filter.token.Body.TokenPayloadAbs;
-import cn.com.filter.token.Key.KeyFactory;
 import cn.com.utils.Redis.RedisUtil;
-import com.alibaba.fastjson.JSONObject;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.JedisCluster;
 
 import javax.annotation.Resource;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
 
-
-public class JWTUtils implements KeyFactory {
+public class JWTUtils {
     @Resource
     private RedisUtil redisUtil;
     @Autowired
@@ -33,43 +28,27 @@ public class JWTUtils implements KeyFactory {
     private static final long serialVersionUID = SpringContextUtil.serialVersionUID;
     private final long TOKEN_EXPIRE_MILLIS = 1000 * 60 * springContextUtil.getTokenExpireMinute();
 
-    private TokenPayloadAbs t;
-    private KeyFactory k;
-
     private JWTUtils(){}
 
-    public JWTUtils(TokenPayloadAbs body,KeyFactory key){
-        this.t = body;
-        this.k = key;
-    }
+    public String gettoken(){
 
-    public String builder(){
-        long l = System.currentTimeMillis();
-        JwtBuilder builder = Jwts.builder()
-                .setHeader(getHeader())
-                .setId(String.valueOf(t.getUUID()))
-                .setSubject(Subject)
-                .setIssuedAt(new Date(l))
-                .setExpiration(new Date(l + TOKEN_EXPIRE_MILLIS));
-        t.inItJwtBuilder(t, builder);
-        builder.signWith(getPublicKey(toeknSalt));
-        return builder.compact();
+        return null;
     }
 
     public TokenPayloadAbs getPayload(String token){
-        Claims claims = getClaims(token, getPublicKey(toeknSalt));
-        String uuid = claims.get("UUID").toString();
-        redisUtil.get("admin");
-        if (getPrivate(toeknSalt) != null){
-
-        }else {
-
-            try {
-                return (TokenPayloadAbs) JSONObject.parseObject(JSONObject.toJSONString(claims),Class.forName((String) claims.get("TypeClass")));
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+//        Claims claims = getClaims(token, getPublicKey(toeknSalt));
+//        String uuid = claims.get("UUID").toString();
+//        redisUtil.get("admin");
+//        if (getPrivate(toeknSalt) != null){
+//
+//        }else {
+//
+//            try {
+//                return (TokenPayloadAbs) JSONObject.parseObject(JSONObject.toJSONString(claims),Class.forName((String) claims.get("TypeClass")));
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
         return null;
     }
 
@@ -90,21 +69,5 @@ public class JWTUtils implements KeyFactory {
         }
     };
 
-    @Override
-    public Key getPublicKey(String key) {
-        return k.getPublicKey(key);
-    }
-
-    @Override
-    public Key getPrivate(String key) {
-        return k.getPrivate(key);
-    }
-
-    private HashMap<String, Object> getHeader() {
-        HashMap<String, Object> header = new HashMap<>();
-        header.put("alg", alg);
-        header.put("typ", typ);
-        return header;
-    }
 
 }

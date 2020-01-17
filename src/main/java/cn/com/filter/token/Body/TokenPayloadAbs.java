@@ -16,7 +16,7 @@ public abstract class TokenPayloadAbs implements Serializable {
     public String IP; // 申请每个 Token 地址
     public Class TypeClass;
 
-    public TokenPayloadAbs(){}
+    private TokenPayloadAbs(){}
 
     /**
      * @param request 请求的 Request

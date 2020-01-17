@@ -12,10 +12,6 @@ import java.util.Map;
 @Log4j
 public class TokenUserNamePayload extends TokenPayloadAbs {
 
-    public TokenUserNamePayload(){
-        super();
-    }
-
     public TokenUserNamePayload(String userName, HttpServletRequest request) {
         super(TokenUserNamePayload.class, request);
         this.userName = userName;
