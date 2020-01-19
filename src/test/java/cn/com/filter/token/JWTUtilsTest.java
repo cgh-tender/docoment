@@ -24,15 +24,5 @@ public class JWTUtilsTest {
 
     @Test
     public void test(){
-        request = new MockHttpServletRequest();
-        request.setCharacterEncoding("UTF-8");
-        TokenUserNamePayload admin = new TokenUserNamePayload("admin", request);
-        log.info(JSONObject.parseObject(JSONObject.toJSONString(admin),Map.class));
-        JWTUtils jwtUtils = new JWTUtils(admin,new MySigningKey());
-        String token = jwtUtils.builder();
-        log.info(token);
-        log.info(jwtUtils.getPublicKey(JWTUtils.toeknSalt));
-        TokenPayloadAbs payload = jwtUtils.getPayload(token);
-        log.info(payload);
     }
 }
