@@ -55,11 +55,12 @@ public class ShiroConfig {
         ShiroRealm myRealm = new ShiroRealm();
         log.info(">>>>>>>>>>>>>>>ShiroRealm注入加密<<<<<<<<<<<<<");
         String name = SpringContextUtil.hashAlgorithmName.getName();
-        if (name.equals("MY")){
-            myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
-        }else{
-            myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
-        }
+//        if (name.equals("MY")){
+//            myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
+//        }else{
+//            myRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+//        }
+        myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
         log.info(">>>>>>>>>>>>>>>ShiroRealm注册完成<<<<<<<<<<<<<");
         return myRealm;
     }

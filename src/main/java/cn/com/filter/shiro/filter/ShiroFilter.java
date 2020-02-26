@@ -31,7 +31,7 @@ public class ShiroFilter extends AccessControlFilter {
 //            return true;
 //        }
         log.info(subject.isAuthenticated());
-        boolean separation = SpringContextUtil.isSeparation((HttpServletRequest) request, (HttpServletResponse) response);
+        boolean separation = SpringContextUtil.isSeparation((HttpServletResponse) response);
         if (separation){
             Object principal = subject.getPrincipal();
             log.info(principal);

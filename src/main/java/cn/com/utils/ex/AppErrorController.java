@@ -77,7 +77,7 @@ public class AppErrorController extends ErrorPageFilter implements ErrorControll
         Map<String, Object> attr = this.errorAttributes.getErrorAttributes(req, false);
         int status = (int) attr.get("status");
         log.error(">>>>>>>>>>>>>>> " + (attr.get("message") == "No message available" ? "" : attr.get("message") ) + " <<<<<<<<<<<<<");
-        boolean separation = SpringContextUtil.isSeparation(request,response);
+        boolean separation = SpringContextUtil.isSeparation(response);
         if (separation){
             String message = (String) attr.get("message");
             if (message.contains("请重新登录")){

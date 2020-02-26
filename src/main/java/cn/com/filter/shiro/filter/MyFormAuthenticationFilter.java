@@ -17,7 +17,7 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
-        boolean separation = SpringContextUtil.isSeparation(servletRequest,servletResponse);
+        boolean separation = SpringContextUtil.isSeparation(servletResponse);
         log.info("MyFormAuthenticationFilter isAccessAllowed");
         if (separation){
             boolean b = super.isAccessAllowed(request, response, mappedValue);

@@ -1,42 +1,33 @@
-package cn.com.filter;
+package cn.com;
 
-
-import cn.com.SpringContextUtil;
 import cn.com.utils.AuthFilterItemProperties;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.MediaType;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.annotation.Resource;
-import javax.servlet.*;
-import javax.servlet.FilterConfig;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.List;
 
-@WebFilter(filterName = "authFilter",urlPatterns = "/*")
 @Log4j
-public class AuthFilter implements Filter {
+public class SysCostInterceptor implements HandlerInterceptor {
+    long start = System.currentTimeMillis();
 
-    private List<String>  items;
-
-    @Override
-    public void init(FilterConfig filterConfig) {
+    static {
         AuthFilterItemProperties authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
         log.info("系统以 [" + SpringContextUtil.hashAlgorithmName.getName()+"] 加密方式进行验证,Shiro的验证方式为 [" + authFilterItemProperties.getIsSeparation() +" - "+ authFilterItemProperties.getIsSeparationDesc() + "] ");
-        log.info("init AuthFilter");
-}
+    }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        start = System.currentTimeMillis();
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         // 取得根目录所对应的绝对路径
         String currentURL = request.getRequestURI();
-
-        HttpSession session = request.getSession(false);
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -50,13 +41,12 @@ public class AuthFilter implements Filter {
         response.setDateHeader("Expires", -10);
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
-        log.info(String.format(" [authFilter] - currentURL : %s ",currentURL));
-        filterChain.doFilter(servletRequest,servletResponse);
-        return;
     }
 
     @Override
-    public void destroy() {
-        log.info("destroy");
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        SpringContextUtil.ModeLog(request);
+        long time = (System.currentTimeMillis() - start)/1000;
+        log.info("[time] + " + time + "s");
     }
 }

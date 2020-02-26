@@ -48,6 +48,8 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
     //Token 刷新时间
     @Value("${shiro.token.tokenExpireMinute}")
     private int tokenExpireMinute;
+    @Value("${shiro.token.tokenPay}")
+    private String tokenPay;
     //系统密码加密盐
     @Value("${system.salt}")
     private String salt;
@@ -168,7 +170,7 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
      * @author Haidar
      * @date 2020/1/10 15:16
      **/
-    public static boolean isSeparation(HttpServletRequest request,HttpServletResponse response) throws AppConfigException {
+    public static boolean isSeparation(HttpServletResponse response) throws AppConfigException {
         if (authFilterItemProperties == null){
             authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
         }
@@ -177,23 +179,7 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
         if (!StringUtils.isBlank(bo)){
             return Boolean.parseBoolean(bo);
         }
-        if (separation == 0){
-            String uri = request.getRequestURI();
-            String token = request.getHeader("TOKEN");
-            List<String> items = authFilterItemProperties.getItems();
-            if (StringUtils.isNotBlank(token)) {
-                response.addHeader("separation","false");
-                return Boolean.FALSE;
-            }
-            for (String item : items) {
-                if (uri.contains(item)) {
-                    response.addHeader("separation","false");
-                    return Boolean.FALSE;
-                }
-            }
-            response.addHeader("separation","true");
-            return Boolean.TRUE;
-        }else if(separation == 1){
+        if(separation == 1){
             response.addHeader("separation","true");
             return Boolean.TRUE;
         }else if (separation == 2){
@@ -255,6 +241,15 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
             e.printStackTrace();
         }
         return map;
+    }
+
+    public static void ModeLog(HttpServletRequest request){
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        String addr = request.getRemoteAddr();
+        String token = request.getHeader("TOKEN");
+        String s = "当前请求 [ %s ] - 请求类型 [ %s ] - 请求 IP [ %s ] - 请求 TOKEN [ %s ]";
+        log.info(String.format(s, uri,method,addr,token));
     }
 
 }

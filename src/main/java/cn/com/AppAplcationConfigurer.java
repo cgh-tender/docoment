@@ -1,6 +1,5 @@
 package cn.com;
 
-import cn.com.filter.AuthFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,14 +32,14 @@ public class AppAplcationConfigurer extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LogCostInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new SysCostInterceptor()).addPathPatterns("/**");
     }
 
     //    @Bean
     public FilterRegistrationBean filterRegistrationBean(){
         FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
-        bean.setFilter(new AuthFilter());
-        bean.addUrlPatterns("/*");
+//        bean.setFilter(new AuthFilter());
+//        bean.addUrlPatterns("/*");
         return bean;
     }
 

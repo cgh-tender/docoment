@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 
 class TokenPayloadTest {
+    private MockHttpServletRequest request;
 
     @BeforeEach
     void setUp() {
@@ -27,5 +29,6 @@ class TokenPayloadTest {
 
     @Test
     void main() {
+        log.info(request);
     }
 }

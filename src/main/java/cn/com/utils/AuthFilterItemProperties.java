@@ -27,14 +27,12 @@ public class AuthFilterItemProperties {
     @NotNull private String PAGE302;
     private List<String> items;
     public void setIsSeparation(int isSeparation) {
-        log.info(22222222);
-        log.info(isSeparation);
         this.isSeparation = isSeparation;
         this.isSeparationDesc = isSeparationEnum.getDesc(isSeparation);
     }
 
     enum isSeparationEnum{
-        isSeparation_0(0,"两者并存"),isSeparation_1(1,"Session的方式"),isSeparation_2(2,"无Session的方式");
+        isSeparation_1(1,"Session的方式"),isSeparation_2(2,"无Session的方式");
         private int isSeparations;
         private String Desc;
         private isSeparationEnum(int isSeparation, String Desc){

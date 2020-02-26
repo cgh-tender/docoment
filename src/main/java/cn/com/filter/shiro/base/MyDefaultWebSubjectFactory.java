@@ -31,7 +31,7 @@ public class MyDefaultWebSubjectFactory extends DefaultWebSubjectFactory {
         boolean separation = false;
         if (!context.isAuthenticated()) {
             try {
-                separation = SpringContextUtil.isSeparation(request,response);
+                separation = SpringContextUtil.isSeparation(response);
                 this.storageEvaluator.setSessionStorageEnabled(separation);
                 context.setSessionCreationEnabled(separation);
             } catch (Exception e) {

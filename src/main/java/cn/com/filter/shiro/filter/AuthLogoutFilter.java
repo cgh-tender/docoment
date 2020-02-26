@@ -33,7 +33,7 @@ public class AuthLogoutFilter extends LogoutFilter {
             servletRequest.removeAttribute("TOKEN");
         }
         String redirectUrl=authFilterItemProperties.getLOGIN();
-        boolean separation = SpringContextUtil.isSeparation((HttpServletRequest) request, (HttpServletResponse) response);
+        boolean separation = SpringContextUtil.isSeparation((HttpServletResponse) response);
         try {
             Subject subject=getSubject(request,response);
             subject.logout();

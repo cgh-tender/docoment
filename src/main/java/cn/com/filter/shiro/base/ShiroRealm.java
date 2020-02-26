@@ -59,8 +59,8 @@ public class ShiroRealm extends AuthorizingRealm {
         String userName = (String) token.getPrincipal();
         User user = new User();
         user.setUserName("admin");
-//        user.setPassword("bfa481bf1e4d1f604ea9b86fefd4e507");
-        user.setPassword("14acc5c44989f7b5e5d37f2c3721f535");
+        user.setPassword("bfa481bf1e4d1f604ea9b86fefd4e507");
+//        user.setPassword("14acc5c44989f7b5e5d37f2c3721f535");
         return new SimpleAuthenticationInfo(
                 user, //这里传入的是user对象，比对的是用户名，直接传入用户名也没错，但是在授权部分就需要自己重新从数据库里取权限
                 user.getPassword(), //密码

@@ -34,14 +34,15 @@ system:
 
 shiro:
   token:
+    tokenPay: 'userName' # userName / Phone
     tokeSubject: 'TOKEN'
     tokenSalt: 'chenguohai_chenguohai_chenguohai' # bytes >= 256 or char >= 32
-    alg: 'SecretKey'  # SecretKey OR PairKey OR MyKey alg: 'SecretKey'  # SecretKey OR PairKey OR MyKey
+    alg: '2'  # 1 , 2 , 3
     tokenExpireMinute: 1 # token 刷新
 
 data:
-  isSeparation: 1
-  hashAlgorithmName: MD5
+  isSeparation: 2 # Session的方式:1,无Session的方式:2 [登录状态]
+  hashAlgorithmName: MD5 # 密码加码方式
   filterChainDefinitionMap: {
     /css/**: anon,
     /fonts/**: anon,

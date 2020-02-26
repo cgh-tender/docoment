@@ -17,8 +17,6 @@ public class AServiceFactory implements AServiceSFactory {
 
     public AServiceFactory(List<AService> services){
         services.forEach(c -> {
-            log.info(c);
-            log.info("2222222222222222222");
             data.put(c.getJdbcType(),c);
         });
 

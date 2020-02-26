@@ -17,16 +17,16 @@ public class MyCredentialsMatcher extends HashedCredentialsMatcher {
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
         log.info(">>>>>>>>>>>>>>>验证密码对比<<<<<<<<<<<<<");
-        if (StringUtils.equals(SpringContextUtil.hashAlgorithmName.getName(),"MD5")){
-            HashedCredentialsMatcher hashedCredentialsMatcher = SpringContextUtil.getBean(HashedCredentialsMatcher.class);
-            if (hashedCredentialsMatcher.doCredentialsMatch(token,info)){
-                log.info(">>>>>>>>>>>>>>>验证密码对比成功<<<<<<<<<<<<<");
-                return true;
-            }else {
-                log.info(">>>>>>>>>>>>>>>验证密码对比失败<<<<<<<<<<<<<");
-                return false;
-            }
-        }
+//        if (StringUtils.equals(SpringContextUtil.hashAlgorithmName.getName(),"MD5")){
+//            HashedCredentialsMatcher hashedCredentialsMatcher = SpringContextUtil.getBean(HashedCredentialsMatcher.class);
+//            if (hashedCredentialsMatcher.doCredentialsMatch(token,info)){
+//                log.info(">>>>>>>>>>>>>>>验证密码对比成功<<<<<<<<<<<<<");
+//                return true;
+//            }else {
+//                log.info(">>>>>>>>>>>>>>>验证密码对比失败<<<<<<<<<<<<<");
+//                return false;
+//            }
+//        }
         try {
             boolean match = super.doCredentialsMatch(token, info);
             if (match){
