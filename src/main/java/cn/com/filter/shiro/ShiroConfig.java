@@ -107,8 +107,6 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/html/**", "anon");
         filterChainDefinitionMap.put("/login", "anon");
         filterChainDefinitionMap.put("/index", "anon");
-        filterChainDefinitionMap.put("/frontend/login", "anon");
-        filterChainDefinitionMap.put("/hello/**", "anon");
         filterChainDefinitionMap.put("/logout", "logout");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

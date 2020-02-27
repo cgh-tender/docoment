@@ -7,12 +7,14 @@ import cn.com.filter.token.Body.TokenPayloadAbs;
 import cn.com.filter.token.TokenBuilder;
 import cn.com.filter.token.TokenService;
 import cn.com.filter.token.TokenVerifyService;
+import cn.com.utils.Redis.RedisUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Date;
@@ -21,12 +23,16 @@ import java.util.Map;
 
 @Service
 @Log4j
-public class MyCustom implements TokenService, TokenVerifyService, TokenBuilder {
+public class MyCustom<T> implements TokenService, TokenVerifyService, TokenBuilder {
+    @Resource
+    private RedisUtil redisUtil;
     private TokenPayloadAbs tokenPayloadAbs;
     private String TOKEN;
     public static SpringContextUtil springContextUtil = SpringContextUtil.getBean(SpringContextUtil.class);
     private final String typ = "JWT";
     private final long TOKEN_EXPIRE_MILLIS = 1000 * 60 * springContextUtil.getTokenExpireMinute();
+    private final long SYS_EXPIRE_SECONDS = 60 * springContextUtil.getExpireMinute();
+    private final Boolean USER_ONLINE = springContextUtil.getUserOnline();
 
     @Override
     public String getType() {
@@ -88,6 +94,9 @@ public class MyCustom implements TokenService, TokenVerifyService, TokenBuilder 
 
     @Override
     public String reToken() {
+        if (!redisUtil.get(getKey()).equals(TOKEN)){
+            return (String) redisUtil.get(getKey());
+        }
         return builder(getClaims()).compact();
     }
 
@@ -110,6 +119,11 @@ public class MyCustom implements TokenService, TokenVerifyService, TokenBuilder 
         }
     }
 
+    @Override
+    public Boolean SysIsOverdue() {
+        return !redisUtil.hasKey(getKey());
+    }
+
     private Key getKey(String key) {
         return new SecretKeySpec(key.getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
@@ -119,5 +133,48 @@ public class MyCustom implements TokenService, TokenVerifyService, TokenBuilder 
         header.put("alg", springContextUtil.getAlg());
         header.put("typ", typ);
         return header;
+    }
+
+    /**
+     * redis 中存入的Key值
+     * @return
+     */
+    private String getKey(){
+        String key = "";
+        if (USER_ONLINE){
+            if (springContextUtil.getTokenPay().equals("userName")){
+                TokenUserNamePayload tokenUserNamePayload = (TokenUserNamePayload) decodeToken();
+                key = tokenUserNamePayload.getUserName();
+            }else if (springContextUtil.getTokenPay().equals("Phone")){
+                TokenUserPhonePayload tokenUserNamePayload = (TokenUserPhonePayload) decodeToken();
+                key = tokenUserNamePayload.getPhone();
+            }
+        }else {
+            Claims claims = getClaims();
+            key = claims.getId();
+        }
+        return key;
+    }
+
+    @Override
+    public Boolean saveToken() {
+        try {
+            redisUtil.set(getKey(),TOKEN,SYS_EXPIRE_SECONDS);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean upTokenTime() {
+        try {
+            redisUtil.expire(getKey(),SYS_EXPIRE_SECONDS);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

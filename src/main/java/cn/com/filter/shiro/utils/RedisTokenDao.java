@@ -1,6 +1,5 @@
 package cn.com.filter.shiro.utils;
 
-import cn.com.SpringContextUtil;
 import lombok.extern.log4j.Log4j;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;

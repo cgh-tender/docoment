@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.Objects;
 @Configuration
 @Log4j
 @Data
-public class SpringContextUtil<T> implements ApplicationContextAware {
+public class SpringContextUtil<T> implements ApplicationContextAware, Serializable {
     public static final Long serialVersionUID = 24L;
 
     public static AuthFilterItemProperties authFilterItemProperties;
@@ -48,8 +49,13 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
     //Token 刷新时间
     @Value("${shiro.token.tokenExpireMinute}")
     private int tokenExpireMinute;
+    //Token pay 类型
     @Value("${shiro.token.tokenPay}")
+    // Token 用户是否单点
     private String tokenPay;
+    @Value("${shiro.token.userOnline}")
+    private Boolean userOnline;
+
     //系统密码加密盐
     @Value("${system.salt}")
     private String salt;
@@ -116,11 +122,11 @@ public class SpringContextUtil<T> implements ApplicationContextAware {
 //        return enc(password,this.SALT);
 //    }
 
-    public static String enc(String password, String salt){
+    public String enc(String password, String salt){
         return enc(password,salt,hashIterations);
     }
 
-    public static String enc(String password, String salt,int hashIterations){
+    public String enc(String password, String salt,int hashIterations){
         SimpleHash result = new SimpleHash(hashAlgorithmName.getName(), password, ByteSource.Util.bytes(salt), hashIterations);
         return result.toString();
     }

@@ -9,31 +9,28 @@ import javax.servlet.http.HttpServletRequest;
 @Data
 @Log4j
 public class TokenUserNamePayload extends TokenPayloadAbs {
+    private String userName;
+    private String passWord;
 
     public TokenUserNamePayload() {
         super();
     }
 
-    public TokenUserNamePayload(String userName, HttpServletRequest request) {
+    public TokenUserNamePayload(String userName, String password,HttpServletRequest request) {
         super(request);
+        this.passWord = password;
         this.userName = userName;
-    }
-
-    private String userName;
-
-    @Override
-    public TokenPayloadAbs getPayload(String userName, HttpServletRequest request) {
-        this.userName = userName;
-        return this;
     }
 
     @Override
     public String toString() {
         return "TokenUserNamePayload{" +
                 "userName='" + userName + '\'' +
-                ", UUID=" + uuid +
-                ", IP='" + ip + '\'' +
+                ", password='" + passWord + '\'' +
+                ", uuid=" + uuid +
+                ", ip='" + ip + '\'' +
                 '}';
     }
+
 }
 

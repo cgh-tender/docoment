@@ -21,6 +21,7 @@ public class SysCostInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         start = System.currentTimeMillis();
+        log.info("preHandle init");
         return true;
     }
 
@@ -41,6 +42,7 @@ public class SysCostInterceptor implements HandlerInterceptor {
         response.setDateHeader("Expires", -10);
         response.setHeader("Cache-Control", "no-store");
         response.setHeader("Pragma", "no-cache");
+
     }
 
     @Override

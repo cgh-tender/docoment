@@ -4,13 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Log4j
 public class MyShiroFilterFactoryBean extends ShiroFilterFactoryBean {
-
     @Setter
     @Getter
     private Map<String, String> FilterBashChainDefinitionMap;
