@@ -34,12 +34,14 @@ shiro:
     tokenPay: 'userName' # userName / Phone
     tokeSubject: 'TOKEN'
     tokenSalt: 'chenguohai_chenguohai_chenguohai' # bytes >= 256 or char >= 32
-    alg: 3  # 1 , 2 , 3
+    alg: 2  # 1 , 2 , 3(不能用有点问题)
     tokenExpireMinute: 1 # token 刷新
-    userOnline: true # 是否锁定用户
+    userOnline: false # 是否锁定用户
+    loginNum: 3 # 用户登录次数 为 -1 不限制
+    loginLockMinute: 10 # 用户登录超过次数进行锁定
 
 data:
-  isSeparation: 2 # Session的方式:1,无Session的方式:2 [登录状态]
+  isSeparation: 1 # Session的方式:1,无Session的方式:2 [登录状态]
   hashAlgorithmName: MD5 # 密码加码方式
 
   LOGIN: login

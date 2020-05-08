@@ -19,15 +19,15 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
         HttpServletResponse servletResponse = (HttpServletResponse) response;
         boolean separation = SpringContextUtil.isSeparation(servletResponse);
         log.info("MyFormAuthenticationFilter isAccessAllowed");
-        if (separation){
-            boolean b = super.isAccessAllowed(request, response, mappedValue);
-            Subject subject = this.getSubject(request, response);
-            subject.getSession();
-            log.info(b);
-            if (!b){
-                throw new LogOutException("请重新登录");
-            }
-        }
+//        if (separation){
+//            boolean b = super.isAccessAllowed(request, response, mappedValue);
+//            Subject subject = this.getSubject(request, response);
+//            subject.getSession();
+//            log.info(b);
+//            if (!b){
+//                throw new LogOutException("请重新登录");
+//            }
+//        }
         return true;
     }
 

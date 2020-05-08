@@ -2,17 +2,14 @@ package cn.com.filter.shiro.filter;
 
 import cn.com.SpringContextUtil;
 import cn.com.entity.Result;
-import cn.com.filter.token.Body.TokenPayloadAbs;
 import cn.com.filter.token.TokenServiceFactory;
 import cn.com.filter.token.TokenVerifyService;
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +27,6 @@ public class ShiroFilter extends AccessControlFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) {
         log.info("ShiroFilter onAccessDenied");
         Subject subject = getSubject(request, response);
-        log.info(subject.isAuthenticated());
         boolean separation = SpringContextUtil.isSeparation((HttpServletResponse) response);
         if (separation){
             Object principal = subject.getPrincipal();
@@ -49,7 +45,7 @@ public class ShiroFilter extends AccessControlFilter {
             }else {
                 subject.login(builder.decodeToken());
                 if (builder.isOverdue()){
-                    log.info("重新加载Token");
+//                    log.info("重新加载Token");
                     String reToken = builder.reToken();
                     log.info(reToken);
                     tokenServiceFactory.getInstance().builder(reToken).saveToken();

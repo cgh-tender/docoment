@@ -38,7 +38,7 @@ public class MyDefaultWebSubjectFactory extends DefaultWebSubjectFactory {
                 e.printStackTrace();
             }
         }
-        log.info(">>>>>>>>>>>>>>>createSubject 是否创建 Session: [" + separation + "]<<<<<<<<<<<<<");
+//        log.info(">>>>>>>>>>>>>>>createSubject 是否创建 Session: [" + separation + "]<<<<<<<<<<<<<");
         return super.createSubject(context);
     }
 }

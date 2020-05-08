@@ -21,18 +21,15 @@ public class RedisTokenDao extends RedisSessionDao {
 
     @Override
     protected Session doReadSession(Serializable sessionId) {
-        log.info("RedisTokenDao doReadSession");
         return super.doReadSession(sessionId);
     }
 
     @Override
     protected void doUpdate(Session session) {
-        log.info("RedisTokenDao doUpdate");
     }
 
     @Override
     protected void doDelete(Session session) {
-        log.info("RedisTokenDao doDelete");
         super.doDelete(session);
     }
 

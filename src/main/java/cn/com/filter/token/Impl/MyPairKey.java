@@ -5,9 +5,10 @@ import cn.com.filter.token.Body.Impl.TokenUserNamePayload;
 import cn.com.filter.token.Body.Impl.TokenUserPhonePayload;
 import cn.com.filter.token.Body.TokenPayloadAbs;
 import cn.com.filter.token.TokenBuilder;
+import cn.com.filter.token.TokenConfig;
 import cn.com.filter.token.TokenService;
 import cn.com.filter.token.TokenVerifyService;
-import cn.com.utils.Redis.RedisUtil;
+import cn.com.filter.token.Utils.TokenRedisUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import io.jsonwebtoken.*;
@@ -25,17 +26,19 @@ import java.util.Map;
 @Log4j
 public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder {
     @Resource
-    private RedisUtil redisUtil;
+    private TokenRedisUtil redisUtil;
     private TokenPayloadAbs tokenPayloadAbs;
     private String TOKEN;
-    public static SpringContextUtil springContextUtil = SpringContextUtil.getBean(SpringContextUtil.class);
+    public static TokenConfig tokenCfg = SpringContextUtil.getBean(TokenConfig.class);
     private final String typ = "JWT";
-    private final long TOKEN_EXPIRE_MILLIS = 1000 * 60 * springContextUtil.getTokenExpireMinute();
-    private final long SYS_EXPIRE_SECONDS = 60 * springContextUtil.getExpireMinute();
-    private final Boolean USER_ONLINE = springContextUtil.getUserOnline();
+    private final long TOKEN_EXPIRE_MILLIS = 1000 * 60 * tokenCfg.getTokenExpireMinute();
+    private final long USER_EXPIRE_MILLIS = 60 * tokenCfg.getLoginLockMinute();
+    private final long SYS_EXPIRE_SECONDS = 60 * tokenCfg.getExpireMinute();
+    private final Boolean USER_ONLINE = tokenCfg.getUserOnline();
     private final int KEYSIZE = 2048;
     private SignatureAlgorithm SINHASH = SignatureAlgorithm.ES384; // HS384,HS256,HS512,RS256,PS256,RS384,PS384,RS512,PS512,ES256,ES384,ES512
-
+    private final int LOGIN_NUM = tokenCfg.getLoginNum();
+    
     @Override
     public String getType() {
         return "2";
@@ -56,9 +59,9 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
     @Override
     public TokenPayloadAbs decodeToken() {
         Claims claims = getClaims();
-        if (springContextUtil.getTokenPay().equals("userName")){
+        if (tokenCfg.getTokenPay().equals("userName")){
             return JSONObject.parseObject(JSONObject.toJSONString(claims), TokenUserNamePayload.class);
-        }else if (springContextUtil.getTokenPay().equals("Phone")){
+        }else if (tokenCfg.getTokenPay().equals("Phone")){
             return JSONObject.parseObject(JSONObject.toJSONString(claims), TokenUserPhonePayload.class);
         }
         log.error("请配置 shiro.token.tokenPay 参数");
@@ -72,7 +75,7 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
                 .addClaims(claims)
                 .setIssuedAt(new Date(l))
                 .setExpiration(new Date(l + TOKEN_EXPIRE_MILLIS));
-        KeyPair keyPair = getKeyPair();
+        KeyPair keyPair = getKeyPair(claims.getId());
         builder.signWith(keyPair.getPrivate());
         saveKeyPair(builder.compact(),keyPair);
         return builder;
@@ -83,11 +86,11 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
         JwtBuilder builder = Jwts.builder()
                 .setHeader(getHeader())
                 .setId(String.valueOf(tokenPayloadAbs.getUuid()))
-                .setSubject(springContextUtil.getTokeSubject())
+                .setSubject(tokenCfg.getTokeSubject())
                 .setIssuedAt(new Date(l))
                 .setExpiration(new Date(l + TOKEN_EXPIRE_MILLIS))
                 .addClaims(JSONObject.parseObject(JSONObject.toJSONString(tokenPayloadAbs), new TypeReference<Map<String, Object>>(){}));;
-        KeyPair keyPair = getKeyPair();
+        KeyPair keyPair = getKeyPair(String.valueOf(tokenPayloadAbs.getUuid()));
         builder.signWith(keyPair.getPrivate());
         saveKeyPair(builder.compact(),keyPair);
         return builder;
@@ -108,6 +111,51 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
         redisUtil.set(token+"_keyPair",keyPair,SYS_EXPIRE_SECONDS * 1000);
     }
 
+    private String getUserKey(){
+        String key = "";
+        if (tokenCfg.getTokenPay().equals("userName")){
+            TokenUserNamePayload tokenUserNamePayload = (TokenUserNamePayload) decodeToken();
+            key = tokenUserNamePayload.getUserName();
+        }else if (tokenCfg.getTokenPay().equals("Phone")){
+            TokenUserPhonePayload tokenUserNamePayload = (TokenUserPhonePayload) decodeToken();
+            key = tokenUserNamePayload.getPhone();
+        }
+        return key;
+    }
+
+    @Override
+    public int remainLoginNum() {
+        String userKey = getUserKey();
+        int num = -1;
+        if (redisUtil.hasKey(userKey)){
+            num = (int)redisUtil.get(userKey) - 1;
+        }else {
+            num = LOGIN_NUM - 1;
+        }
+        //锁定用户
+        if (num >= 0){
+            if (num == 0){
+                redisUtil.set(userKey,num,USER_EXPIRE_MILLIS);
+            }else {
+                redisUtil.set(userKey,num);
+            }
+        }else {
+            return -1;
+        }
+        return num;
+    }
+
+    @Override
+    public long remainLoginTime() {
+        String userKey = getUserKey();
+        if (redisUtil.hasKey(userKey)){
+            return redisUtil.getExpire(getUserKey());
+        }else {
+            return -1;
+        }
+
+    }
+
     /**
      * redis 中存入的Key值
      * @return
@@ -115,10 +163,10 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
     private String getKey(){
         String key = "";
         if (USER_ONLINE){
-            if (springContextUtil.getTokenPay().equals("userName")){
+            if (tokenCfg.getTokenPay().equals("userName")){
                 TokenUserNamePayload tokenUserNamePayload = (TokenUserNamePayload) decodeToken();
                 key = tokenUserNamePayload.getUserName();
-            }else if (springContextUtil.getTokenPay().equals("Phone")){
+            }else if (tokenCfg.getTokenPay().equals("Phone")){
                 TokenUserPhonePayload tokenUserNamePayload = (TokenUserPhonePayload) decodeToken();
                 key = tokenUserNamePayload.getPhone();
             }
@@ -126,6 +174,7 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
             Claims claims = getClaims();
             key = claims.getId();
         }
+        log.info(key);
         return key;
     }
 
@@ -156,10 +205,10 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
         }
     }
 
-    private KeyPair getKeyPair(){
+    private KeyPair getKeyPair(String id){
         KeyPair keyPair;
         try {
-            SecureRandom secureRandom = new SecureRandom();
+            SecureRandom secureRandom = new SecureRandom(id.getBytes());
             KeyPairGenerator keyPairGenerator = null;
             try {
                 keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -193,7 +242,7 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
 
     private HashMap<String, Object> getHeader(){
         HashMap<String, Object> header = new HashMap<>();
-        header.put("alg", springContextUtil.getAlg());
+        header.put("alg", tokenCfg.getAlg());
         header.put("typ", typ);
         return header;
     }
@@ -218,5 +267,10 @@ public class MyPairKey implements TokenService, TokenVerifyService, TokenBuilder
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    @Override
+    public void clear() {
+        redisUtil.del(getKey(),TOKEN+"_keyPair");
     }
 }

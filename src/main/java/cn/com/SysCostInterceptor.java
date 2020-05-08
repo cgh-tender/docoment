@@ -1,5 +1,6 @@
 package cn.com;
 
+import cn.com.filter.token.TokenConfig;
 import cn.com.utils.AuthFilterItemProperties;
 import lombok.extern.log4j.Log4j;
 import org.springframework.http.MediaType;
@@ -15,13 +16,12 @@ public class SysCostInterceptor implements HandlerInterceptor {
 
     static {
         AuthFilterItemProperties authFilterItemProperties = SpringContextUtil.getBean(AuthFilterItemProperties.class);
-        log.info("系统以 [" + SpringContextUtil.hashAlgorithmName.getName()+"] 加密方式进行验证,Shiro的验证方式为 [" + authFilterItemProperties.getIsSeparation() +" - "+ authFilterItemProperties.getIsSeparationDesc() + "] ");
+        log.info("系统以 [" + TokenConfig.hashAlgorithmName.getName()+"] 加密方式进行验证,Shiro的验证方式为 [" + authFilterItemProperties.getIsSeparation() +" - "+ authFilterItemProperties.getIsSeparationDesc() + "] ");
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         start = System.currentTimeMillis();
-        log.info("preHandle init");
         return true;
     }
 

@@ -1,11 +1,11 @@
 package cn.com.filter.shiro;
 
-import cn.com.SpringContextUtil;
 import cn.com.filter.shiro.base.MyDefaultWebSubjectFactory;
 import cn.com.filter.shiro.base.ShiroRealm;
 import cn.com.filter.shiro.filter.*;
 import cn.com.filter.shiro.base.MyShiroFilterFactoryBean;
 import cn.com.filter.shiro.utils.RedisTokenDao;
+import cn.com.filter.token.TokenConfig;
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
@@ -38,8 +38,8 @@ public class ShiroConfig {
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher(){
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
-        hashedCredentialsMatcher.setHashAlgorithmName(SpringContextUtil.hashAlgorithmName.getName());
-        hashedCredentialsMatcher.setHashIterations(SpringContextUtil.hashIterations);
+        hashedCredentialsMatcher.setHashAlgorithmName(TokenConfig.hashAlgorithmName.getName());
+        hashedCredentialsMatcher.setHashIterations(TokenConfig.hashIterations);
         hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
         return hashedCredentialsMatcher;
     }
@@ -54,7 +54,7 @@ public class ShiroConfig {
     public ShiroRealm shiroRealm(){
         ShiroRealm myRealm = new ShiroRealm();
         log.info(">>>>>>>>>>>>>>>ShiroRealm注入加密<<<<<<<<<<<<<");
-        String name = SpringContextUtil.hashAlgorithmName.getName();
+        String name = TokenConfig.hashAlgorithmName.getName();
 //        if (name.equals("MY")){
 //            myRealm.setCredentialsMatcher(new MyCredentialsMatcher());
 //        }else{

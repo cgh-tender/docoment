@@ -3,16 +3,15 @@ package cn.com.filter.shiro.filter;
 import cn.com.SpringContextUtil;
 import cn.com.filter.token.Body.Impl.TokenUserNamePayload;
 import cn.com.filter.token.Body.Impl.TokenUserPhonePayload;
-import cn.com.filter.token.Body.TokenPayloadAbs;
+import cn.com.filter.token.TokenConfig;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
-import org.apache.shiro.subject.PrincipalCollection;
 
 @Log4j
 public class MyCredentialsMatcher extends HashedCredentialsMatcher {
-    private SpringContextUtil springContextUtil = null;
+    private TokenConfig tokenCfg = null;
 
     public MyCredentialsMatcher() {
         super();
@@ -22,10 +21,10 @@ public class MyCredentialsMatcher extends HashedCredentialsMatcher {
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) throws AuthenticationException {
         log.info(">>>>>>>>>>>>>>>验证密码对比<<<<<<<<<<<<<");
-        if (springContextUtil == null)springContextUtil = SpringContextUtil.getBean(SpringContextUtil.class);
+        if (tokenCfg == null) tokenCfg = SpringContextUtil.getBean(TokenConfig.class);
         try {
             String password;
-            if (springContextUtil.getTokenPay().equals("userName")){
+            if (tokenCfg.getTokenPay().equals("userName")){
                 TokenUserNamePayload token1 = (TokenUserNamePayload) token;
                 password = token1.getPassWord();
             }else {
@@ -33,7 +32,7 @@ public class MyCredentialsMatcher extends HashedCredentialsMatcher {
                 password = token1.getPassWord();
             }
             String credentials = info.getCredentials().toString();
-            if (StringUtils.equals(credentials,springContextUtil.enc(password, springContextUtil.getTokenSalt()))){
+            if (StringUtils.equals(credentials, tokenCfg.enc(password, tokenCfg.getTokenSalt()))){
                 return true;
             }
 

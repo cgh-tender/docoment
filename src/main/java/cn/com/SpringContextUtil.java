@@ -1,17 +1,11 @@
 package cn.com;
 
-import cn.com.entity.AuthHashAlgorithmName;
 import cn.com.utils.AuthFilterItemProperties;
 import cn.com.utils.ex.AppConfigException;
-import lombok.Data;
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
@@ -22,54 +16,20 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Configuration
 @Log4j
-@Data
 public class SpringContextUtil<T> implements ApplicationContextAware, Serializable {
     public static final Long serialVersionUID = 24L;
 
     public static AuthFilterItemProperties authFilterItemProperties;
-    @Value("${shiro.token.tokeSubject}")
-    private String tokeSubject;
-    //token 加密盐
-    @Value("${shiro.token.tokenSalt}")
-    private String tokenSalt;
-    // Token 加密方式
-    @Value("${shiro.token.alg}")
-    private String alg;
-    //Token 刷新时间
-    @Value("${shiro.token.tokenExpireMinute}")
-    private int tokenExpireMinute;
-    //Token pay 类型
-    @Value("${shiro.token.tokenPay}")
-    // Token 用户是否单点
-    private String tokenPay;
-    @Value("${shiro.token.userOnline}")
-    private Boolean userOnline;
 
-    //系统密码加密盐
-    @Value("${system.salt}")
-    private String salt;
-    //系统超时时常
-    @Value("${system.expireMinute}")
-    private int expireMinute;
-    //加密方式
-    @NotNull
-    public static final AuthHashAlgorithmName hashAlgorithmName = AuthHashAlgorithmName.MD5;
-    //加密次数
-    @NotNull
-    public static final int hashIterations = 2;
-
-    @Getter
     private static ApplicationContext applicationContext;
 
     @Override
@@ -118,19 +78,6 @@ public class SpringContextUtil<T> implements ApplicationContextAware, Serializab
                 || "XMLHttpRequest".equalsIgnoreCase(xRequestedWith);
     }
 
-//    public static String enc(String password){
-//        return enc(password,this.SALT);
-//    }
-
-    public String enc(String password, String salt){
-        return enc(password,salt,hashIterations);
-    }
-
-    public String enc(String password, String salt,int hashIterations){
-        SimpleHash result = new SimpleHash(hashAlgorithmName.getName(), password, ByteSource.Util.bytes(salt), hashIterations);
-        return result.toString();
-    }
-
     public static void write(String success) {
         write(success,200);
     }
@@ -140,7 +87,8 @@ public class SpringContextUtil<T> implements ApplicationContextAware, Serializab
     }
 
     public static void write(String success, int statusCode) {
-        write(getResponse(), success, statusCode);
+        HttpServletResponse response = getResponse();
+        write(response, success, statusCode);
     }
 
     public synchronized static void write(HttpServletResponse response,String success, int statusCode) {
@@ -258,4 +206,15 @@ public class SpringContextUtil<T> implements ApplicationContextAware, Serializab
         log.info(String.format(s, uri,method,addr,token));
     }
 
+    public static AuthFilterItemProperties getAuthFilterItemProperties() {
+        return authFilterItemProperties;
+    }
+
+    public static void setAuthFilterItemProperties(AuthFilterItemProperties authFilterItemProperties) {
+        SpringContextUtil.authFilterItemProperties = authFilterItemProperties;
+    }
+
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
 }

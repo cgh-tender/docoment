@@ -1,14 +1,14 @@
 package cn.com.utils.ex;
 
+import lombok.extern.log4j.Log4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
-@ResponseBody
+@Log4j
 public class ShiroExceptions extends BaseExceptions {
 
     //不正确的凭证
