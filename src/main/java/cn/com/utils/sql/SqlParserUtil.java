@@ -1,10 +1,15 @@
 package cn.com.utils.sql;
 
+import cn.com.utils.sql.parser.SqlParseType;
+import com.alibaba.fastjson.JSONObject;
 import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
+import net.sf.jsqlparser.expression.operators.relational.ComparisonOperator;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.*;
-import net.sf.jsqlparser.statement.alter.*;
+import net.sf.jsqlparser.statement.alter.Alter;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
 import net.sf.jsqlparser.statement.create.view.CreateView;
@@ -19,232 +24,12 @@ import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.statement.upsert.Upsert;
 import net.sf.jsqlparser.util.TablesNamesFinder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
 
-public class SqlParserUtil<T> {
-    private static final Logger log = Logger.getLogger(SqlParserUtil.class);
-
-    private File file;
-    private String sqlData;
-    private SqlParserUtil(){}
-
-    public void run(){
-        if (file != null){
-            Queue<String> sqls = getSqls(file);
-            int size = sqls.size();
-            for (int i = 1; i <= size; i++) {
-                String sql = sqls.poll();
-                this.SqlParser(sql);
-            }
-        }else if (sqlData != null){
-            this.SqlParser(sqlData);
-        }
-    }
-
-    public SqlParserUtil(File file){
-        this.file = file;
-    }
-
-    public SqlParserUtil(String sql){
-        this.sqlData = sql;
-    }
-
-    /**
-     * <p> 获取 sql 的查询类型
-     *
-     * @param sql
-     * @return SqlParseType
-     * @throws JSQLParserException
-     */
-    public static SqlParseType getSqlType(String sql) throws JSQLParserException {
-        final Statement sqlStmt = getStatement(sql);
-        if (sqlStmt instanceof Alter) {
-            return SqlParseType.ALTER;
-        } else if (sqlStmt instanceof CreateIndex) {
-            return SqlParseType.CREATEINDEX;
-        } else if (sqlStmt instanceof CreateTable) {
-            return SqlParseType.CREATETABLE;
-        } else if (sqlStmt instanceof CreateView) {
-            return SqlParseType.CREATEVIEW;
-        } else if (sqlStmt instanceof Delete) {
-            return SqlParseType.DELETE;
-        } else if (sqlStmt instanceof Drop) {
-            return SqlParseType.DROP;
-        } else if (sqlStmt instanceof Execute) {
-            return SqlParseType.EXECUTE;
-        } else if (sqlStmt instanceof Insert) {
-            return SqlParseType.INSERT;
-        } else if (sqlStmt instanceof Merge) {
-            return SqlParseType.MERGE;
-        } else if (sqlStmt instanceof Replace) {
-            return SqlParseType.REPLACE;
-        } else if (sqlStmt instanceof Select) {
-            return SqlParseType.SELECT;
-        } else if (sqlStmt instanceof Truncate) {
-            return SqlParseType.TRUNCATE;
-        } else if (sqlStmt instanceof Update) {
-            return SqlParseType.UPDATE;
-        } else if (sqlStmt instanceof Upsert) {
-            return SqlParseType.UPSERT;
-        } else {
-            return SqlParseType.NONE;
-        }
-    }
-
-    public static Map<String, Object> parserSql(String sql) throws JSQLParserException {
-        log.info("当前解析的sql:［" + sql  + "］");
-        SqlParseType sqlType = getSqlType(sql);
-        log.info(sqlType.toString());
-        ParserSql statement = sqlType.getStatement();
-        Map<String, Object> parser = statement.parser(getStatement(sql));
-        return parser;
-    }
-
-    private void SqlParser(String sql){
-        try {
-            Map map = this.parserSql(SqlParserUtil.getSql(sql));
-            log.info("解析内容: ");
-            log.info(map);
-        } catch (JSQLParserException e) {
-            Throwable cause = e.getCause();
-            log.error("\n异常情况 请检查: \n"+cause.getMessage().split("\\.")[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    static class PAlter extends Alter implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            Alter parserSql1 = (Alter) statement;
-            try{
-                Table table = parserSql1.getTable();
-                stringStringHashMap.put("TABLENAME",table.getName());
-                stringStringHashMap.put("fiedName",table.getFullyQualifiedName());
-            }catch (Exception e){}
-            return stringStringHashMap;
-        }
-    }
-    static class PCreateIndex extends CreateIndex implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            return null;
-        }
-    }
-    static class PCreateTable extends CreateTable implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            CreateTable parserSql1 = (CreateTable) statement;
-            try{
-                stringStringHashMap.put("TABLENAME",getTableList(parserSql1).toString());
-            }catch (Exception e){}
-            try{
-                if (null != parserSql1.getSelect()){
-                    stringStringHashMap.put("Columns",getSelectItems(parserSql1.getSelect().getSelectBody()));
-                }else {
-                    stringStringHashMap.put("Columns",parserSql1.getColumnDefinitions().toString());
-                }
-
-            }catch (Exception e){}
-            return stringStringHashMap;
-        }
-    }
-    static class PCreateView extends CreateView implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PDelete extends Delete implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PDrop extends Drop implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            Drop parserSql1 = (Drop) statement;
-            try{
-                stringStringHashMap.put("TABLENAME",parserSql1.getName());
-            }catch (Exception e){}
-            try{
-                String type = parserSql1.getType();
-                stringStringHashMap.put("Type",type);
-            }catch (Exception e){}
-            return stringStringHashMap;
-        }
-    }
-    static class PExecute extends Exception implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PInsert extends Insert implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PMerge extends Merge implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PReplace extends Replace implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PSelect extends Select implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }static class PTruncate extends Truncate implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }static class PUpdate extends Update implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class PUpsert extends Upsert implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
-    static class POther implements ParserSql{
-        @Override
-        public Map<String, Object> parser(Statement statement) {
-            HashMap<String, Object> stringStringHashMap = new HashMap<>();
-            return stringStringHashMap;
-        }
-    }
+@SuppressWarnings("ALL")
+public class SqlParserUtil {
 
     /**
      * <p> 返回当前sql的查询体
@@ -262,38 +47,79 @@ public class SqlParserUtil<T> {
      * @param statement
      */
     public static List<String> getTableList(Statement statement){
-        TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-        return tablesNamesFinder.getTableList(statement);
+        ArrayList<String> data = new ArrayList<>();
+        if (statement instanceof Alter) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof CreateIndex) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof CreateTable) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof CreateView) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Delete) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Drop) {
+            Drop statement1 = (Drop) statement;
+            data.add(statement1.getName().getName());
+        } else if (statement instanceof Execute) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Insert) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Merge) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Replace) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Select) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Truncate) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Update) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else if (statement instanceof Upsert) {
+            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+            return tablesNamesFinder.getTableList(statement);
+        } else {
+            return null;
+        }
+        return data;
     }
 
     /**
-     * <p> 获取子查询
-     * @return SubSelect
-     * @param selectBody
+     * <p> 获取tables的表名
+     * @return List
+     * @param statement
      */
-    public static SubSelect getSubSelect(SelectBody selectBody){
-        if(selectBody instanceof PlainSelect){
-            FromItem fromItem = ((PlainSelect) selectBody).getFromItem();
-            if(fromItem instanceof SubSelect){
-                return ((SubSelect) fromItem);
-            }
-        }else if(selectBody instanceof WithItem){
-            getSubSelect(((WithItem) selectBody).getSelectBody());
+    public static List<String> getTableList(String sql){
+        try {
+            final Statement sqlStmt = getStatement(sql);
+            return getTableList(sqlStmt);
+//            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+//            return tablesNamesFinder.getTableList(sqlStmt);
+        } catch (JSQLParserException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<String>();
+    }
+
+
+    public static Expression getWhere(SelectBody selectBody){
+        if (selectBody instanceof PlainSelect) {
+            Expression where = ((PlainSelect) selectBody).getWhere();
+            return where;
         }
         return null;
-    }
-
-    /**
-     * <p> 获取join层级
-     * @param selectBody
-     * @return List<Join>
-     */
-    public static List<Join> getJoins(SelectBody selectBody) {
-        if (selectBody instanceof PlainSelect) {
-            List<Join> joins = ((PlainSelect) selectBody).getJoins();
-            return joins;
-        }
-        return new ArrayList<Join>();
     }
     /**
      * <p>
@@ -304,17 +130,7 @@ public class SqlParserUtil<T> {
         if(selectBody instanceof PlainSelect){
             return ((PlainSelect) selectBody).getIntoTables();
         }
-        return new ArrayList<Table>();
-    }
-    /**
-     * <p>
-     * @param selectBody
-     * @return
-     */
-    public static void setIntoTables(SelectBody selectBody,List<Table> tables){
-        if(selectBody instanceof PlainSelect){
-            ((PlainSelect) selectBody).setIntoTables(tables);
-        }
+        return null;
     }
 
     /**
@@ -342,6 +158,51 @@ public class SqlParserUtil<T> {
             getFromItem(((WithItem) selectBody).getSelectBody());
         }
         return null;
+    }
+
+    /**
+     * 是否还有子查询
+     * @param selectBody
+     * @return
+     */
+    public static boolean isSeedSelect(SelectBody selectBody){
+        if(selectBody instanceof PlainSelect){
+            FromItem fromItem = ((PlainSelect) selectBody).getFromItem();
+            if(fromItem instanceof SubSelect){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static SelectBody getSeedSelectBody(SelectBody selectBody){
+        if (isSeedSelect(selectBody)){
+           return  ((SubSelect) ((PlainSelect) selectBody).getFromItem()).getSelectBody();
+        }
+        return null;
+    }
+
+    public static boolean isSelect(SelectBody selectBody){
+        if (selectBody instanceof PlainSelect) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * <p> 获取join层级
+     * @param selectBody
+     * @return List<Join>
+     */
+    public static List<Join> getJoins(SelectBody selectBody) {
+        if(isSelect(selectBody)){
+            List<Join> joins = ((PlainSelect) selectBody).getJoins();
+            return joins;
+        }
+        return null;
+    }
+
+    public static String ObjtoString(Object o){
+        return JSONObject.toJSONString(o);
     }
 
     /**
@@ -401,6 +262,22 @@ public class SqlParserUtil<T> {
         return null;
     }
 
+    public static void getParserWhere(Expression expression , List<String> wheres){
+        try{
+            Expression rightExpression = ((AndExpression) expression).getRightExpression();
+            Expression leftExpression = ((AndExpression) expression).getLeftExpression();
+            wheres.add(rightExpression.toString());
+            getParserWhere(leftExpression,wheres);
+        }catch (Exception e){
+            wheres.add(expression.toString());
+        }
+    }
+
+    /**
+     * 获取文件中的全部sql进行格式化后放到桶中
+     * @param file
+     * @return
+     */
     public static Queue<String> getSqls(File file) {
         BufferedReader reader = null;
         FileInputStream fileInputStream = null;
@@ -411,7 +288,6 @@ public class SqlParserUtil<T> {
             inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
             reader = new BufferedReader(inputStreamReader);
             String tem = "";
-            int i = 1;
             StringBuffer sql = new StringBuffer();
             int nLine = 0;
             while ((tem = reader.readLine()) != null) {
@@ -430,7 +306,7 @@ public class SqlParserUtil<T> {
                 }
                 if (nLine != 0)continue;
 //                ----------------------------------------------------------------------------------------------------------
-                if (StringUtils.isNoneBlank(tem)) {
+                if (isNotEmpty(tem)) {
                     sql.append(" ");
                     sql.append(tem);
                 }
@@ -438,7 +314,6 @@ public class SqlParserUtil<T> {
                     sqls.add(sql.toString());
                     sql = new StringBuffer();
                 }
-                i++;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -459,8 +334,13 @@ public class SqlParserUtil<T> {
         return sqls;
     }
 
+    /**
+     * 对单sql 进行格式化
+     * @param sql
+     * @return
+     */
     public static String getSql(String sql) {
-        if (StringUtils.isEmpty(sql)) return null;
+        if (isEmpty(sql)) return null;
         String[] split = sql.split("\\r|\\n");
         StringBuffer data = new StringBuffer();
         try {
@@ -481,7 +361,7 @@ public class SqlParserUtil<T> {
                 }
                 if (nLine != 0)continue;
 //                ----------------------------------------------------------------------------------------------------------
-                if (StringUtils.isNoneBlank(tem)) {
+                if (isNotEmpty(tem)) {
                     data.append(" ");
                     data.append(tem);
                 }
@@ -491,4 +371,54 @@ public class SqlParserUtil<T> {
         }
         return data.toString();
     }
+    /**
+     * 对象是否为空
+     * @param o String,List,Map,Object[],int[],long[]
+     * @return
+     */
+
+    public static boolean isEmpty(Object o) {
+        if (o == null) {
+            return true;
+        }
+        if (o instanceof String) {
+            if (o.toString().trim().equals("")||o.toString().trim().equals("null")) {
+                return true;
+            }
+        } else if (o instanceof List) {
+            if (((List) o).size() == 0) {
+                return true;
+            }
+        } else if (o instanceof Map) {
+            if (((Map) o).size() == 0) {
+                return true;
+            }
+        } else if (o instanceof Set) {
+            if (((Set) o).size() == 0) {
+                return true;
+            }
+        } else if (o instanceof Object[]) {
+            if (((Object[]) o).length == 0) {
+                return true;
+            }
+        } else if (o instanceof int[]) {
+            if (((int[]) o).length == 0) {
+                return true;
+            }
+        } else if (o instanceof long[]) {
+            if (((long[]) o).length == 0) {
+                return true;
+            }
+        } else if(o instanceof Integer) {
+            if (o.toString().trim().equals("0")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isNotEmpty(Object o){
+        return !isEmpty(o);
+    }
+
 }
