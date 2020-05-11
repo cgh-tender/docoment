@@ -62,11 +62,17 @@ public class SqlParserFactory {
             int size = sqls.size();
             for (int i = 1; i <= size; i++) {
                 String sql = sqls.poll();
-                log.info(parserSql(sql));
+                HashMap<String, Object> data = parserSql(sql);
+                log.info(data.get("SQL"));
+                data.remove("SQL");
+                log.info(data);
             }
             //单sql解析
         }else if (sqlData != null){
-           log.info(parserSql(SqlParserUtil.getSql(sqlData)));
+            HashMap<String, Object> data = parserSql(SqlParserUtil.getSql(sqlData));
+            log.info(data.get("SQL"));
+            data.remove("SQL");
+            log.info(data);
         }
     }
 
@@ -77,21 +83,17 @@ public class SqlParserFactory {
     private HashMap<String, Object> parserSql(String sql){
         HashMap<String, Object> map = new HashMap<>();
         try {
-            map.put("当前解析的sql",sql);
+            map.put("SQL",sql);
             SqlParseType sqlType = getSqlType(sql);
-            map.put("当前解析的sql类型",sqlType.toString());
-//            log.info(sqlType.toString());
+            map.put("TYPE",sqlType.toString());
             ParserSql statement = sqlType.getStatement();
             Map<String, Object> parser = statement.parser(SqlParserUtil.getStatement(sql));
-//            log.info("解析内容如下: " + JSONObject.toJSONString(parser));
-            map.put("解析内容如下",JSONObject.toJSONString(parser));
-            map.put("success",true);
+            map.put("PARSER",JSONObject.toJSONString(parser));
+            map.put("SUCCESS",true);
         } catch (JSQLParserException e) {
             Throwable cause = e.getCause();
-//            e.printStackTrace();
-            map.put("success",false);
-            map.put("msg","\n异常情况 请检查: \n"+cause.getMessage().split("\\.")[0]);
-//            log.error("\n异常情况 请检查: \n"+cause.getMessage().split("\\.")[0]);
+            map.put("SUCCESS",false);
+            map.put("MSG","\n异常情况 请检查: \n"+cause.getMessage().split("\\.")[0]);
         } catch (Exception e) {
             e.printStackTrace();
         }

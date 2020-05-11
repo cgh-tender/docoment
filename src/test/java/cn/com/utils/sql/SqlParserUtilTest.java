@@ -14,7 +14,7 @@ import java.io.File;
 public class SqlParserUtilTest {
     @Test
   public void sqlTest() {
-        File file = new File("C:\\Users\\HaiDar\\Desktop\\联通欠费.txt");
+        File file = new File("/Users/cgh/MyIdeaWork/demo/src/test/java/cn/com/utils/sql/SqlParserUtilSqlTest1.txt");
 //        File file = new File("C:\\Users\\HaiDar\\Desktop\\111.txt");
        new SqlParserFactory(file).run();
 //        log.info("=========================");

@@ -1,11 +1,9 @@
 package cn.com.utils.sql;
 
-import cn.com.utils.sql.parser.SqlParseType;
 import com.alibaba.fastjson.JSONObject;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.relational.ComparisonOperator;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.*;
@@ -49,17 +47,20 @@ public class SqlParserUtil {
     public static List<String> getTableList(Statement statement){
         ArrayList<String> data = new ArrayList<>();
         if (statement instanceof Alter) {
-            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-            return tablesNamesFinder.getTableList(statement);
+            Alter statement1 = (Alter) statement;
+            data.add(statement1.getTable().getName());
+            return data;
         } else if (statement instanceof CreateIndex) {
-            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-            return tablesNamesFinder.getTableList(statement);
+            CreateIndex statement1 = (CreateIndex) statement;
+            data.add(statement1.getTable().getName());
+            return data;
         } else if (statement instanceof CreateTable) {
             TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
             return tablesNamesFinder.getTableList(statement);
         } else if (statement instanceof CreateView) {
-            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-            return tablesNamesFinder.getTableList(statement);
+            CreateView statement1 = (CreateView) statement;
+            data.add(statement1.getView().getName());
+            return data;
         } else if (statement instanceof Delete) {
             TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
             return tablesNamesFinder.getTableList(statement);
@@ -105,8 +106,6 @@ public class SqlParserUtil {
         try {
             final Statement sqlStmt = getStatement(sql);
             return getTableList(sqlStmt);
-//            TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-//            return tablesNamesFinder.getTableList(sqlStmt);
         } catch (JSQLParserException e) {
             e.printStackTrace();
         }
@@ -114,7 +113,7 @@ public class SqlParserUtil {
     }
 
 
-    public static Expression getWhere(SelectBody selectBody){
+    public static Expression getSelectWhere(SelectBody selectBody){
         if (selectBody instanceof PlainSelect) {
             Expression where = ((PlainSelect) selectBody).getWhere();
             return where;
@@ -138,7 +137,7 @@ public class SqlParserUtil {
      * @param selectBody
      * @return Limit
      */
-    public static Limit getLimit(SelectBody selectBody){
+    public static Limit getSelectLimit(SelectBody selectBody){
         if(selectBody instanceof PlainSelect){
             return ((PlainSelect) selectBody).getLimit();
         }
@@ -193,7 +192,7 @@ public class SqlParserUtil {
      * @param selectBody
      * @return List<Join>
      */
-    public static List<Join> getJoins(SelectBody selectBody) {
+    public static List<Join> getSelectJoins(SelectBody selectBody) {
         if(isSelect(selectBody)){
             List<Join> joins = ((PlainSelect) selectBody).getJoins();
             return joins;

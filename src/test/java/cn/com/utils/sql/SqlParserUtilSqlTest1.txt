@@ -129,3 +129,29 @@ select infotb.district,infotb.districtid,infotb.town,infotb.townid,infotb.villag
 from infotb,dictionary
 where infotb.village like dictionary.village and infotb.town like dictionary.town and infotb.districtid like dictionary.districtid;
 
+ALTER TABLE Persons
+ALTER COLUMN Birthday year;
+
+ALTER TABLE Persons
+ADD Birthday date;
+
+ALTER TABLE Person
+DROP COLUMN Birthday;
+
+alter table test add primary key(id);
+
+CREATE INDEX index_name
+ON table_name (column_name);
+
+CREATE INDEX PersonIndex
+ON Person (LastName, FirstName);
+
+CREATE VIEW view_name AS
+SELECT a,b,c
+FROM table_name
+WHERE 1 = 1;
+
+DELETE FROM Person WHERE LastName = 'Wilson';
+
+UPDATE Person SET Address = 'Zhongshan 23', City = 'Nanjing'
+WHERE LastName = 'Wilson';
