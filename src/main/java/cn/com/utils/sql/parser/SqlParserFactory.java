@@ -65,7 +65,7 @@ public class SqlParserFactory {
                 HashMap<String, Object> data = parserSql(sql);
                 log.info(data.get("SQL"));
                 data.remove("SQL");
-                log.info(data);
+                log.info(JSONObject.toJSONString(data));
             }
             //单sql解析
         }else if (sqlData != null){
@@ -88,7 +88,7 @@ public class SqlParserFactory {
             map.put("TYPE",sqlType.toString());
             ParserSql statement = sqlType.getStatement();
             Map<String, Object> parser = statement.parser(SqlParserUtil.getStatement(sql));
-            map.put("PARSER",JSONObject.toJSONString(parser));
+            map.put("PARSER",parser);
             map.put("SUCCESS",true);
         } catch (JSQLParserException e) {
             Throwable cause = e.getCause();
