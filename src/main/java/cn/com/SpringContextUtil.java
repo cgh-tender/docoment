@@ -6,9 +6,11 @@ import lombok.NonNull;
 import lombok.extern.log4j.Log4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,6 +27,7 @@ import java.util.Objects;
 
 @Configuration
 @Log4j
+@Order(1)
 public class SpringContextUtil<T> implements ApplicationContextAware, Serializable {
     public static final Long serialVersionUID = 24L;
 
@@ -32,18 +35,17 @@ public class SpringContextUtil<T> implements ApplicationContextAware, Serializab
 
     private static ApplicationContext applicationContext;
 
-    @Override
     public void setApplicationContext(ApplicationContext args0) throws BeansException {
-        SpringContextUtil.applicationContext = args0;
+        if (null == applicationContext)applicationContext = args0;
     }
 
     public static <T> T getBean(@NonNull String name){
-        return (T )applicationContext.getBean(name);
+        return (T)applicationContext.getBean(name);
     }
 
     //通过类型获取上下文中的bean
     public static <T> T getBean(@NonNull Class<T> requiredType){
-        return applicationContext.getBean(requiredType);
+        return (T)applicationContext.getBean(requiredType);
     }
 
     public static HttpServletRequest getRequest(){

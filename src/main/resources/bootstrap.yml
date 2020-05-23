@@ -27,7 +27,7 @@ spring:
 
 system:
   salt: 'chenguohai'
-  expireMinute: 60 # 登录超时时长
+  expireMinute: 60 # 登录超时时长(分)
 
 shiro:
   token:
@@ -35,13 +35,13 @@ shiro:
     tokeSubject: 'TOKEN'
     tokenSalt: 'chenguohai_chenguohai_chenguohai' # bytes >= 256 or char >= 32
     alg: 2  # 1 , 2 , 3(不能用有点问题)
-    tokenExpireMinute: 1 # token 刷新
+    tokenExpireMinute: 1 # token 刷新时常(分)
     userOnline: false # 是否锁定用户
     loginNum: 3 # 用户登录次数 为 -1 不限制
-    loginLockMinute: 10 # 用户登录超过次数进行锁定
+    loginLockMinute: 10 # 用户登录超过次数进行锁定(分)
 
 data:
-  isSeparation: 1 # Session的方式:1,无Session的方式:2 [登录状态]
+  isSeparation: 1 # Session的方式:1    ,无Session的方式:2  [登录状态]
   hashAlgorithmName: MD5 # 密码加码方式
 
   LOGIN: login
