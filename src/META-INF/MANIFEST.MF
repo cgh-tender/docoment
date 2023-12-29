@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: cn.com.utils.sql.parser.SqlMain
-Class-Path: lib/fastjson:1.2.62 lib/jsqlparser:3.1 lib/log4j:1.2.17
-

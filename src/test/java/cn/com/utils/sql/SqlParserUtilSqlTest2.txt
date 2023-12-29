@@ -1,2 +1,0 @@
-
-SELECT count(1) cnt from WORKORDER_LIST_3710 t1 where 1=1 AND (T1.step_deal = 'C0543TS009' or (T1.step_deal IN ('1220','1799850') and EXISTS (SELECT * from (SELECT DISTINCT t2.code FROM ums_domain t2 START WITH t2.code = '3716'  or t2.code IN ('3716','3716')   CONNECT BY PRIOR t2.code = t2.parent_domain_code) o1 where o1.code=t1.node_sn)));
