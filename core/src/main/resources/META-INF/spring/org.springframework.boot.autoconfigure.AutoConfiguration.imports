@@ -1,1 +1,2 @@
-cn.com.cgh.core.exception.CoreConfig
+cn.com.cgh.core.exception.config.CoreConfig
+cn.com.cgh.core.exception.config.GracefulResponseConfig

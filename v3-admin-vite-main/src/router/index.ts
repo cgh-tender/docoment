@@ -3,6 +3,7 @@ import { history, flatMultiLevelRoutes } from "./helper"
 import routeSettings from "@/config/route"
 
 const Layouts = () => import("@/layouts/index.vue")
+// const Layouts = () => {}
 
 /**
  * 常驻路由
@@ -249,7 +250,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   }
 ]
-const aa = (constantRoutes)
 
 /**
  * 动态路由
@@ -287,7 +287,9 @@ export const asyncRoutes: RouteRecordRaw[] = [
         }
       }
     ]
-  },
+  }
+]
+export const endRoutes: RouteRecordRaw[] = [
   {
     path: "/:pathMatch(.*)*", // Must put the 'ErrorPage' route at the end, 必须将 'ErrorPage' 路由放在最后
     redirect: "/404",
@@ -304,9 +306,12 @@ const router = createRouter({
 })
 
 /** 重置路由 */
-export function resetRouter() {
+export function resetRouter(rout: RouteRecordRaw[]) {
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
   try {
+    rout.forEach((rout) => {
+      router.addRoute(rout)
+    })
     router.getRoutes().forEach((route) => {
       const { name, meta } = route
       if (name && meta.roles?.length) {

@@ -7,7 +7,6 @@ import SwitchRoles from "./components/SwitchRoles.vue"
 const key = ref(1)
 const handleRolesChange = () => {
   key.value++
-  console.log(key.value)
 }
 </script>
 

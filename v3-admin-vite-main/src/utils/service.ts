@@ -31,15 +31,14 @@ function createService() {
       const responseType = response.request?.responseType
       if (responseType === "blob" || responseType === "arraybuffer") return apiData
       // 这个 code 是和后端约定的业务 code
-      let code = apiData.code || apiData?.status?.code
+      const code = apiData.code || apiData?.status?.code
       // 如果没有 code, 代表这不是项目后端开发的 api
       if (code === undefined) {
         ElMessage.error("非本系统的接口")
         return Promise.reject(new Error("非本系统的接口"))
       }
-      code = parseInt(code)
       switch (code) {
-        case 0:
+        case "0" || 0:
           // 本系统采用 code === 0 来表示没有业务错误
           return apiData
         case 401:
@@ -109,7 +108,7 @@ function createRequest(service: AxiosInstance) {
         Authorization: token ? `Bearer ${token}` : undefined,
         "Content-Type": "application/json"
       },
-      timeout: 5000,
+      timeout: import.meta.env.VITE_BASE_TIMEOUT,
       baseURL: import.meta.env.VITE_BASE_API,
       data: {}
     }
