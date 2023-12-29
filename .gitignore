@@ -30,3 +30,39 @@ build/
 ### VS Code ###
 .vscode/
 .DS_Store
+v3-admin-vite-main/node_modules
+# Git 会忽略的文件
+
+v3-admin-vite-main/.DS_Store
+v3-admin-vite-main/node_modules
+v3-admin-vite-main/dist
+v3-admin-vite-main/dist-ssr
+v3-admin-vite-main/.eslintcache
+v3-admin-vite-main/
+# Local env files
+v3-admin-vite-main/*.local
+v3-admin-vite-main/
+# Logs
+v3-admin-vite-main/logs
+v3-admin-vite-main/*.log
+v3-admin-vite-main/npm-debug.log*
+v3-admin-vite-main/yarn-debug.log*
+v3-admin-vite-main/yarn-error.log*
+v3-admin-vite-main/pnpm-debug.log*
+v3-admin-vite-main/lerna-debug.log*
+v3-admin-vite-main/
+# Editor directories and files
+v3-admin-vite-main/.vscode/*
+v3-admin-vite-main/!.vscode/extensions.json
+v3-admin-vite-main/!.vscode/settings.json
+v3-admin-vite-main/!.vscode/*.code-snippets
+v3-admin-vite-main/.idea
+v3-admin-vite-main/*.suo
+v3-admin-vite-main/*.ntvs*
+v3-admin-vite-main/*.njsproj
+v3-admin-vite-main/*.sln
+v3-admin-vite-main/*.sw?
+v3-admin-vite-main/
+# Use the PNPM
+v3-admin-vite-main/package-lock.json
+v3-admin-vite-main/yarn.lock

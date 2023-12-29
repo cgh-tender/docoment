@@ -29,18 +29,18 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
       /** 是否自动打开浏览器 */
       open: false,
       /** 跨域设置允许 */
-      cors: false,
+      cors: true,
       /** 端口被占用时，是否直接退出 */
       strictPort: false,
       /** 接口代理 */
-      // proxy: {
-      //   "/api/v1": {
-      //     target: "https://www.fastmock.site/mock/761e2dda2b8890ab86c928a74e8f6538",
-      //     ws: true,
-      //     /** 是否允许跨域 */
-      //     changeOrigin: true
-      //   }
-      // },
+      proxy: {
+        "/api/v1": {
+          target: "https://www.fastmock.site/mock/761e2dda2b8890ab86c928a74e8f6538",
+          ws: true,
+          /** 是否允许跨域 */
+          changeOrigin: true
+        }
+      },
       /** 预热常用文件，提高初始页面加载速度 */
       warmup: {
         clientFiles: ["./src/layouts/**/*.vue"]
