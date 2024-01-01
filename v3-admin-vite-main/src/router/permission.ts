@@ -59,7 +59,6 @@ router.beforeEach(async (to, _from, next) => {
       userStore.setRoles(routeSettings.defaultRoles)
       // permissionStore.setRoutes(routeSettings.defaultRoles)
     }
-    permissionStore.endRoutes.forEach((route) => router.addRoute(route))
     console.log(router.getRoutes())
     // 将'有访问权限的动态路由' 添加到 Router 中
     // 确保添加路由已完成

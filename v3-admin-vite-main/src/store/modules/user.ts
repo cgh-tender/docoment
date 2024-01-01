@@ -69,6 +69,7 @@ export const useUserStore = defineStore("user", () => {
     })
     permissionStore.LocalRoute = rest
     permissionStore.setRoutes(rest)
+    permissionStore.endRoutes.forEach((route) => router.addRoute(route))
     console.log("flushRoute", router.getRoutes())
   }
 

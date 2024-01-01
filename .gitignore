@@ -66,3 +66,5 @@ v3-admin-vite-main/
 # Use the PNPM
 v3-admin-vite-main/package-lock.json
 v3-admin-vite-main/yarn.lock
+logs/*.log
+
