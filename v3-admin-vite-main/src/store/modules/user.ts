@@ -1,22 +1,27 @@
 import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
-import { usePermissionStore } from "./permission"
+import { usePermissionStoreHook } from "./permission"
 import { useTagsViewStore } from "./tags-view"
 import { useSettingsStore } from "./settings"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
-import router, { resetRouter } from "@/router"
-import { loginApi, getUserInfoApi, getRouterApi } from "@/api/login"
-import { type LoginRequestData, MenuInfoResponseData } from "@/api/login/types/login";
+import router, { cleanRouter, Layouts } from "@/router"
+import { getRouterApi, getUserInfoApi, loginApi } from "@/api/login"
+import { type LoginRequestData } from "@/api/login/types/login"
 import { type RouteRecordRaw } from "vue-router"
 import routeSettings from "@/config/route"
+import { flatMultiLevelRoutes } from "@/router/helper"
+import { ElMessage } from "element-plus"
+import * as Module from "module"
+
+const modules = import.meta.glob(`/src/views/**/*.vue`)
 
 export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const roles = ref<string[]>([])
   const username = ref<string>("")
 
-  const permissionStore = usePermissionStore()
+  const permissionStore = usePermissionStoreHook()
   const tagsViewStore = useTagsViewStore()
   const settingsStore = useSettingsStore()
 
@@ -30,6 +35,43 @@ export const useUserStore = defineStore("user", () => {
     setToken(data.token)
     token.value = data.token
   }
+
+  const _flushRouter = (routes: RouteRecordRaw[]): RouteRecordRaw[] => {
+    const res: RouteRecordRaw[] = []
+    if (!routes || routes.length == 0) return res
+    routes.forEach((route) => {
+      const tmp = { ...route } as any
+      if (tmp.component == "Layouts") {
+        tmp.component = Layouts
+      } else {
+        const component: Module = modules[`/src/views/${tmp.component}.vue`]
+        if (component) {
+          tmp.component = component
+        } else {
+          tmp.component = modules[`/src/views/error-page/404.vue`]
+        }
+      }
+      res.push(tmp)
+      if (tmp.children && tmp.children.length > 0) {
+        tmp.children = _flushRouter(tmp.children)
+      }
+    })
+    return res
+  }
+
+  const flushRoute = async () => {
+    if (!permissionStore.LocalRoute) return
+    const { data } = await getRouterApi()
+    const res: RouteRecordRaw[] = _flushRouter(data)
+    const rest: RouteRecordRaw[] = routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(res) : res
+    rest.forEach((r) => {
+      router.addRoute(r)
+    })
+    permissionStore.LocalRoute = rest
+    permissionStore.setRoutes(rest)
+    console.log("flushRoute", router.getRoutes())
+  }
+
   /** 获取用户详情 */
   const getInfo = async () => {
     const { data } = await getUserInfoApi()
@@ -40,16 +82,18 @@ export const useUserStore = defineStore("user", () => {
 
   /** 切换角色 */
   const changeRoles = async (role: string) => {
+    console.log("changeRoles")
     const newToken = "token-" + role
     token.value = newToken
     setToken(newToken)
+    cleanRouter()
     await getInfo()
-    permissionStore.setRoutes(roles.value)
-    const { data } = await getRouterApi()
-    resetRouter(data.route)
-    permissionStore.dynamicRoutes.forEach((item: RouteRecordRaw) => {
-      router.addRoute(item)
-    })
+    await useUserStore()
+      .flushRoute()
+      .catch((e) => {
+        console.log(e)
+        ElMessage.error(e)
+      })
     _resetTagsView()
   }
   /** 登出 */
@@ -57,7 +101,7 @@ export const useUserStore = defineStore("user", () => {
     removeToken()
     token.value = ""
     roles.value = []
-    resetRouter([])
+    cleanRouter()
     _resetTagsView()
   }
   /** 重置 Token */
@@ -74,7 +118,7 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, roles, username, setRoles, login, getInfo, changeRoles, logout, resetToken }
+  return { token, roles, username, setRoles, login, getInfo, changeRoles, logout, resetToken, flushRoute }
 })
 
 /** 在 setup 外使用 */

@@ -13,6 +13,7 @@
         <module>gallery</module>
         <module>core</module>
         <module>login</module>
+        <module>jena</module>
     </modules>
 
     <properties>
@@ -25,6 +26,8 @@
         <lombox.version>1.18.28</lombox.version>
         <fastjson2.version>2.0.44</fastjson2.version>
         <graceful.version>3.4.0-boot3</graceful.version>
+        <jena.version>1.0</jena.version>
+        <httpmime.version>4.5.14</httpmime.version>
     </properties>
 
     <parent>
@@ -78,6 +81,18 @@
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
             </dependency>
+
+<!--            听写的sd-->
+            <dependency>
+                <groupId>com.hp.hpl.jena</groupId>
+                <artifactId>json-jena</artifactId>
+                <version>${jena.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpmime</artifactId>
+                <version>${httpmime.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -96,6 +111,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <parameters>true</parameters>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
         </plugins>
     </build>

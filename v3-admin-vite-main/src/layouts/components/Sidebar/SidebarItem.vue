@@ -64,7 +64,11 @@ const resolvePath = (routePath: string) => {
     v-if="!props.item.meta?.hidden"
     :class="{ 'simple-mode': props.isCollapse && !isTop, 'first-level': props.isFirstLevel }"
   >
-    <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
+    <template
+      v-if="
+        !alwaysShowRootMenu && theOnlyOneChild && (!theOnlyOneChild.children || theOnlyOneChild?.children?.length == 0)
+      "
+    >
       <SidebarItemLink v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
         <el-menu-item :index="resolvePath(theOnlyOneChild.path)">
           <SvgIcon v-if="theOnlyOneChild.meta.svgIcon" :name="theOnlyOneChild.meta.svgIcon" />
@@ -81,7 +85,7 @@ const resolvePath = (routePath: string) => {
         <component v-else-if="props.item.meta?.elIcon" :is="props.item.meta.elIcon" class="el-icon" />
         <span v-if="props.item.meta?.title">{{ props.item.meta.title }}</span>
       </template>
-      <template v-if="props.item.children">
+      <template v-if="props.item.children && props.item.children.length > 0">
         <sidebar-item
           v-for="child in props.item.children"
           :key="child.path"

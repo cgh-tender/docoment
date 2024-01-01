@@ -1,5 +1,5 @@
 import router from "@/router"
-import { useUserStoreHook } from "@/store/modules/user"
+import { useUserStore, useUserStoreHook } from "@/store/modules/user"
 import { usePermissionStoreHook } from "@/store/modules/permission"
 import { ElMessage } from "element-plus"
 import { setRouteChange } from "@/hooks/useRouteListener"
@@ -15,6 +15,7 @@ const { setTitle } = useTitle()
 NProgress.configure({ showSpinner: false })
 
 router.beforeEach(async (to, _from, next) => {
+  console.log("beforeEach")
   fixBlankPage()
   NProgress.start()
   const userStore = useUserStoreHook()
@@ -42,24 +43,25 @@ router.beforeEach(async (to, _from, next) => {
 
   // 如果用户已经获得其权限角色
   if (userStore.roles.length !== 0) return next()
-
   // 否则要重新获取权限角色
   try {
-    console.log("routeSettings", routeSettings)
     if (routeSettings.async) {
       // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
       await userStore.getInfo()
-      const roles = userStore.roles
-      // 根据角色生成可访问的 Routes（可访问路由 = 常驻路由 + 有访问权限的动态路由）
-      permissionStore.setRoutes(roles)
+      await useUserStore()
+        .flushRoute()
+        .catch((e) => {
+          console.log(e)
+          ElMessage.error(e)
+        })
     } else {
       // 没有开启动态路由功能，则启用默认角色
       userStore.setRoles(routeSettings.defaultRoles)
-      permissionStore.setRoutes(routeSettings.defaultRoles)
+      // permissionStore.setRoutes(routeSettings.defaultRoles)
     }
+    permissionStore.endRoutes.forEach((route) => router.addRoute(route))
+    console.log(router.getRoutes())
     // 将'有访问权限的动态路由' 添加到 Router 中
-    permissionStore.dynamicRoutes.forEach((route) => router.addRoute(route))
-    // permissionStore.endRoutes.forEach((route) => router.addRoute(route))
     // 确保添加路由已完成
     // 设置 replace: true, 因此导航将不会留下历史记录
     next({ ...to, replace: true })
@@ -73,6 +75,7 @@ router.beforeEach(async (to, _from, next) => {
 })
 
 router.afterEach((to) => {
+  console.log("router.afterEach")
   setRouteChange(to)
   setTitle(to.meta.title)
   NProgress.done()

@@ -1,2 +1,3 @@
 cn.com.cgh.core.exception.config.CoreConfig
 cn.com.cgh.core.exception.config.GracefulResponseConfig
+cn.com.cgh.core.exception.beanDefinition.CoreBeanDefinition

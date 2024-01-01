@@ -2,6 +2,7 @@ package cn.com.cgh.login.controller;
 
 import cn.com.cgh.login.pojo.User;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Slf4j
 public class LoginController {
     /**
      * 获取 验证码
@@ -21,6 +23,7 @@ public class LoginController {
     @GetMapping("/getCode")
     public Map getCode(){
         Map<String,String> map = new HashMap();
+        log.info("login");
         map.put("url","http://dummyimage.com/100x40/dcdfe6/000000.png&text=1");
         return map;
     }

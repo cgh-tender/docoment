@@ -9,10 +9,10 @@ export interface LoginRequestData {
   code: string
 }
 
-export type LoginCodeResponseData = ApiResponseData<string>
+export type LoginCodeResponseData = ApiResponseData<{ data: string; url: string }>
 
 export type LoginResponseData = ApiResponseData<{ token: string }>
 
 export type UserInfoResponseData = ApiResponseData<{ username: string; roles: string[] }>
 
-export type MenuInfoResponseData = ApiResponseData<{ route: RouteRecordRaw[] }>
+export type MenuInfoResponseData = ApiResponseData<RouteRecordRaw[]>

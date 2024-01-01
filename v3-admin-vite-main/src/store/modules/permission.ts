@@ -2,42 +2,23 @@ import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
 import { type RouteRecordRaw } from "vue-router"
-import { constantRoutes, asyncRoutes, endRoutes as endRoute } from "@/router"
-import { flatMultiLevelRoutes } from "@/router/helper"
-import routeSettings from "@/config/route"
-
-const hasPermission = (roles: string[], route: RouteRecordRaw) => {
-  const routeRoles = route.meta?.roles
-  return routeRoles ? roles.some((role) => routeRoles.includes(role)) : true
-}
-
-const filterAsyncRoutes = (routes: RouteRecordRaw[], roles: string[]) => {
-  const res: RouteRecordRaw[] = []
-  routes.forEach((route) => {
-    const tempRoute = { ...route }
-    if (hasPermission(roles, tempRoute)) {
-      if (tempRoute.children) {
-        tempRoute.children = filterAsyncRoutes(tempRoute.children, roles)
-      }
-      res.push(tempRoute)
-    }
-  })
-  return res
-}
+import { constantRoutes, endRoutes as endRoute } from "@/router"
 
 export const usePermissionStore = defineStore("permission", () => {
-  const routes = ref<RouteRecordRaw[]>([])
-  const dynamicRoutes = ref<RouteRecordRaw[]>([])
-  const endRoutes = ref<RouteRecordRaw[]>([])
+  const routes = ref<RouteRecordRaw[]>(constantRoutes)
+  const endRoutes = ref<RouteRecordRaw[]>(endRoute)
 
-  const setRoutes = (roles: string[]) => {
-    const accessedRoutes = routeSettings.async ? filterAsyncRoutes(asyncRoutes, roles) : asyncRoutes
-    routes.value = constantRoutes.concat(accessedRoutes)
-    dynamicRoutes.value = routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(accessedRoutes) : accessedRoutes
-    endRoutes.value = endRoute
+  const LocalRoute = ref<RouteRecordRaw[]>([])
+
+  const setRoutes = (route: RouteRecordRaw[]) => {
+    if (route.length > 0) {
+      routes.value = routes.value.concat(route)
+    } else {
+      routes.value = constantRoutes
+    }
   }
 
-  return { routes, dynamicRoutes, endRoutes, setRoutes }
+  return { endRoutes, setRoutes, LocalRoute, routes }
 })
 
 /** 在 setup 外使用 */

@@ -1,9 +1,9 @@
-import { type RouteRecordRaw, createRouter } from "vue-router"
+import { type RouteRecordRaw, createRouter, RouteRecordName } from "vue-router"
 import { history, flatMultiLevelRoutes } from "./helper"
 import routeSettings from "@/config/route"
+import { usePermissionStoreHook } from "@/store/modules/permission"
 
-const Layouts = () => import("@/layouts/index.vue")
-// const Layouts = () => {}
+export const Layouts = () => import("@/layouts/index.vue")
 
 /**
  * 常驻路由
@@ -25,7 +25,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/403",
-    component: () => import("@/views/error-page/403.vue"),
+    component: () => import("../views/error-page/403.vue"),
     meta: {
       hidden: true
     }
@@ -58,77 +58,6 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "首页",
           svgIcon: "dashboard",
           affix: true
-        }
-      }
-    ]
-  },
-  {
-    path: "/unocss",
-    component: Layouts,
-    redirect: "/unocss/index",
-    children: [
-      {
-        path: "index",
-        component: () => import("@/views/unocss/index.vue"),
-        name: "UnoCSS",
-        meta: {
-          title: "UnoCSS",
-          svgIcon: "unocss"
-        }
-      }
-    ]
-  },
-  {
-    path: "/link",
-    meta: {
-      title: "外链",
-      svgIcon: "link"
-    },
-    children: [
-      {
-        path: "https://juejin.cn/post/7089377403717287972",
-        component: () => {},
-        name: "Link1",
-        meta: {
-          title: "中文文档"
-        }
-      },
-      {
-        path: "https://juejin.cn/column/7207659644487139387",
-        component: () => {},
-        name: "Link2",
-        meta: {
-          title: "新手教程"
-        }
-      }
-    ]
-  },
-  {
-    path: "/table",
-    component: Layouts,
-    redirect: "/table/element-plus",
-    name: "Table",
-    meta: {
-      title: "表格",
-      elIcon: "Grid"
-    },
-    children: [
-      {
-        path: "element-plus",
-        component: () => import("@/views/table/element-plus/index.vue"),
-        name: "ElementPlus",
-        meta: {
-          title: "Element Plus",
-          keepAlive: true
-        }
-      },
-      {
-        path: "vxe-table",
-        component: () => import("@/views/table/vxe-table/index.vue"),
-        name: "VxeTable",
-        meta: {
-          title: "Vxe Table",
-          keepAlive: true
         }
       }
     ]
@@ -200,52 +129,6 @@ export const constantRoutes: RouteRecordRaw[] = [
             }
           }
         ]
-      },
-      {
-        path: "menu2",
-        component: () => import("@/views/menu/menu2/index.vue"),
-        name: "Menu2",
-        meta: {
-          title: "menu2",
-          keepAlive: true
-        }
-      }
-    ]
-  },
-  {
-    path: "/hook-demo",
-    component: Layouts,
-    redirect: "/hook-demo/use-fetch-select",
-    name: "HookDemo",
-    meta: {
-      title: "Hook 示例",
-      elIcon: "Menu",
-      alwaysShow: true
-    },
-    children: [
-      {
-        path: "use-fetch-select",
-        component: () => import("@/views/hook-demo/use-fetch-select.vue"),
-        name: "UseFetchSelect",
-        meta: {
-          title: "useFetchSelect"
-        }
-      },
-      {
-        path: "use-fullscreen-loading",
-        component: () => import("@/views/hook-demo/use-fullscreen-loading.vue"),
-        name: "UseFullscreenLoading",
-        meta: {
-          title: "useFullscreenLoading"
-        }
-      },
-      {
-        path: "use-watermark",
-        component: () => import("@/views/hook-demo/use-watermark.vue"),
-        name: "UseWatermark",
-        meta: {
-          title: "useWatermark"
-        }
       }
     ]
   }
@@ -307,6 +190,7 @@ const router = createRouter({
 
 /** 重置路由 */
 export function resetRouter(rout: RouteRecordRaw[]) {
+  console.log(router.getRoutes())
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
   try {
     rout.forEach((rout) => {
@@ -318,6 +202,27 @@ export function resetRouter(rout: RouteRecordRaw[]) {
         router.hasRoute(name) && router.removeRoute(name)
       }
     })
+  } catch {
+    // 强制刷新浏览器也行，只是交互体验不是很好
+    window.location.reload()
+  }
+}
+
+export function cleanRouter() {
+  // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
+  try {
+    const permissionStore = usePermissionStoreHook()
+    permissionStore.endRoutes.forEach((route: RouteRecordRaw) => {
+      const { name } = route
+      router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
+    })
+    permissionStore.LocalRoute.forEach((route: RouteRecordRaw) => {
+      const { name } = route
+      router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
+    })
+    console.log("cleanRouter", router.getRoutes())
+    permissionStore.LocalRoute = []
+    permissionStore.setRoutes([])
   } catch {
     // 强制刷新浏览器也行，只是交互体验不是很好
     window.location.reload()

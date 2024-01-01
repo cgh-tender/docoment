@@ -2,7 +2,7 @@
 import { reactive, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
-import { type FormInstance, type FormRules } from "element-plus"
+import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import { getLoginCodeApi } from "@/api/login"
 import { type LoginRequestData } from "@/api/login/types/login"
@@ -50,6 +50,7 @@ const handleLogin = () => {
           loading.value = false
         })
     } else {
+      ElMessage.error("表单校验不通过")
       console.error("表单校验不通过", fields)
     }
   })
