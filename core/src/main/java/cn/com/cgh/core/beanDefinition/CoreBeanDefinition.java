@@ -1,4 +1,4 @@
-package cn.com.cgh.core.exception.beanDefinition;
+package cn.com.cgh.core.beanDefinition;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

@@ -15,6 +15,8 @@ China repository: [Gitee](https://gitee.com/un-pany/v3-admin-vite)
 
 ## 更新版本
 ```shell
+pnpm add -g pnpm
+
 pnpm update --latest
 ```
 ## 📚 Document

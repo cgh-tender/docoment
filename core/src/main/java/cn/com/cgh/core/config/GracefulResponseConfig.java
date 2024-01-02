@@ -1,7 +1,8 @@
-package cn.com.cgh.core.exception.config;
+package cn.com.cgh.core.config;
 
 import cn.com.cgh.core.exception.CoreException;
 import com.feiniaojin.gracefulresponse.AbstractExceptionAliasRegisterConfig;
+import com.feiniaojin.gracefulresponse.EnableGracefulResponse;
 import com.feiniaojin.gracefulresponse.ExceptionAliasRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @ConditionalOnClass(value = {AbstractExceptionAliasRegisterConfig.class})
-@Configuration
+@EnableGracefulResponse
 public class GracefulResponseConfig extends AbstractExceptionAliasRegisterConfig {
     private final List<CoreException> list;
 
