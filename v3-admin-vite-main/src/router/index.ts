@@ -63,6 +63,36 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/table",
+    component: Layouts,
+    redirect: "/table/element-plus",
+    name: "Table",
+    meta: {
+      title: "表格",
+      elIcon: "Grid"
+    },
+    children: [
+      {
+        path: "element-plus",
+        component: () => import("@/views/table/element-plus/index.vue"),
+        name: "ElementPlus",
+        meta: {
+          title: "Element Plus",
+          keepAlive: true
+        }
+      },
+      {
+        path: "vxe-table",
+        component: () => import("@/views/table/vxe-table/index.vue"),
+        name: "VxeTable",
+        meta: {
+          title: "Vxe Table",
+          keepAlive: true
+        }
+      }
+    ]
+  },
+  {
     path: "/menu",
     component: Layouts,
     redirect: "/menu/menu1",
@@ -199,7 +229,6 @@ const router = createRouter({
 
 /** 重置路由 */
 export function resetRouter(rout: RouteRecordRaw[]) {
-  console.log(router.getRoutes())
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
   try {
     rout.forEach((rout) => {

@@ -38,7 +38,8 @@ export default (configEnv: ConfigEnv): UserConfigExport => {
           target: "https://www.fastmock.site/mock/761e2dda2b8890ab86c928a74e8f6538",
           ws: true,
           /** 是否允许跨域 */
-          changeOrigin: true
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/v1/, "/api/v1")
         }
       },
       /** 预热常用文件，提高初始页面加载速度 */

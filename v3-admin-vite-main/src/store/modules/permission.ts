@@ -11,7 +11,6 @@ export const usePermissionStore = defineStore("permission", () => {
   const QueryLocalRoute = ref<RouteRecordRaw[]>([])
 
   const setRoutes = (route: RouteRecordRaw[]) => {
-    console.log("setRoutes", routes.value)
     if (route.length > 0) {
       routes.value = routes.value.concat(route)
     } else {
@@ -20,7 +19,7 @@ export const usePermissionStore = defineStore("permission", () => {
     resetRouter(route)
   }
 
-  return { endRoutes, setRoutes, QueryLocalRoute, LocalRoute, routes }
+  return { endRoutes, setRoutes, QueryLocalRoute, routes }
 })
 
 /** 在 setup 外使用 */

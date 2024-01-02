@@ -57,7 +57,6 @@ router.beforeEach(async (to, _from, next) => {
       // 没有开启动态路由功能，则启用默认角色
       userStore.setRoles(routeSettings.defaultRoles)
     }
-    console.log(router.getRoutes())
     // 将'有访问权限的动态路由' 添加到 Router 中
     // 确保添加路由已完成
     // 设置 replace: true, 因此导航将不会留下历史记录
