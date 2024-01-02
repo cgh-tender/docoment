@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.concurrent.TimeUnit;
 
-public class LoadBalanConfig {
+public class LoadBalanceConfig {
     @Bean
     public CacheManager cacheManager(){
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
