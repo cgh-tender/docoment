@@ -61,6 +61,85 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       }
     ]
+  },
+  {
+    path: "/menu",
+    component: Layouts,
+    redirect: "/menu/menu1",
+    name: "Menu",
+    meta: {
+      title: "多级路由",
+      svgIcon: "menu"
+    },
+    children: [
+      {
+        path: "menu1",
+        component: () => import("@/views/menu/menu1/index.vue"),
+        redirect: "/menu/menu1/menu1-1",
+        name: "Menu1",
+        meta: {
+          title: "menu1"
+        },
+        children: [
+          {
+            path: "menu1-1",
+            component: () => import("@/views/menu/menu1/menu1-1/index.vue"),
+            name: "Menu1-1",
+            meta: {
+              title: "menu1-1",
+              keepAlive: true
+            }
+          },
+          {
+            path: "menu1-2",
+            component: () => import("@/views/menu/menu1/menu1-2/index.vue"),
+            redirect: "/menu/menu1/menu1-2/menu1-2-1",
+            name: "Menu1-2",
+            meta: {
+              title: "menu1-2"
+            },
+            children: [
+              {
+                path: "menu1-2-1",
+                component: () => import("@/views/menu/menu1/menu1-2/menu1-2-1/index.vue"),
+                name: "Menu1-2-1",
+                meta: {
+                  title: "menu1-2-1",
+                  keepAlive: true
+                }
+              },
+              {
+                path: "menu1-2-2",
+                component: () => import("@/views/menu/menu1/menu1-2/menu1-2-2/index.vue"),
+                name: "Menu1-2-2",
+                meta: {
+                  title: "menu1-2-2",
+                  keepAlive: true
+                }
+              }
+            ]
+          },
+          {
+            path: "menu1-3",
+            component: () => import("@/views/menu/menu1/menu1-3/index.vue"),
+            name: "Menu1-3",
+            meta: {
+              title: "menu1-3",
+              keepAlive: true
+            }
+          }
+        ]
+      },
+      {
+        path: "menu2",
+        component: () => import("@/views/menu/menu2/index.vue"),
+        name: "Menu2",
+        meta: {
+          title: "menu2",
+          keepAlive: true
+        }
+      }
+    ]
   }
 ]
 
@@ -146,12 +225,12 @@ export function cleanRouter() {
       const { name } = route
       router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
     })
-    permissionStore.LocalRoute.forEach((route: RouteRecordRaw) => {
+    permissionStore.QueryLocalRoute.forEach((route: RouteRecordRaw) => {
       const { name } = route
       router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
     })
     console.log("cleanRouter", router.getRoutes())
-    permissionStore.LocalRoute = []
+    permissionStore.QueryLocalRoute = []
     permissionStore.setRoutes([])
   } catch {
     // 强制刷新浏览器也行，只是交互体验不是很好

@@ -13,6 +13,7 @@ import routeSettings from "@/config/route"
 import { flatMultiLevelRoutes } from "@/router/helper"
 import { ElMessage } from "element-plus"
 import * as Module from "module"
+import { checkPermission } from "@/utils/permission"
 
 const modules = import.meta.glob(`/src/views/**/*.vue`)
 
@@ -51,23 +52,30 @@ export const useUserStore = defineStore("user", () => {
           tmp.component = modules[`/src/views/error-page/404.vue`]
         }
       }
-      res.push(tmp)
-      if (tmp.children && tmp.children.length > 0) {
-        tmp.children = _flushRouter(tmp.children)
+      if (tmp.meta.roles?.length >= 0) {
+        if (checkPermission(tmp.meta.roles)) {
+          if (tmp.children?.length > 0) {
+            tmp.children = _flushRouter(tmp.children)
+            if (tmp.children?.length > 0) {
+              res.push(tmp)
+            }
+          } else {
+            res.push(tmp)
+          }
+        }
+      } else {
+        res.push(tmp)
       }
     })
     return res
   }
 
   const flushRoute = async () => {
-    if (!permissionStore.LocalRoute) return
+    if (!permissionStore.QueryLocalRoute) return
     const { data } = await getRouterApi()
     const res: RouteRecordRaw[] = _flushRouter(data)
     const rest: RouteRecordRaw[] = routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(res) : res
-    rest.forEach((r) => {
-      router.addRoute(r)
-    })
-    permissionStore.LocalRoute = rest
+    permissionStore.QueryLocalRoute = rest
     permissionStore.setRoutes(rest)
     permissionStore.endRoutes.forEach((route) => router.addRoute(route))
     console.log("flushRoute", router.getRoutes())
@@ -96,6 +104,8 @@ export const useUserStore = defineStore("user", () => {
         ElMessage.error(e)
       })
     _resetTagsView()
+    /** 跳转到首页*/
+    await router.push("/")
   }
   /** 登出 */
   const logout = () => {

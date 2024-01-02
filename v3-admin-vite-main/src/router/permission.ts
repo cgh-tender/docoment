@@ -1,6 +1,5 @@
 import router from "@/router"
 import { useUserStore, useUserStoreHook } from "@/store/modules/user"
-import { usePermissionStoreHook } from "@/store/modules/permission"
 import { ElMessage } from "element-plus"
 import { setRouteChange } from "@/hooks/useRouteListener"
 import { useTitle } from "@/hooks/useTitle"
@@ -19,7 +18,6 @@ router.beforeEach(async (to, _from, next) => {
   fixBlankPage()
   NProgress.start()
   const userStore = useUserStoreHook()
-  const permissionStore = usePermissionStoreHook()
   const token = getToken()
 
   // 判断该用户是否已经登录
@@ -46,6 +44,7 @@ router.beforeEach(async (to, _from, next) => {
   // 否则要重新获取权限角色
   try {
     if (routeSettings.async) {
+      console.log("query userInfo and menuRouter")
       // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
       await userStore.getInfo()
       await useUserStore()
@@ -57,7 +56,6 @@ router.beforeEach(async (to, _from, next) => {
     } else {
       // 没有开启动态路由功能，则启用默认角色
       userStore.setRoles(routeSettings.defaultRoles)
-      // permissionStore.setRoutes(routeSettings.defaultRoles)
     }
     console.log(router.getRoutes())
     // 将'有访问权限的动态路由' 添加到 Router 中

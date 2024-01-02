@@ -221,7 +221,7 @@ public class MenuController {
         menu.setName("DirectivePermission");
         menu.setComponent("permission/directive");
         menu.setKeepAlive(Boolean.TRUE);
-        menu.setMeta(RouteMeta.builder().title("指令权限").roles(new String[]{"admin"}).build());
+        menu.setMeta(RouteMeta.builder().title("指令权限").roles(new String[]{"admin","editor"}).build());
         asyMenu.getChildren().add(menu);
     }
     @GetMapping("/getMenu")

@@ -17,17 +17,18 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.cloud.alibaba.version>2022.0.0.0</spring.cloud.alibaba.version>
         <spring.cloud.version>2022.0.4</spring.cloud.version>
         <spring.version>3.0.9</spring.version>
-        <lombox.version>1.18.28</lombox.version>
+        <lombok.version>1.18.30</lombok.version>
         <fastjson2.version>2.0.44</fastjson2.version>
         <graceful.version>3.4.0-boot3</graceful.version>
         <jena.version>1.0</jena.version>
-        <httpmime.version>4.5.14</httpmime.version>
+        <httpmime.version>4.5.13</httpmime.version>
+        <lunar.version>1.6.3</lunar.version>
     </properties>
 
     <parent>
@@ -43,6 +44,11 @@
                 <groupId>cn.com.cgh</groupId>
                 <artifactId>core</artifactId>
                 <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.6tail</groupId>
+                <artifactId>lunar</artifactId>
+                <version>${lunar.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.feiniaojin</groupId>
@@ -72,11 +78,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombox.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
@@ -87,11 +88,6 @@
                 <groupId>com.hp.hpl.jena</groupId>
                 <artifactId>json-jena</artifactId>
                 <version>${jena.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpmime</artifactId>
-                <version>${httpmime.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
