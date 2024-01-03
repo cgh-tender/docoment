@@ -2,6 +2,7 @@ import { type RouteRecordRaw, createRouter, RouteRecordName } from "vue-router"
 import { history, flatMultiLevelRoutes } from "./helper"
 import routeSettings from "@/config/route"
 import { usePermissionStoreHook } from "@/store/modules/permission"
+import { checkPermission } from "@/utils/permission"
 
 export const Layouts = () => import("@/layouts/index.vue")
 
@@ -227,25 +228,6 @@ const router = createRouter({
   routes: routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(constantRoutes) : constantRoutes
 })
 
-/** 重置路由 */
-export function resetRouter(rout: RouteRecordRaw[]) {
-  // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
-  try {
-    rout.forEach((rout) => {
-      router.addRoute(rout)
-    })
-    router.getRoutes().forEach((route) => {
-      const { name, meta } = route
-      if (name && meta.roles?.length) {
-        router.hasRoute(name) && router.removeRoute(name)
-      }
-    })
-  } catch {
-    // 强制刷新浏览器也行，只是交互体验不是很好
-    window.location.reload()
-  }
-}
-
 export function cleanRouter() {
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
   try {
@@ -258,12 +240,11 @@ export function cleanRouter() {
       const { name } = route
       router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
     })
-    console.log("cleanRouter", router.getRoutes())
+    // console.log("cleanRouter", router.getRoutes())
     permissionStore.QueryLocalRoute = []
-    permissionStore.setRoutes([])
+    permissionStore.resetRouter([])
   } catch {
-    // 强制刷新浏览器也行，只是交互体验不是很好
-    window.location.reload()
+    console.error("cleanRouter 异常")
   }
 }
 

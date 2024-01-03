@@ -46,13 +46,10 @@ const modalVisible = computed({
 })
 /** 树形菜单 */
 const menusData = computed(() => cloneDeep(usePermissionStore().routes))
-
 /** 搜索（防抖） */
 const handleSearch = debounce(() => {
   const flatMenusData = flatTree(menusData.value)
-  resultList.value = flatMenusData.filter((menu) =>
-    keyword.value ? menu.meta?.title?.toLocaleLowerCase().includes(keyword.value.toLocaleLowerCase().trim()) : false
-  )
+  resultList.value = flatMenusData.filter((menu) => keyword.value ? menu.meta?.title?.toLocaleLowerCase().includes(keyword.value.toLocaleLowerCase().trim()) : false)
   // 默认选中搜索结果的第一项
   const length = resultList.value?.length
   activeRouteName.value = length > 0 ? resultList.value[0].name : undefined
@@ -61,9 +58,7 @@ const handleSearch = debounce(() => {
 /** 将树形菜单扁平化为一维数组，用于菜单搜索 */
 const flatTree = (arr: RouteRecordRaw[], result: RouteRecordRaw[] = []) => {
   arr.forEach((item) => {
-    // result.push(item)
-    // item.children && flatTree(item.children, result)
-    item.children ? flatTree(item.children, result) : result.push(item)
+    item.children && item.children.length > 0 ? flatTree(item.children, result) : result.push(item)
   })
   return result
 }

@@ -14,7 +14,6 @@ const { setTitle } = useTitle()
 NProgress.configure({ showSpinner: false })
 
 router.beforeEach(async (to, _from, next) => {
-  console.log("beforeEach")
   fixBlankPage()
   NProgress.start()
   const userStore = useUserStoreHook()
@@ -71,7 +70,6 @@ router.beforeEach(async (to, _from, next) => {
 })
 
 router.afterEach((to) => {
-  console.log("router.afterEach")
   setRouteChange(to)
   setTitle(to.meta.title)
   NProgress.done()

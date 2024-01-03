@@ -22,7 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.cloud.alibaba.version>2022.0.0.0</spring.cloud.alibaba.version>
         <spring.cloud.version>2022.0.4</spring.cloud.version>
-        <spring.version>3.0.9</spring.version>
+        <spring.version>3.0.13</spring.version>
         <lombok.version>1.18.30</lombok.version>
         <fastjson2.version>2.0.44</fastjson2.version>
         <graceful.version>3.4.0-boot3</graceful.version>
@@ -30,6 +30,8 @@
         <httpmime.version>4.5.13</httpmime.version>
         <lunar.version>1.6.3</lunar.version>
         <caffeine.version>3.1.8</caffeine.version>
+        <logback.version>1.4.12</logback.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
     </properties>
 
     <parent>
@@ -41,6 +43,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.com.cgh</groupId>
                 <artifactId>core</artifactId>
@@ -105,7 +112,20 @@
                 <configuration>
                     <mainClass>none</mainClass>
                     <classifier>execute</classifier>
+                    <jvmArguments>
+                        -Xdebug -Runjags:transport=dt_socket,server=y,suspend=y,address=5005
+                    </jvmArguments>
+                    <profiles>
+                        <profile>dev</profile>
+                    </profiles>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>springloaded</artifactId>
+                        <version>1.2.5.RELEASE</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <goals>

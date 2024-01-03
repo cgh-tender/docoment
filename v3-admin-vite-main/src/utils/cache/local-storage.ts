@@ -39,6 +39,7 @@ export const setActiveThemeName = (themeName: ThemeName) => {
 
 //#region 标签栏
 export const getVisitedViews = () => {
+  console.log("getVisitedViews")
   const json = localStorage.getItem(CacheKey.VISITED_VIEWS)
   return JSON.parse(json ?? "[]") as TagView[]
 }

@@ -12,11 +12,10 @@ import { type RouteRecordRaw } from "vue-router"
 import routeSettings from "@/config/route"
 import { flatMultiLevelRoutes } from "@/router/helper"
 import { ElMessage } from "element-plus"
-import * as Module from "module"
 import { checkPermission } from "@/utils/permission"
 
 const modules = import.meta.glob(`/src/views/**/*.vue`)
-
+const isFlushRouter = ref<boolean>(false)
 export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const roles = ref<string[]>([])
@@ -45,7 +44,7 @@ export const useUserStore = defineStore("user", () => {
       if (tmp.component == "Layouts") {
         tmp.component = Layouts
       } else {
-        const component: Module = modules[`/src/views/${tmp.component}.vue`]
+        const component = modules[`/src/views/${tmp.component}.vue`]
         if (component) {
           tmp.component = component
         } else {
@@ -71,14 +70,21 @@ export const useUserStore = defineStore("user", () => {
   }
 
   const flushRoute = async () => {
-    if (!permissionStore.QueryLocalRoute) return
-    const { data } = await getRouterApi()
-    const res: RouteRecordRaw[] = _flushRouter(data)
-    const rest: RouteRecordRaw[] = routeSettings.thirdLevelRouteCache ? flatMultiLevelRoutes(res) : res
-    permissionStore.QueryLocalRoute = rest
-    permissionStore.setRoutes(rest)
-    permissionStore.endRoutes.forEach((route) => router.addRoute(route))
-    console.log("flushRoute", router.getRoutes())
+    if (isFlushRouter.value) return
+    isFlushRouter.value = true
+    try {
+      cleanRouter()
+      const { data } = await getRouterApi()
+      const rest: RouteRecordRaw[] = routeSettings.thirdLevelRouteCache
+        ? flatMultiLevelRoutes(_flushRouter(data))
+        : _flushRouter(data)
+      permissionStore.QueryLocalRoute = rest
+      permissionStore.resetRouter(rest)
+      permissionStore.endRoutes.forEach((r) => router.addRoute(r))
+      console.log("flushRoute", router.getRoutes())
+    } finally {
+      isFlushRouter.value = false
+    }
   }
 
   /** 获取用户详情 */
@@ -91,11 +97,9 @@ export const useUserStore = defineStore("user", () => {
 
   /** 切换角色 */
   const changeRoles = async (role: string) => {
-    console.log("changeRoles")
     const newToken = "token-" + role
     token.value = newToken
     setToken(newToken)
-    cleanRouter()
     await getInfo()
     await useUserStore()
       .flushRoute()
