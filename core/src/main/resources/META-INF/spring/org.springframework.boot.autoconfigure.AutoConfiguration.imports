@@ -3,3 +3,4 @@ cn.com.cgh.core.config.GracefulResponseConfig
 cn.com.cgh.core.beanDefinition.CoreBeanDefinition
 cn.com.cgh.core.config.RedisConfig
 cn.com.cgh.core.config.RestTemplateConfig
+cn.com.cgh.core.config.Application

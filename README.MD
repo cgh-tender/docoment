@@ -45,8 +45,9 @@ auto-aof-rewrite-percentage 100
 auto-aof-rewrite-min-size 64mb
 # 淘汰机制设置
 maxmemory-policy noeviction
-
+cluster-enabled yes
 #密码设置
+masterauth 123456
 requirepass 123456
 ```
 ### redis_slave.conf
@@ -55,6 +56,7 @@ replicaof 172.17.0.4 6379
 port 6379
 masterauth 123456
 requirepass 123456
+cluster-enabled yes
 ```
 
 ```bash

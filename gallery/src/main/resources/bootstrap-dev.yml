@@ -4,7 +4,7 @@ spring:
       config:
         namespace: public
         server-addr: ${spring.cloud.nacos.server-addr}
-        file-extension: yml
+        file-extension: yaml
       discovery:
         namespace: public
         server-addr: ${spring.cloud.nacos.server-addr}

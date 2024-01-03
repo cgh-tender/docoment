@@ -32,6 +32,7 @@
         <caffeine.version>3.1.8</caffeine.version>
         <logback.version>1.4.12</logback.version>
         <snakeyaml.version>2.2</snakeyaml.version>
+        <redis.json.version>20231013</redis.json.version>
     </properties>
 
     <parent>
@@ -43,6 +44,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--    redis -> json        -->
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${redis.json.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
