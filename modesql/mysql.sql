@@ -20,3 +20,20 @@ CREATE TABLE `t_ware_sale_statistics`
     KEY                `idx_business_ware` (`business_id`,`ware_inside_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='商品销售统计';
 
+
+create table sys_resource(
+    id bigint(20) not null auto_increment comment '主键',
+    code bigint(20) not null comment '菜单code',
+    parent_code bigint(20) not null comment '父菜单code',
+    name varchar(64) not null comment '菜单名称',
+    displayName varchar(128) comment 'desc',
+    create_user bigint(20) comment '创建人',
+    create_time datetime not null DEFAULT CURRENT_TIMESTAMP comment '创建时间',
+    modify_user bigint(20) comment '最终修改人',
+    modify_time datetime comment '修改时间',
+    is_delete tinyint(2) default 2 DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '是否删除 1: 是，2：否',
+    PRIMARY KEY (`id`) USING BTREE,
+    KEY `idx_code_ware` (`code`,`parent_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='商品销售统计';
+
+

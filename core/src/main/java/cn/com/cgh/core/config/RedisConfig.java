@@ -12,9 +12,11 @@ import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
 @ConditionalOnProperty(prefix = "spring", name = "redis.host")
@@ -22,6 +24,10 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 public class RedisConfig extends CachingConfigurerSupport {
     static {
         log.info("run Redis config !!!");
+    }
+    @Bean(name = "redisConnectionFactory")
+    public LettuceConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory(); // 根据实际情况选择合适的连接工厂类型
     }
     @Bean
     @ConditionalOnMissingBean(name = "redisTemplate")
@@ -39,13 +45,12 @@ public class RedisConfig extends CachingConfigurerSupport {
     }
 
     private static RedisTemplate<String, Object> getStringObjectRedisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper om) {
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer =
-                new Jackson2JsonRedisSerializer<>(om, Object.class);
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
-        template.setKeySerializer(jackson2JsonRedisSerializer);
+        template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(jackson2JsonRedisSerializer);
-        template.setHashKeySerializer(jackson2JsonRedisSerializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         return template;
     }

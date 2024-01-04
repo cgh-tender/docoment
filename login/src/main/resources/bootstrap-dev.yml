@@ -19,18 +19,3 @@ spring:
       server-addr: 127.0.0.1:8848
   application:
     name: login
-
-#spring:
-#  data:
-#    redis:
-#      password: 123456
-#      database: 0
-#      lettuce:
-#        pool:
-#          min-idle: 0
-#          max-active: 8
-#          max-wait: -1
-#          max-idle: 8
-#          enabled: true
-#      host: 127.0.0.1
-#      port: 63790

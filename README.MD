@@ -62,7 +62,6 @@ replicaof 172.17.0.4 6379
 port 6379
 masterauth 123456
 requirepass 123456
-cluster-enabled yes
 ```
 
 ```bash
