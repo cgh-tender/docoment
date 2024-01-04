@@ -1,3 +1,9 @@
+## docker 创建网络段
+```bash
+docker network create --driver bridge --subnet 192.167.0.0/16 --gateway 192.167.0.1 mynet
+
+```
+
 ## maven 热部署
 ```bash
 mvn spring-boot:run
@@ -60,16 +66,16 @@ cluster-enabled yes
 ```
 
 ```bash
-docker run --restart=always --name redis-master -v /Users/cgh/Tool/redis/config/redis_master.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63790:6379 -d redis:latest redis-server /etc/redis/redis.conf
+docker run --restart=always --name redis-master --net mynet --ip 192.167.0.2 -v /Users/cgh/Tool/redis/config/redis_master.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63790:6379 -d redis:latest redis-server /etc/redis/redis.conf
 
 docker ps 
 docker inspect 1513d8e488a2
-172.17.0.4
+192.167.0.2
 
 
-docker run --restart=always --name redis-slave-1 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63791:6379 -d redis:latest redis-server /etc/redis/redis.conf
-docker run --restart=always --name redis-slave-2 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63792:6379 -d redis:latest redis-server /etc/redis/redis.conf
-// slaveof 172.17.0.4 6379
+docker run --restart=always --name redis-slave-1 --net mynet --ip 192.167.0.3 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data1:/data -p 63791:6379 -d redis:latest redis-server /etc/redis/redis.conf
+docker run --restart=always --name redis-slave-2 --net mynet --ip 192.167.0.4 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data2:/data -p 63792:6379 -d redis:latest redis-server /etc/redis/redis.conf
+// slaveof 192.167.0.2 6379
 
 docker exec -it redis-master bash -c "redis-cli -h 127.0.0.1 -p 6379"
 docker exec -it redis-slave-1 bash -c "redis-cli -h 127.0.0.1 -p 6379"
@@ -142,4 +148,48 @@ nacos.core.auth.enabled=true
 nacos.core.auth.server.identity.key=example
 nacos.core.auth.server.identity.value=example
 nacos.core.auth.plugin.nacos.token.secret.key=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=
+```
+
+## 安装 dcoker OceanBase
+```bash
+docker pull oceanbase/oceanbase-ce
+docker run -p 2885:2885 -p 2881:2881 --name myOceanBase -e Mini_mode=0 -d oceanbase/oceanbase-ce
+docker exec -it myOceanBase bash
+docker logs myOceanBase | tail -1
+
+docker exec -it myOceanBase ob-mysql sys
+docker exec -it myOceanBase ob-mysql root
+
+
+SELECT * FROM oceanbase.DBA_OB_UNIT_CONFIGS;
+
+CREATE RESOURCE UNIT S1_unit_config
+                MEMORY_SIZE = '5G',
+                MAX_CPU = 3, MIN_CPU = 3,
+                LOG_DISK_SIZE = '6G',
+                MAX_IOPS = 10000, MIN_IOPS = 10000, IOPS_WEIGHT=1;
+
+SELECT * FROM oceanbase.DBA_OB_UNIT_CONFIGS;
+
+
+SELECT * FROM oceanbase.DBA_OB_RESOURCE_POOLS;
+
+CREATE RESOURCE POOL mq_pool_01 
+                UNIT='S1_unit_config', 
+                UNIT_NUM=1, 
+                ZONE_LIST=('zone1','zone2'); 
+
+
+SELECT * FROM oceanbase.DBA_OB_TENANTS;
+
+CREATE TENANT IF NOT EXISTS test1 
+                PRIMARY_ZONE='zone1', 
+                RESOURCE_POOL_LIST=('mq_pool_01')
+                set OB_TCP_INVITED_NODES='%';
+
+>sys
+ALTER USER root IDENTIFIED BY '123456'
+>root
+ALTER USER test  IDENTIFIED BY '123456';
+
 ```
