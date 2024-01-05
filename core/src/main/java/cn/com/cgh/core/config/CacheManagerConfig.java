@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class CacheManagerConfig {
     static {
-        log.info("LoadBalanceConfig init");
+        log.info("LoadBalanceConfig已启动");
     }
     @Bean
     public CacheManager cacheManager(){

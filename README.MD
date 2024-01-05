@@ -1,3 +1,9 @@
+## 
+```sql
+create schema cgh1 collate utf8mb4_general_ci;
+```
+
+
 ## docker 创建网络段
 ```bash
 docker network create --driver bridge --subnet 192.167.0.0/16 --gateway 192.167.0.1 mynet

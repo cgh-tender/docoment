@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 public class GracefulResponseConfig extends AbstractExceptionAliasRegisterConfig {
     static {
-        log.info("GracefulResponseConfig init");
+        log.info("GracefulResponseConfig已启动");
     }
     private final List<CoreException> list;
 

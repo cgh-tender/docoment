@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class RestTemplateConfig {
     static {
-        log.info("RestTemplateConfig init");
+        log.info("RestTemplateConfig已启动");
     }
     @LoadBalanced
     @Bean

@@ -19,3 +19,20 @@ spring:
       server-addr: 127.0.0.1:8848
   application:
     name: login
+springfox:
+  documentation:
+#    swagger:
+#      v2:
+#        path: /v2/swagger-ui.html
+#        enabled: true
+#        url: /swagger-ui.html
+    swagger-ui:
+      base-url: /swagger
+logging:
+  level:
+    com.p6spy: debug
+    org.springframework.cloud.nacos: debug
+    org.springframework.cloud.openfeign: debug
+    org.springframework.cloud.openfeign.ribbon: debug
+    org.springframework.cloud.openfeign.loadbalancer: debug
+    org.springframework.cloud.openfeign.ribbon.okhttp: debug
