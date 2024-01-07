@@ -1,26 +1,16 @@
-package cn.com.cgh.core.config;
+package cn.com.cgh.login.config;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
-import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
-@MapperScan(basePackages = {"cn.com.cgh.**.mapper"})
-@RefreshScope
-@Getter
-@Setter
-public class MybatisConfig extends HikariDataSource implements InitializingBean {
+@Component
+public class ConfigMybatis {
     @Value("${spring.datasource.url}")
     private String url;
     @Value("${spring.datasource.username}")
@@ -29,19 +19,7 @@ public class MybatisConfig extends HikariDataSource implements InitializingBean 
     private String password;
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
-
-
-    @Override
-    public void afterPropertiesSet() {
-        super.setJdbcUrl(url);
-        super.setUsername(username);
-        super.setPassword(password);
-        super.setDriverClassName(driverClassName);
-    }
-
-
     @Bean
-    @RefreshScope
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setJdbcUrl(url);
@@ -56,12 +34,5 @@ public class MybatisConfig extends HikariDataSource implements InitializingBean 
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         return sqlSessionFactoryBean.getObject();
-    }
-
-    @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        return interceptor;
     }
 }

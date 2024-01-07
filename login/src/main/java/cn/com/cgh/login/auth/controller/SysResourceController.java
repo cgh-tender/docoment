@@ -2,8 +2,8 @@ package cn.com.cgh.login.auth.controller;
 
 import cn.com.cgh.login.auth.entity.SysResource;
 import cn.com.cgh.login.auth.service.ISysResourceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +21,12 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/sysResource")
-@Api(value = "SysResourceController", tags = "商品销售统计")
+@Tag(name = "商品销售统计")
 public class SysResourceController {
     @Autowired
     private ISysResourceService ISysResourceService;
     @GetMapping("/list")
-    @ApiOperation("分页用户列表")
+    @Operation(summary = "分页用户列表")
     public List<SysResource> querySysResourceList() {
         return ISysResourceService.query().list();
     }

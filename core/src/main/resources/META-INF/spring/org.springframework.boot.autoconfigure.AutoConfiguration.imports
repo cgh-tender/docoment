@@ -5,4 +5,5 @@ cn.com.cgh.core.config.RedisConfig
 cn.com.cgh.core.config.RestTemplateConfig
 cn.com.cgh.core.config.Application
 cn.com.cgh.core.config.MybatisConfig
-cn.com.cgh.core.config.SwaggerConfig
+cn.com.cgh.core.config.CoreOpenAiNotGateWayConfig
+cn.com.cgh.core.config.WebMvcConfig

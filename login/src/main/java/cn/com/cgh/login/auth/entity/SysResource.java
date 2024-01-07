@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -25,48 +24,48 @@ import java.time.LocalDateTime;
 @Setter
 @Accessors(chain = true)
 @TableName("sys_resource")
-@ApiModel(value = "SysResource对象", description = "商品销售统计")
+@Schema(description = "商品销售统计")
 public class SysResource implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("主键")
+    @Schema(description = "主键")
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty("菜单code")
+    @Schema(description = "菜单code")
     @TableField("code")
     private Long code;
 
-    @ApiModelProperty("父菜单code")
+    @Schema(description = "父菜单code")
     @TableField("parent_code")
     private Long parentCode;
 
-    @ApiModelProperty("菜单名称")
+    @Schema(description = "菜单名称")
     @TableField("name")
     private String name;
 
-    @ApiModelProperty("desc")
+    @Schema(description = "desc")
     @TableField("displayName")
     private String displayName;
 
-    @ApiModelProperty("创建人")
+    @Schema(description = "创建人")
     @TableField("create_user")
     private Long createUser;
 
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     @TableField("create_time")
     private LocalDateTime createTime;
 
-    @ApiModelProperty("最终修改人")
+    @Schema(description = "最终修改人")
     @TableField("modify_user")
     private Long modifyUser;
 
-    @ApiModelProperty("修改时间")
+    @Schema(description = "修改时间")
     @TableField("modify_time")
     private LocalDateTime modifyTime;
 
-    @ApiModelProperty("是否删除 1: 是，2：否")
+    @Schema(description = "是否删除 1: 是，2：否", example = "1")
     @TableField("is_delete")
     private Byte isDelete;
 }
