@@ -14,6 +14,8 @@
         <module>core</module>
         <module>login</module>
         <module>jena</module>
+        <module>auth</module>
+        <module>romantic</module>
     </modules>
 
     <properties>
@@ -22,7 +24,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.cloud.alibaba.version>2022.0.0.0</spring.cloud.alibaba.version>
         <spring.cloud.version>2022.0.0</spring.cloud.version>
-        <spring.version>3.0.6</spring.version>
+        <spring.version>3.0.13</spring.version>
         <lombok.version>1.18.30</lombok.version>
         <fastjson2.version>2.0.34</fastjson2.version>
         <graceful.version>3.4.0-boot3</graceful.version>
@@ -45,12 +47,11 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
 
-        <easyexcel.version>3.1.1</easyexcel.version>
+        <easyexcel.version>3.3.2</easyexcel.version>
         <hutool.version>5.8.24</hutool.version>
         <knife4j.version>4.4.1-SNAPSHOT</knife4j.version>
-        <guava.version>32.0.1-android</guava.version>
-        <javax.version>4.0.1</javax.version>
         <security.oauth2.version>2.5.2.RELEASE</security.oauth2.version>
+        <nacos.version>2022.0.0.0</nacos.version>
     </properties>
     <repositories>
         <repository>
@@ -62,7 +63,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.0.13</version>
         <relativePath/>
     </parent>
 
@@ -98,6 +99,27 @@
             </dependency>
 
             <dependency>
+                <groupId>cn.com.cgh</groupId>
+                <artifactId>core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.com.cgh</groupId>
+                <artifactId>romantic</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>easyexcel</artifactId>
                 <version>${easyexcel.version}</version>
@@ -109,21 +131,11 @@
             </dependency>
             <!--     swagger       -->
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--                <version>${mybatis.plus.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus</artifactId>
@@ -132,23 +144,12 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-<!--                <version>3.4.1</version>-->
                 <version>${mybatis.plus.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.mybatis.spring.boot</groupId>-->
-<!--                <artifactId>mybatis-spring-boot-starter</artifactId>-->
-<!--                <version>${mybatis.boot.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis.boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.velocity</groupId>
-                <artifactId>velocity-engine-core</artifactId>
-                <version>${mybatis.velocity.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -173,11 +174,6 @@
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>${redis.json.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.com.cgh</groupId>
-                <artifactId>core</artifactId>
-                <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>cn.6tail</groupId>
@@ -208,12 +204,6 @@
                 <version>${jena.version}</version>
             </dependency>
 
-<!--            bug -->
-            <dependency>
-                <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk18on</artifactId>
-                <version>${bcpkix.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>

@@ -18,3 +18,18 @@ spring:
         server-addr: 127.0.0.1:8848
       username: nacos
       password: nacos
+
+knife4j:
+  # 聚合swagger文档
+  gateway:
+    enabled: true
+    tags-sorter: order
+    operations-sorter: order
+    strategy: discover
+    discover:
+      service-config:
+        login:
+          - group-name: 用户服务
+            order: 2
+      excluded-services:
+#        - login.*

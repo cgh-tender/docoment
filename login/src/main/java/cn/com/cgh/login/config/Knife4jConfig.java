@@ -1,4 +1,4 @@
-package cn.com.cgh.core.config;
+package cn.com.cgh.login.config;
 
 import cn.hutool.core.util.RandomUtil;
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -10,14 +10,16 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+@Configuration
 @Profile(value = {"dev", "test"})
 @Slf4j
 public class Knife4jConfig {

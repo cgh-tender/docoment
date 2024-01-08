@@ -19,6 +19,20 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>cn.com.cgh</groupId>
+            <artifactId>core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>graceful-response</artifactId>
+                    <groupId>com.feiniaojin</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>

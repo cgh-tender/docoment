@@ -7,7 +7,6 @@ import com.feiniaojin.gracefulresponse.ExceptionAliasRegister;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class GracefulResponseConfig extends AbstractExceptionAliasRegisterConfig {
     static {
-        log.info("GracefulResponseConfig 已启动");
+        log.info("GracefulResponseConfig:已启动");
     }
     private final List<CoreException> list;
 

@@ -7,6 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 @Slf4j
 public class CoreConfig {
    static {
-       log.info("CoreConfig 已启动 bootstrap.properties");
+       log.info("CoreConfig:已启动 bootstrap.properties");
    }
 }
