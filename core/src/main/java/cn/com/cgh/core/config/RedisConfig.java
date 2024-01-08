@@ -5,11 +5,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -23,6 +26,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@code @Cacheable}
@@ -102,7 +106,7 @@ public class RedisConfig {
     }
 
     @Bean(Constants.REDIS_CACHE_MANAGER_NAME)
-    public RedisCacheManager empRedisCacheManager(RedisTemplate<Object, Object> redisTemplateOO,LettuceConnectionFactory redisConnectionFactory) {
+    public RedisCacheManager empRedisCacheManager(RedisTemplate<Object, Object> redisTemplateOO, LettuceConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
                 // 设置key为String
@@ -125,7 +129,6 @@ public class RedisConfig {
         }
         // 设置自定义缓存配置，缓存名为cache_user，它的过期时间为60s
         redisCacheManagerBuilder.withCacheConfiguration("demo", redisCacheConfiguration.entryTtl(Duration.ofSeconds(60)))
-                // 配置同步修改或删除 put/evict
                 .transactionAware();
         return redisCacheManagerBuilder.build();
     }

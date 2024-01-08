@@ -16,4 +16,9 @@ spring:
             - Path=/login/**
           filters:
             - StripPrefix=1
-#            - RewritePath=/user/(?<segment>.*),/$\{segment}
+    nacos:
+      config:
+        extension-configs:
+          - data-id: core.yml
+            group: DEFAULT_GROUP
+            refresh: true

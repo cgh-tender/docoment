@@ -11,11 +11,13 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 
 import javax.sql.DataSource;
 
+@ConditionalOnClass(value = {MybatisPlusInterceptor.class})
 @MapperScan(basePackages = {"cn.com.cgh.**.mapper"})
 @RefreshScope
 @Getter

@@ -1,4 +1,4 @@
-package cn.com.cgh.login.config;
+package cn.com.cgh.core.config;
 
 import cn.hutool.core.util.RandomUtil;
 import io.swagger.v3.oas.models.ExternalDocumentation;
