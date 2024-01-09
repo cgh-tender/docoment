@@ -1,8 +1,8 @@
 package cn.com.cgh.core.config;
 
+import cn.com.cgh.core.util.ResponseImpl;
 import com.alibaba.cloud.sentinel.annotation.SentinelRestTemplate;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.feiniaojin.gracefulresponse.GracefulResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -31,7 +31,7 @@ public class RestTemplateConfig {
         public static ClientHttpResponse handleException(HttpRequest request, byte[] body, ClientHttpRequestExecution execution, BlockException exception) {
             log.info(execution.toString());
             log.info(exception.toString());
-            GracefulResponse.raiseException("1","restTemplate操作异常");
+            ResponseImpl.builder().msg("restTemplate操作异常").build().FULL();
             return null;
         }
     }

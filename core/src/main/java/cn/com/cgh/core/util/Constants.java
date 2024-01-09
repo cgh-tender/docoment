@@ -1,4 +1,4 @@
-package cn.com.cgh.core.config;
+package cn.com.cgh.core.util;
 
 import java.time.format.DateTimeFormatter;
 
@@ -16,4 +16,5 @@ public class Constants {
     public static final DateTimeFormatter yyyyMMddHHmmssSSS = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 
     public static final String REDIS_CACHE_MANAGER_NAME = "empRedisCacheManager";
+    public static final String REQUEST_IP_NAME = "X-Real-IP";
 }

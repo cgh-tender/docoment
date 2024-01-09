@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
-@EnableFeignClients
 @PropertySource(value = "classpath:bootstrap.properties")
 @ComponentScan(value = "cn.com.cgh.romantic")
+@EnableFeignClients
 @Slf4j
 public class OpenfeignConfig {
     static {
@@ -20,3 +20,5 @@ public class OpenfeignConfig {
         return new AuthRequestInterceptor();
     }
 }
+
+

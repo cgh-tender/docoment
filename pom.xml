@@ -27,7 +27,6 @@
         <spring.version>3.0.13</spring.version>
         <lombok.version>1.18.30</lombok.version>
         <fastjson2.version>2.0.34</fastjson2.version>
-        <graceful.version>3.4.0-boot3</graceful.version>
         <jena.version>1.0</jena.version>
         <httpmime.version>4.5.13</httpmime.version>
         <lunar.version>1.6.3</lunar.version>
@@ -184,11 +183,6 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.feiniaojin</groupId>
-                <artifactId>graceful-response</artifactId>
-                <version>${graceful.version}</version>
             </dependency>
 
             <dependency>

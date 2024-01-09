@@ -1,4 +1,4 @@
-package cn.com.cgh.romantic.sentinelRule;
+package cn.com.cgh.login.controller;
 
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import org.slf4j.Logger;

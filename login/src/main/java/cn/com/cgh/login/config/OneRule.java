@@ -1,4 +1,4 @@
-package cn.com.cgh.romantic.sentinelRule;
+package cn.com.cgh.login.config;
 
 
 import cn.com.cgh.romantic.config.Constants;

@@ -1,6 +1,6 @@
 package cn.com.cgh.gateway.config;
 
-import cn.com.cgh.gateway.error.MyBlockRequestHandler;
+import cn.com.cgh.gateway.error.MySentinelRequestHandler;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
@@ -8,6 +8,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.BlockRequestHandler;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 @Configuration
+@Slf4j
 public class GatewayConfiguration implements ApplicationRunner {
     private final List<ViewResolver> viewResolvers;
     private final ServerCodecConfigurer serverCodecConfigurer;
@@ -44,6 +46,12 @@ public class GatewayConfiguration implements ApplicationRunner {
     public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
         // Register the block exception handler for Spring Cloud Gateway.
         return new SentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
+    }
+
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public MySentinelRequestHandler sentinelFallbackHandler() {
+        return new MySentinelRequestHandler();
     }
 
     @Bean
@@ -129,18 +137,14 @@ public class GatewayConfiguration implements ApplicationRunner {
                  * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。
                  */
 //                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_ROUTE_ID)
-                .setCount(1)
-                .setIntervalSec(2)
+                .setCount(2)
+                .setIntervalSec(1)
                 .setGrade(RuleConstant.FLOW_GRADE_QPS)
         );
         GatewayRuleManager.loadRules(rules);
     }
 
     public void initBlockHandlers() {    // 限流后的响应
-        BlockRequestHandler blockRequestHandler = (serverWebExchange, throwable) -> {
-            MyBlockRequestHandler.ErrorResult result = new MyBlockRequestHandler.ErrorResult("1","xxxxxx");
-            return ServerResponse.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON_UTF8).body(BodyInserters.fromObject(result));
-        };
-        GatewayCallbackManager.setBlockHandler(blockRequestHandler);    // 设置限流响应
+
     }
 }
