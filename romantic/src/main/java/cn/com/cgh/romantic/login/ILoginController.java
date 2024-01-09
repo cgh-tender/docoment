@@ -14,24 +14,23 @@ public interface ILoginController {
     Logger logger = LoggerFactory.getLogger(ILoginController.class);
 
     @GetMapping("/getCode")
+//    @SentinelResource(value = cn.com.cgh.romantic.config.Constants.ONE_RULE,blockHandler = "handler",blockHandlerClass = cn.com.cgh.romantic.sentinelRule.CustomerBlockHandler.class)
     Map getCode(String code);
 
 
     @Component
-    static class TestFallbackFactory implements FallbackFactory<FallbackWithFactory> {
+    static class TestFallbackFactory implements FallbackFactory<ILoginController> {
 
         @Override
-        public FallbackWithFactory create(Throwable cause) {
-            return new FallbackWithFactory();
+        public ILoginController create(Throwable cause) {
+            return new ILoginController() {
+                @Override
+                public Map getCode(String code) {
+                    logger.info("返回的信息为{}", code);
+                    return null;
+                }
+            };
         }
 
-    }
-
-    class FallbackWithFactory implements ILoginController {
-        @Override
-        public Map getCode(String code) {
-            logger.info("返回的信息为{}", code);
-            return null;
-        }
     }
 }

@@ -2,15 +2,15 @@ package cn.com.cgh.login.controller;
 
 import cn.com.cgh.login.pojo.Menu;
 import cn.com.cgh.login.pojo.RouteMeta;
+import cn.com.cgh.romantic.login.IMenuController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
-public class MenuController {
+public class MenuController implements IMenuController<Menu> {
 //    ,
 //    {
 //        path: "/unocss",
@@ -224,6 +224,7 @@ public class MenuController {
         menu.setMeta(RouteMeta.builder().title("指令权限").roles(new String[]{"admin","editor"}).build());
         asyMenu.getChildren().add(menu);
     }
+    @Override
     @GetMapping("/getMenu")
     public List<Menu> queryMenu(){
         return asyncRoutes;

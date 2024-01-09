@@ -1,11 +1,12 @@
 package cn.com.cgh.login.controller;
 
-import cn.com.cgh.core.config.Constants;
 import cn.com.cgh.login.pojo.User;
 import cn.com.cgh.romantic.login.ILoginController;
+import cn.com.cgh.romantic.login.IMenuController;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,19 +21,33 @@ import java.util.Map;
 @RestController
 @Slf4j
 public class LoginController implements ILoginController {
+    @Autowired
+    private IMenuController controller;
     /**
      * 获取 验证码
      * @return
      */
     @Override
     @GetMapping("/getCode")
-    @Cacheable(cacheNames = "login", cacheManager = Constants.REDIS_CACHE_MANAGER_NAME, key = "#code")
+//    @Cacheable(cacheNames = "login", cacheManager = Constants.REDIS_CACHE_MANAGER_NAME, key = "#code")
+//    @SentinelResource(value = cn.com.cgh.romantic.config.Constants.ONE_RULE
+//            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
+//            ,fallback = "getCodeFallback"
+//    )
     public Map getCode(String code){
         Map<String,String> map = new HashMap();
         log.info("login");
         map.put("url","http://dummyimage.com/100x40/dcdfe6/000000.png&text="+code);
+        List list = controller.queryMenu();
+        log.info(JSONObject.valueToString(list));
         return map;
     }
+
+    public Map getCodeFallback(String code,Throwable throwable){
+        log.info("获取验证码失败");
+        throw new RuntimeException("获取验证码失败");
+    }
+
 
     /**
      * 登录
