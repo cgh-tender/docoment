@@ -10,12 +10,16 @@ import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStaticMasterReplicaConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisConnectionUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -45,21 +49,21 @@ public class RedisConfig {
 
     @Bean(value = {"redisTemplate", "redisTemplateOO"})
     public RedisTemplate<Object, Object> redisTemplate(
-            RedisConnectionFactory redisConnectionFactory) {
+            LettuceConnectionFactory lettuceConnectionFactory) {
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.WRAPPER_ARRAY);
-        RedisTemplate<Object, Object> template = getRedisTemplateOO(redisConnectionFactory, om);
+        RedisTemplate<Object, Object> template = getRedisTemplateOO(lettuceConnectionFactory, om);
         template.afterPropertiesSet();
         return template;
     }
 
-    private static RedisTemplate<Object, Object> getRedisTemplateOO(RedisConnectionFactory redisConnectionFactory, ObjectMapper om) {
+    private static RedisTemplate<Object, Object> getRedisTemplateOO(LettuceConnectionFactory lettuceConnectionFactory, ObjectMapper om) {
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
         RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
+        template.setConnectionFactory(lettuceConnectionFactory);
         template.setKeySerializer(jackson2JsonRedisSerializer);
         template.setValueSerializer(jackson2JsonRedisSerializer);
         template.setHashKeySerializer(jackson2JsonRedisSerializer);
@@ -69,22 +73,22 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<String, Object> redisTemplateSO(
-            RedisConnectionFactory redisConnectionFactory) {
+            LettuceConnectionFactory lettuceConnectionFactory) {
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.WRAPPER_ARRAY);
-        RedisTemplate<String, Object> template = getStringObjectRedisTemplate(redisConnectionFactory, om);
+        RedisTemplate<String, Object> template = getStringObjectRedisTemplate(lettuceConnectionFactory, om);
         template.afterPropertiesSet();
         return template;
 
     }
 
-    private static RedisTemplate<String, Object> getStringObjectRedisTemplate(RedisConnectionFactory redisConnectionFactory, ObjectMapper om) {
+    private static RedisTemplate<String, Object> getStringObjectRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory, ObjectMapper om) {
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(om, Object.class);
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
+        template.setConnectionFactory(lettuceConnectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(jackson2JsonRedisSerializer);
         template.setHashKeySerializer(new StringRedisSerializer());
@@ -93,7 +97,7 @@ public class RedisConfig {
     }
 
     @Bean(Constants.REDIS_CACHE_MANAGER_NAME)
-    public RedisCacheManager empRedisCacheManager(RedisTemplate<Object, Object> redisTemplateOO, LettuceConnectionFactory redisConnectionFactory) {
+    public RedisCacheManager empRedisCacheManager(RedisTemplate<Object, Object> redisTemplateOO, LettuceConnectionFactory lettuceConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
                 // 设置key为String
@@ -108,7 +112,7 @@ public class RedisConfig {
         RedisCacheManager.RedisCacheManagerBuilder redisCacheManagerBuilder = RedisCacheManager
                 .RedisCacheManagerBuilder
                 // Redis 连接工厂
-                .fromConnectionFactory(redisConnectionFactory)
+                .fromConnectionFactory(lettuceConnectionFactory)
                 // 设置默认缓存配置
                 .cacheDefaults(redisCacheConfiguration);
         if (properties.getCacheNames() != null) {
@@ -121,9 +125,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory, List<RedisMessageAdvice> messageAdvices) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(LettuceConnectionFactory lettuceConnectionFactory, List<RedisMessageAdvice> messageAdvices) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(redisConnectionFactory);
+        container.setConnectionFactory(lettuceConnectionFactory);
         if (messageAdvices != null) {
             for (RedisMessageAdvice advice : messageAdvices) {
                 container.addMessageListener(advice, advice.getTopic());

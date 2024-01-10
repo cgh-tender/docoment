@@ -1,3 +1,10 @@
 spring:
   profiles:
     active: dev
+
+log:
+  level:
+    - name: 'cn.com.cgh.login'
+      level: info
+    - name: 'cn.com.cgh.gateway'
+      level: info

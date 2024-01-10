@@ -60,10 +60,10 @@ const createCode = () => {
   // 先清空验证码的输入
   loginFormData.code = ""
   // 获取验证码
-  codeUrl.value = ""
-  getLoginCodeApi().then((res) => {
-    codeUrl.value = res.data?.url
-  })
+  codeUrl.value = "/login/getCode"
+  // getLoginCodeApi().then((res) => {
+  //   codeUrl.value = res.data?.url
+  // })
 }
 
 /** 初始化验证码 */

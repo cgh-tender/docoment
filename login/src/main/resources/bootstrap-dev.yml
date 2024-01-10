@@ -36,7 +36,7 @@ springdoc:
       paths-to-match: '/**'
       packages-to-scan: cn.com.cgh
   default-flat-param-object: false
-  
+
 #knife4j:
 #  enable: true
 #  setting:

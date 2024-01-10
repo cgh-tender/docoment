@@ -2,9 +2,13 @@ package cn.com.cgh.login.controller;
 
 import cn.com.cgh.login.pojo.User;
 import cn.com.cgh.romantic.login.ILoginController;
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.GifCaptcha;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -36,12 +41,11 @@ public class LoginController implements ILoginController {
             ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
             ,fallback = "getCodeFallback"
     )
-    public Map getCode(String code){
-        Map<String,String> map = new HashMap();
-        log.info("login");
-        map.put("url","http://dummyimage.com/100x40/dcdfe6/000000.png&text="+code);
-        ansyCall();
-        return map;
+    public void getCode(HttpServletResponse response) throws IOException {
+        GifCaptcha gifCaptcha = CaptchaUtil.createGifCaptcha(200, 50);
+        gifCaptcha.setGenerator(new RandomGenerator("0123456789",4));
+        gifCaptcha.createCode();
+        response.getOutputStream().write(gifCaptcha.getImageBytes());
     }
 
     @Async

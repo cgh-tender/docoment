@@ -1,11 +1,12 @@
 package cn.com.cgh.romantic.login;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Map;
 
 class ILoginControllerFallback implements ILoginController {
     @Override
-    public Map getCode(String code) {
+    public void getCode(HttpServletResponse response) {
 
-        return null;
     }
 }

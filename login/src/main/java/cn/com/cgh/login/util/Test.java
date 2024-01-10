@@ -17,7 +17,6 @@ public class Test implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        redisTemplateSO.opsForValue().set("test", "test1");
-        redisTemplateSO.expire("test", 10, TimeUnit.SECONDS);
+        redisTemplateSO.opsForValue().setIfAbsent("test", "test",10,TimeUnit.SECONDS);
     }
 }

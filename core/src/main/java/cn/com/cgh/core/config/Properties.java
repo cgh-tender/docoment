@@ -18,12 +18,6 @@ public class Properties {
     @Value("${spring.cache.cache-names:login,user,core,gateway}")
     private List<String> cacheNames;
 
-    @NacosValue(value = "#{${logging.level:{'cn.com.cgh':'info'}}}", autoRefreshed = true)
-    public Map<String, String> loggers;
-    @NacosValue(value = "${logging.level.a:la}", autoRefreshed = true)
-    public String a;
-
-
     @Value("${spring.datasource.url}")
     private String url;
     @Value("${spring.datasource.username}")

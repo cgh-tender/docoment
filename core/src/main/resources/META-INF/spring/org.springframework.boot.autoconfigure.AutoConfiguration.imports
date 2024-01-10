@@ -7,4 +7,5 @@ cn.com.cgh.core.config.Application
 cn.com.cgh.core.config.MybatisConfig
 cn.com.cgh.core.config.WebMvcConfig
 cn.com.cgh.core.config.AsyncConfig
+cn.com.cgh.core.config.LoginProperties
 cn.com.cgh.core.config.LoggerConfig
