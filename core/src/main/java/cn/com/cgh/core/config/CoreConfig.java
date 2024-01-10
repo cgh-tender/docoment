@@ -8,9 +8,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.retry.annotation.EnableRetry;
 
 @PropertySource(value = "classpath:bootstrap.properties")
 @ComponentScan(basePackages = "cn.com.cgh.core.sentinel")
+@EnableRetry
 @Slf4j
 public class CoreConfig {
    static {

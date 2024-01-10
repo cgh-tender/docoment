@@ -16,7 +16,9 @@ import java.util.Collections;
 public class ResponseImpl {
     private String code;
     private String msg;
+    @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
+    @Builder.Default
     private Object data = Collections.EMPTY_MAP;
 
     public ResponseImpl SUCCESS(){
@@ -37,4 +39,5 @@ public class ResponseImpl {
         }
         return this;
     }
+
 }

@@ -3,14 +3,32 @@ package cn.com.cgh.login.controller;
 import cn.com.cgh.login.pojo.Menu;
 import cn.com.cgh.login.pojo.RouteMeta;
 import cn.com.cgh.romantic.login.IMenuController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@Slf4j
 public class MenuController implements IMenuController<Menu> {
+    @Retryable(retryFor = Exception.class,maxAttempts = 3,backoff = @Backoff(delay = 3600,multiplier = 1.5))
+    public Map call(){
+        log.info("成功");
+        throw new RuntimeException("获取验证码失败");
+    }
+
+    @Recover
+    public Map call1(Exception e){
+        log.info("获取验证码失败 {}",e.getMessage());
+        throw new RuntimeException("获取验证码失败");
+    }
+
 //    ,
 //    {
 //        path: "/unocss",

@@ -24,7 +24,7 @@ import java.util.Map;
 @Slf4j
 public class Knife4jConfig {
     static {
-        log.info("SwaggerConfig1 已启动");
+        log.info("SwaggerConfig1:已启动");
     }
 
     @Bean

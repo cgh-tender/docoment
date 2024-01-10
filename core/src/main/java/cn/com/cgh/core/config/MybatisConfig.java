@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -19,26 +19,17 @@ import javax.sql.DataSource;
 
 @ConditionalOnClass(value = {MybatisPlusInterceptor.class})
 @MapperScan(basePackages = {"cn.com.cgh.**.mapper"})
-@RefreshScope
 @Getter
 @Setter
 public class MybatisConfig extends HikariDataSource implements InitializingBean {
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.username}")
-    private String username;
-    @Value("${spring.datasource.password}")
-    private String password;
-    @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
-
-
+    @Autowired
+    private Properties properties;
     @Override
     public void afterPropertiesSet() {
-        super.setJdbcUrl(url);
-        super.setUsername(username);
-        super.setPassword(password);
-        super.setDriverClassName(driverClassName);
+        super.setJdbcUrl(properties.getUrl());
+        super.setUsername(properties.getUsername());
+        super.setPassword(properties.getPassword());
+        super.setDriverClassName(properties.getDriverClassName());
     }
 
 
@@ -46,9 +37,9 @@ public class MybatisConfig extends HikariDataSource implements InitializingBean 
     @RefreshScope
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setJdbcUrl(properties.getUrl());
+        dataSource.setUsername(properties.getUsername());
+        dataSource.setPassword(properties.getPassword());
         // 其他配置项...
         return dataSource;
     }

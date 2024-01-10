@@ -1,5 +1,6 @@
 package cn.com.cgh.core.config;
 
+import cn.com.cgh.core.interfac.RedisMessageAdvice;
 import cn.com.cgh.core.util.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -7,8 +8,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -40,11 +40,11 @@ public class RedisConfig {
         log.info("RedisConfig:已启动");
     }
 
-    @Value("${spring.cache.cache-names}")
-    private List<String> cacheNames;
+    @Autowired
+    private Properties properties;
 
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplateOO(
+    @Bean(value = {"redisTemplate", "redisTemplateOO"})
+    public RedisTemplate<Object, Object> redisTemplate(
             RedisConnectionFactory redisConnectionFactory) {
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
@@ -54,7 +54,6 @@ public class RedisConfig {
         RedisTemplate<Object, Object> template = getRedisTemplateOO(redisConnectionFactory, om);
         template.afterPropertiesSet();
         return template;
-
     }
 
     private static RedisTemplate<Object, Object> getRedisTemplateOO(RedisConnectionFactory redisConnectionFactory, ObjectMapper om) {
@@ -93,15 +92,6 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
-    @ConditionalOnMissingBean(StringRedisTemplate.class)
-    public StringRedisTemplate redisTemplateSS(
-            RedisConnectionFactory redisConnectionFactory) {
-        StringRedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(redisConnectionFactory);
-        return template;
-    }
-
     @Bean(Constants.REDIS_CACHE_MANAGER_NAME)
     public RedisCacheManager empRedisCacheManager(RedisTemplate<Object, Object> redisTemplateOO, LettuceConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
@@ -113,7 +103,7 @@ public class RedisConfig {
                 // 不缓存null
                 .disableCachingNullValues()
                 // 缓存数据保存30s
-                .entryTtl(Duration.ofSeconds(30));
+                .entryTtl(Duration.ofSeconds(60));
         // 构造一个redis缓存管理器
         RedisCacheManager.RedisCacheManagerBuilder redisCacheManagerBuilder = RedisCacheManager
                 .RedisCacheManagerBuilder
@@ -121,12 +111,24 @@ public class RedisConfig {
                 .fromConnectionFactory(redisConnectionFactory)
                 // 设置默认缓存配置
                 .cacheDefaults(redisCacheConfiguration);
-        if (cacheNames != null) {
-            cacheNames.forEach(key -> redisCacheManagerBuilder.withCacheConfiguration(key, redisCacheConfiguration.entryTtl(Duration.ofSeconds(60))));
+        if (properties.getCacheNames() != null) {
+            properties.getCacheNames().forEach(key -> redisCacheManagerBuilder.withCacheConfiguration(key, redisCacheConfiguration.entryTtl(Duration.ofSeconds(60))));
         }
         // 设置自定义缓存配置，缓存名为cache_user，它的过期时间为60s
         redisCacheManagerBuilder.withCacheConfiguration("demo", redisCacheConfiguration.entryTtl(Duration.ofSeconds(60)))
                 .transactionAware();
         return redisCacheManagerBuilder.build();
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory, List<RedisMessageAdvice> messageAdvices) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory);
+        if (messageAdvices != null) {
+            for (RedisMessageAdvice advice : messageAdvices) {
+                container.addMessageListener(advice, advice.getTopic());
+            }
+        }
+        return container;
     }
 }

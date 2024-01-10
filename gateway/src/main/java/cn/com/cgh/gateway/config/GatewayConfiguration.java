@@ -4,24 +4,22 @@ import cn.com.cgh.gateway.error.MySentinelRequestHandler;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
-import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.BlockRequestHandler;
-import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.github.xiaoymin.knife4j.spring.gateway.Knife4jGatewayProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerCodecConfigurer;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import org.springframework.web.reactive.result.view.ViewResolver;
 
 import java.util.Collections;
@@ -31,10 +29,17 @@ import java.util.Set;
 
 @Configuration
 @Slf4j
-public class GatewayConfiguration implements ApplicationRunner {
+public class GatewayConfiguration implements ApplicationRunner , ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
     private final List<ViewResolver> viewResolvers;
     private final ServerCodecConfigurer serverCodecConfigurer;
-
     public GatewayConfiguration(ObjectProvider<List<ViewResolver>> viewResolversProvider,
                                 ServerCodecConfigurer serverCodecConfigurer) {
         this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
@@ -65,6 +70,11 @@ public class GatewayConfiguration implements ApplicationRunner {
         initGateWatGroup();
         initGatewayRules();
         initBlockHandlers();
+        try {
+            Knife4jGatewayProperties knife4jGatewayProperties = applicationContext.getBean(Knife4jGatewayProperties.class);
+            log.info("knife4jGatewayProperties {}", knife4jGatewayProperties.getStrategy());
+        } catch (BeansException e) {
+        }
     }
 
     private static void initGateWatGroup() {
@@ -132,14 +142,14 @@ public class GatewayConfiguration implements ApplicationRunner {
 //        );
 
         rules.add(new GatewayFlowRule("login")
-                /**
-                 * 规则是针对 API Gateway 的 route（RESOURCE_MODE_ROUTE_ID）
-                 * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。
-                 */
+                        /**
+                         * 规则是针对 API Gateway 的 route（RESOURCE_MODE_ROUTE_ID）
+                         * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。
+                         */
 //                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_ROUTE_ID)
-                .setCount(2)
-                .setIntervalSec(1)
-                .setGrade(RuleConstant.FLOW_GRADE_QPS)
+                        .setCount(2)
+                        .setIntervalSec(1)
+                        .setGrade(RuleConstant.FLOW_GRADE_QPS)
         );
         GatewayRuleManager.loadRules(rules);
     }

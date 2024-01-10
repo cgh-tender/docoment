@@ -2,14 +2,12 @@ package cn.com.cgh.login.controller;
 
 import cn.com.cgh.login.pojo.User;
 import cn.com.cgh.romantic.login.ILoginController;
-import cn.com.cgh.romantic.login.IMenuController;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,13 +17,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 
 @RestController
 @Slf4j
 public class LoginController implements ILoginController {
     @Autowired
-    private IMenuController controller;
+    private MenuController menuController;
     /**
      * 获取 验证码
      * @return
@@ -41,25 +40,20 @@ public class LoginController implements ILoginController {
         Map<String,String> map = new HashMap();
         log.info("login");
         map.put("url","http://dummyimage.com/100x40/dcdfe6/000000.png&text="+code);
-        List list = controller.queryMenu();
-        call();
-        log.info(JSONObject.valueToString(list));
+        ansyCall();
         return map;
     }
 
-    @Retryable(retryFor = {RuntimeException.class},
-            maxAttempts = 3,
-            backoff = @Backoff(delay = 1000, multiplier = 1.5))
-    public String call(){
-        log.info("调用成功");
-        throw new RuntimeException("调用失败");
+    @Async
+    public CompletableFuture ansyCall() {
+        return CompletableFuture.supplyAsync(() -> {
+            Map call = menuController.call();
+            log.debug(JSONUtil.toJsonStr(call));
+            return null;
+        }).whenComplete((key, value) ->{
+            log.info("key:{} value:{}",key,value);
+        });
     }
-
-    public Map getCodeFallback(){
-        log.info("获取验证码失败");
-        throw new RuntimeException("获取验证码失败");
-    }
-
 
     /**
      * 登录
