@@ -6,7 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "login", configuration = IUmsUserServerConfiguration.class)
+@FeignClient(name = "login"
+        , configuration = IUmsUserServerConfiguration.class
+        , contextId = "menu-0"
+)
 public interface IUmsUserServer {
     @GetMapping("/loadByUsername/${userName}")
     UserDto loadUserByUsername(@RequestParam String userName);

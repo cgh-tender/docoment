@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.IOException;
 
-@FeignClient(name = "login", fallback = ILoginControllerFallback.class, configuration = ILoginControllerConfiguration.class)
+@FeignClient(name = "login"
+        , fallback = ILoginControllerFallback.class
+        , configuration = ILoginControllerConfiguration.class
+        , contextId = "login-0"
+)
 public interface ILoginController {
 
     @GetMapping("/getCode")

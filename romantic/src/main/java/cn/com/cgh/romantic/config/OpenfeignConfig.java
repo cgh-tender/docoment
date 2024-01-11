@@ -7,8 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource(value = "classpath:bootstrap.properties")
-@ComponentScan(value = "cn.com.cgh.romantic")
-@EnableFeignClients
+@EnableFeignClients(basePackages = {"cn.com.cgh.romantic"})
 @Slf4j
 public class OpenfeignConfig {
     static {

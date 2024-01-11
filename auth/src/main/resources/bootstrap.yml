@@ -4,3 +4,19 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: google-client-id
+            client-secret: google-client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: /authorized/google
+            scope: read, write
+            client-name: Okta
+        provider:
+          google:
+            authorization-uri: /oauth2/v1/authorize
+            token-uri: /oauth2/v1/token
