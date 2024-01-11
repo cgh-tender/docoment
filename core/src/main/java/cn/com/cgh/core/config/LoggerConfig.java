@@ -4,8 +4,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import cn.com.cgh.core.util.CoreDelay;
-import cn.hutool.cron.timingwheel.SystemTimer;
-import cn.hutool.cron.timingwheel.TimerTask;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.nacos.api.config.listener.Listener;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -51,23 +48,21 @@ public class LoggerConfig implements ApplicationRunner {
             @Override
             public void receiveConfigInfo(String s) {
                 DelayQueue<CoreDelay> queue = new DelayQueue<CoreDelay>();
-                CoreDelay coreDelay = new CoreDelay("test", TimeUnit.NANOSECONDS.convert(3, TimeUnit.SECONDS));
-                queue.put(coreDelay);
+                queue.put(new CoreDelay("test", 3, TimeUnit.NANOSECONDS){
+                    @Override
+                    public void run() {
+                        runFlyway();
+                    }
+                });
                 try {
-                    queue.take();
-                    runFlyway();
+                    CoreDelay take = queue.take();
+                    take.run();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
         runFlyway();
-        TimerTask timerTask = new TimerTask(() -> {
-            log.info("run .............................");
-        }, 4000);
-        SystemTimer systemTimer = new SystemTimer();
-        systemTimer.addTask(timerTask);
-        SystemTimer start = systemTimer.start();
     }
 
     private void runFlyway() {

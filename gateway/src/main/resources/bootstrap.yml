@@ -16,6 +16,12 @@ spring:
             - Path=/login/**
           filters:
             - StripPrefix=1
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
     nacos:
       config:
         extension-configs:

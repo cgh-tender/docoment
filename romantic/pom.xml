@@ -29,6 +29,11 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.com.cgh</groupId>
+            <artifactId>core</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

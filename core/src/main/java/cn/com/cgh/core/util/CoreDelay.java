@@ -5,13 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-public class CoreDelay implements Delayed {
+public abstract class CoreDelay implements Delayed ,Runnable{
+
     private String orderId;
     private long timeout;
 
-    public CoreDelay(String orderId, long timeout) {
+    public CoreDelay(String orderId, long time,TimeUnit timeUnit) {
         this.orderId = orderId;
-        this.timeout = timeout + System.nanoTime();
+        if (timeUnit != TimeUnit.NANOSECONDS){
+            time = TimeUnit.NANOSECONDS.convert(time, timeUnit);
+        }
+        this.timeout = time + System.nanoTime();
     }
 
     @Override

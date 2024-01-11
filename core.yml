@@ -1,6 +1,7 @@
 spring:
   data:
     redis:
+      client-type: lettuce
       host: 127.0.0.1
       password: 123456
       database: 0
@@ -20,3 +21,32 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+
+log:
+  level:
+    - name: cn.com.cgh.login
+      level: info
+    - name: cn.com.cgh.auth
+      level: info
+
+springdoc:
+  paths-to-exclude:
+    - /api/test/**
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  #  use-management-port: false
+  api-docs:
+    path: /v3/api-docs
+    version: openapi_3_1
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: cn.com.cgh
+  default-flat-param-object: false
+
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
