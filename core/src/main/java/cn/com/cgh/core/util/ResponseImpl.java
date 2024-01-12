@@ -7,21 +7,19 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @Builder
-public class ResponseImpl {
+public class ResponseImpl<T> {
     private String code;
     private String msg;
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
-    @Builder.Default
-    private Object data = Collections.EMPTY_MAP;
+    private T data;
 
-    public ResponseImpl SUCCESS(){
+    public ResponseImpl<T> SUCCESS(){
         if (StringUtils.isBlank(this.code)){
             this.code = "0";
         }
@@ -30,14 +28,13 @@ public class ResponseImpl {
         }
         return this;
     }
-    public ResponseImpl FULL(){
-        if (StringUtils.isBlank(this.code)){
+    public ResponseImpl<T> FULL() {
+        if (StringUtils.isBlank(this.code)) {
             this.code = "1";
         }
-        if (StringUtils.isBlank(this.msg)){
+        if (StringUtils.isBlank(this.msg)) {
             this.msg = "full";
         }
         return this;
     }
-
 }

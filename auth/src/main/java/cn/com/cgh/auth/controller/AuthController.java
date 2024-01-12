@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,23 +15,26 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "AuthController", description = "认证中心登录认证")
 @Slf4j
 public class AuthController {
-    //    @GetMapping("/")
-//    public String index(@RegisteredOAuth2AuthorizedClient("okta") OAuth2AuthorizedClient authorizedClient) {
-//        OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
-//
-//        return "index";
-//    }
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authenticationRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.username(), loginRequest.password());
+        Authentication authenticationRequest = UsernamePasswordAuthenticationToken
+                .authenticated(loginRequest.username(), loginRequest.password(), null);
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
+        boolean authenticated = authenticationResponse.isAuthenticated();
+        if (!authenticated) {
+            throw new RuntimeException("authentication failed");
+        }
         log.info("login");
         return ResponseEntity.ok().body(null);
+    }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return "helloWorld";
     }
 
     public record LoginRequest(String username, String password) {

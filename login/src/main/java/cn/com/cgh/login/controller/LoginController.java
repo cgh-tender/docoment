@@ -1,7 +1,7 @@
 package cn.com.cgh.login.controller;
 
 import cn.com.cgh.login.pojo.User;
-import cn.com.cgh.romantic.login.ILoginController;
+import cn.com.cgh.romantic.pojo.UserDto;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.GifCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
@@ -12,10 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,14 +25,15 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Slf4j
-public class LoginController implements ILoginController {
+public class LoginController {
     @Autowired
     private MenuController menuController;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     /**
      * 获取 验证码
      * @return
      */
-    @Override
     @GetMapping("/getCode")
 //    @Cacheable(cacheNames = "login", cacheManager = Constants.REDIS_CACHE_MANAGER_NAME, key = "#code")
     @SentinelResource(value = cn.com.cgh.romantic.config.Constants.ONE_RULE
@@ -80,6 +79,16 @@ public class LoginController implements ILoginController {
         Map<String, Object> map = new HashMap<>();
         map.put("roles", authorization.contains("admin") ? Arrays.asList("admin","editor") : List.of("editor"));
         return map;
+    }
+
+    @GetMapping("/loadByUsername/{username}")
+    public UserDto loadByUsername(@PathVariable String username){
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+        userDto.setPassword(passwordEncoder.encode("password"));
+        userDto.setStatus(1);
+        log.info(JSONUtil.toJsonStr(userDto));
+        return userDto;
     }
 
 }

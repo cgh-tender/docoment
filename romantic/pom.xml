@@ -34,6 +34,10 @@
             <artifactId>core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.com.cgh</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
