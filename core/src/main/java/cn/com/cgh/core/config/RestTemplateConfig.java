@@ -31,7 +31,7 @@ public class RestTemplateConfig {
         public static ClientHttpResponse handleException(HttpRequest request, byte[] body, ClientHttpRequestExecution execution, BlockException exception) {
             log.info(execution.toString());
             log.info(exception.toString());
-            ResponseImpl.builder().msg("restTemplate操作异常").build().FULL();
+            ResponseImpl.builder().message("restTemplate操作异常").build().FULL();
             return null;
         }
     }

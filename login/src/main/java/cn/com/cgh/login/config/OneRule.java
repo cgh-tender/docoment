@@ -38,7 +38,7 @@ public class OneRule implements ApplicationRunner {
         //设置为QPS的规则类型
         rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
         //值为2,则表示每秒只能访问此资源两次
-        rule.setCount(1);
+        rule.setCount(10);
         rules.add(rule);
         //加载此资源
         FlowRuleManager.loadRules(rules);

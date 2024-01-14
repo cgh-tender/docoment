@@ -17,5 +17,6 @@ public class Menu {
     private String component;
     private Boolean keepAlive;
     private RouteMeta meta;
+
     private List<Menu> children = new ArrayList<>();
 }

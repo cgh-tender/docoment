@@ -2,8 +2,8 @@ spring:
   profiles:
     active: dev
   mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+    path-match:
+      matching-strategy: ANT_PATH_MATCHER
   
   security:
     oauth2:

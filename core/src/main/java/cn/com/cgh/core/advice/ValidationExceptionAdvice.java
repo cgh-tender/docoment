@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.CollectionUtils;
@@ -21,6 +22,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -80,7 +82,7 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return  ResponseImpl.builder().msg(msg).build().FULL();
+        return  ResponseImpl.builder().message(msg).build().FULL();
     }
 
     /**
@@ -102,7 +104,7 @@ public class ValidationExceptionAdvice {
         ConstraintViolationException exception = (ConstraintViolationException) e;
         Set<ConstraintViolation<?>> violationSet = exception.getConstraintViolations();
         String msg = violationSet.stream().map(s -> s.getConstraintDescriptor().getMessageTemplate()).collect(Collectors.joining(";"));
-        return ResponseImpl.builder().msg(msg).build().FULL();
+        return ResponseImpl.builder().message(msg).build().FULL();
     }
 
 }

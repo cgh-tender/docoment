@@ -1,5 +1,8 @@
 package cn.com.cgh.auth.controller;
 
+import cn.com.cgh.romantic.login.ILoginController;
+import cn.com.cgh.romantic.login.IUmsUserServer;
+import cn.com.cgh.romantic.pojo.UserDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +11,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @Tag(name = "AuthController", description = "认证中心登录认证")
@@ -17,11 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private ILoginController iLoginController;
 
-    @GetMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
+    @PostMapping("/login")
+    public Map login(@RequestBody UserDto loginRequest) {
+        log.info("===========");
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken
-                .authenticated(loginRequest.username(), loginRequest.password(), null);
+                .authenticated(loginRequest.getUsername(), loginRequest.getPassword(), null);
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
         boolean authenticated = authenticationResponse.isAuthenticated();
@@ -29,7 +38,12 @@ public class AuthController {
             throw new RuntimeException("authentication failed");
         }
         log.info("login");
-        return ResponseEntity.ok().body(null);
+        return iLoginController.login(loginRequest).getData();
+    }
+
+    @GetMapping("/error")
+    public String error(){
+        return "error";
     }
 
     @GetMapping("/hello")

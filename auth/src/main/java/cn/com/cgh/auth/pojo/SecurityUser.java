@@ -37,6 +37,8 @@ public class SecurityUser implements UserDetails {
      */
     private Collection<SimpleGrantedAuthority> authorities;
 
+    private String code;
+
     public SecurityUser() {
 
     }

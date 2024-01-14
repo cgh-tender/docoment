@@ -1,11 +1,13 @@
 package cn.com.cgh.romantic.login;
 
-import jakarta.servlet.http.HttpServletResponse;
+import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.romantic.pojo.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.io.IOException;
+import java.util.Map;
 
 @FeignClient(name = "login"
         , fallback = ILoginControllerFallback.class
@@ -14,9 +16,10 @@ import java.io.IOException;
 )
 public interface ILoginController {
 
-    @GetMapping("/getCode")
+    @GetMapping("/login")
 //    @Cacheable(cacheNames = "login", cacheManager = Constants.REDIS_CACHE_MANAGER_NAME, key = "#code")
-    void getCode(HttpServletResponse response) throws IOException;
+    public ResponseImpl<Map> login(@RequestBody UserDto user);
+
 }
 
 class ILoginControllerConfiguration {
@@ -28,7 +31,7 @@ class ILoginControllerConfiguration {
 
 class ILoginControllerFallback implements ILoginController {
     @Override
-    public void getCode(HttpServletResponse response) {
-
+    public ResponseImpl<Map> login(@RequestBody UserDto user) {
+        return null;
     }
 }

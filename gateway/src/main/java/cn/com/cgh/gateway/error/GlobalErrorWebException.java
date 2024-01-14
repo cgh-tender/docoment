@@ -29,6 +29,7 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
     private static final JSONObject ERROR_CONVERTERS = new JSONObject();
     static {
         ERROR_CONVERTERS.fluentPut(String.valueOf(HttpStatus.NOT_FOUND.value()), "当前服务不可用请联系管理员");
+        ERROR_CONVERTERS.fluentPut(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "当前服务不可用请联系管理员");
     }
     /**
      * 这个Java函数是一个重写父类方法的函数，
@@ -54,7 +55,8 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
         }
         return response.writeWith(Mono.just(response.bufferFactory().wrap(
                 JSONObject.toJSONString(new JSONObject()
-                        .fluentPut("code", Objects.requireNonNull(statusCode).value())
+                        .fluentPut("code", "1")
+                        .fluentPut("statusCode", Objects.requireNonNull(statusCode).value())
                         .fluentPut("message",
                                 Optional.ofNullable(
                                         ERROR_CONVERTERS.get(String.valueOf(Objects.requireNonNull(statusCode).value()))

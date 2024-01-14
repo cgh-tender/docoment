@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ResponseImpl<T> {
     private String code;
-    private String msg;
+    private String message;
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
     private T data;
@@ -23,8 +23,8 @@ public class ResponseImpl<T> {
         if (StringUtils.isBlank(this.code)){
             this.code = "0";
         }
-        if (StringUtils.isBlank(this.msg)){
-            this.msg = "success";
+        if (StringUtils.isBlank(this.message)){
+            this.message = "success";
         }
         return this;
     }
@@ -32,8 +32,8 @@ public class ResponseImpl<T> {
         if (StringUtils.isBlank(this.code)) {
             this.code = "1";
         }
-        if (StringUtils.isBlank(this.msg)) {
-            this.msg = "full";
+        if (StringUtils.isBlank(this.message)) {
+            this.message = "full";
         }
         return this;
     }

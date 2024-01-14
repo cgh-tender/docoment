@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
 import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
-import { getToken } from "./cache/cookies"
+import { getToken, setUuid } from "./cache/cookies"
 
 /** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {
@@ -29,7 +29,10 @@ function createService() {
       const apiData = response.data
       // 二进制数据则直接返回
       const responseType = response.request?.responseType
-      if (responseType === "blob" || responseType === "arraybuffer") return apiData
+      if (responseType === "blob" || responseType === "arraybuffer"){
+        setUuid(response.headers.uuid)
+        return apiData
+      }
       // 这个 code 是和后端约定的业务 code
       const code = apiData.code || apiData?.status?.code
       // 如果没有 code, 代表这不是项目后端开发的 api
@@ -106,7 +109,11 @@ function createRequest(service: AxiosInstance) {
       headers: {
         // 携带 Token
         Authorization: token ? `Bearer ${token}` : undefined,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json;charset=utf-8"
+        // multipart/form-data
+        // application/x-www-form-urlencoded
+        // application/xml
+        // text/xml
       },
       timeout: import.meta.env.VITE_BASE_TIMEOUT,
       baseURL: import.meta.env.VITE_BASE_API,
@@ -114,6 +121,7 @@ function createRequest(service: AxiosInstance) {
     }
     // 将默认配置 defaultConfig 和传入的自定义配置 config 进行合并成为 mergeConfig
     const mergeConfig = merge(defaultConfig, config)
+    console.log(mergeConfig);
     return service(mergeConfig)
   }
 }

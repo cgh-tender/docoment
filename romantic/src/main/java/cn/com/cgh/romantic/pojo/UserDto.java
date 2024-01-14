@@ -1,5 +1,6 @@
 package cn.com.cgh.romantic.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.util.List;
@@ -12,4 +13,7 @@ public class UserDto {
     private Integer status = 1;
     private String clientId;
     private List<String> roles;
+
+    @TableField(exist = false)
+    private String code;
 }

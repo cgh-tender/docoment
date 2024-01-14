@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
+import { reactive, ref, watchEffect } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
@@ -16,7 +16,8 @@ const loginFormRef = ref<FormInstance | null>(null)
 /** 登录按钮 Loading */
 const loading = ref(false)
 /** 验证码图片 URL */
-const codeUrl = ref("")
+const codeBaseUri = ref(import.meta.env.VITE_BASE_CODE_API)
+const src = ref("")
 /** 登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
   username: "admin",
@@ -50,24 +51,31 @@ const handleLogin = () => {
           loading.value = false
         })
     } else {
-      ElMessage.error("表单校验不通过")
+      ElMessage.error(fields?.code[0].message)
       console.error("表单校验不通过", fields)
     }
   })
 }
+codeBaseUri.value = "login/getCode.gif"
+// gif
+// circle
+// line
+// shear
+
 /** 创建验证码 */
 const createCode = () => {
   // 先清空验证码的输入
   loginFormData.code = ""
   // 获取验证码
-  codeUrl.value = "/login/getCode"
-  // getLoginCodeApi().then((res) => {
-  //   codeUrl.value = res.data?.url
-  // })
+  getLoginCodeApi(codeBaseUri.value)
+    .then((response) => {
+      const blob = new Blob([response], { type: 'image/jpg' });
+      src.value = URL.createObjectURL(blob)
+      }
+    )
 }
-
-/** 初始化验证码 */
 createCode()
+
 </script>
 
 <template>
@@ -111,7 +119,7 @@ createCode()
               size="large"
             >
               <template #append>
-                <el-image :src="codeUrl" @click="createCode" draggable="false">
+                <el-image :src="src" @click="createCode" draggable="false">
                   <template #placeholder>
                     <el-icon>
                       <Picture />
@@ -140,32 +148,39 @@ createCode()
   align-items: center;
   width: 100%;
   min-height: 100%;
+
   .theme-switch {
     position: fixed;
     top: 5%;
     right: 5%;
     cursor: pointer;
   }
+
   .login-card {
     width: 480px;
     border-radius: 20px;
     box-shadow: 0 0 10px #dcdfe6;
     background-color: #fff;
     overflow: hidden;
+
     .title {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 150px;
+
       img {
         height: 100%;
       }
     }
+
     .content {
       padding: 20px 50px 50px 50px;
+
       :deep(.el-input-group__append) {
         padding: 0;
         overflow: hidden;
+
         .el-image {
           width: 100px;
           height: 40px;
@@ -175,6 +190,7 @@ createCode()
           text-align: center;
         }
       }
+
       .el-button {
         width: 100%;
         margin-top: 10px;

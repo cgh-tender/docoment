@@ -1,6 +1,7 @@
 package cn.com.cgh.core.advice;
 
 import cn.com.cgh.core.util.ResponseImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import java.util.Objects;
  * @version 0.1
  * @since 0.1
  */
+@ConditionalOnClass(ResponseBodyAdvice.class)
 @ControllerAdvice
 @Order(value = 1000)
 public class VoidResponseBodyAdvice implements ResponseBodyAdvice<Object> {

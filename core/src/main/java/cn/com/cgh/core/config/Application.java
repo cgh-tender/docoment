@@ -25,4 +25,7 @@ public class Application implements ApplicationContextAware {
     public static <T> T getBean(String name, Class<T> clazz) {
         return Application.applicationContext.getBean(name, clazz);
     }
-}
+
+    public static ApplicationContext getApplicationContext() {
+        return Application.applicationContext;
+    }}
