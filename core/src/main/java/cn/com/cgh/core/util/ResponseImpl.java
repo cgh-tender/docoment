@@ -1,5 +1,6 @@
 package cn.com.cgh.core.util;
 
+import cn.hutool.json.JSONUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,5 +37,10 @@ public class ResponseImpl<T> {
             this.message = "full";
         }
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return JSONUtil.toJsonStr(this);
     }
 }

@@ -47,11 +47,8 @@ public class OAuth2Config {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler((request, response, authentication) -> {
-                    System.out.println(authentication.getCredentials());
-                    System.out.println(authentication.getAuthorities());
-                    System.out.println(authentication.getDetails());
-                    System.out.println(authentication.getPrincipal());
-                    response.getWriter().write(response.getWriter().write(ResponseImpl.builder().message("登录成功").build().FULL().toString());
+                    System.out.println(authentication);
+                    response.getWriter().write(ResponseImpl.builder().message("登录成功").build().FULL().toString());
                 })
                 .failureHandler((request, response, exception) -> {
                     response.getWriter().write(ResponseImpl.builder().message(exception.getMessage()).build().FULL().toString());
