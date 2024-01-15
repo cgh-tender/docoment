@@ -26,8 +26,8 @@ public class AuthController {
     @Autowired
     private ILoginController iLoginController;
 
-    @PostMapping("/login")
-    public Map login(@RequestBody UserDto loginRequest) {
+    @PostMapping("/doLogin")
+    public Map login(UserDto loginRequest) {
         log.info("===========");
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken
                 .authenticated(loginRequest.getUsername(), loginRequest.getPassword(), null);

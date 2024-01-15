@@ -25,6 +25,7 @@ docker ps -a
 docker start mysql-test
 docker update --restart=always mysql-test
 ```
+
 ## redis master slave1 slave2
 ### redis_master.config
 ```text

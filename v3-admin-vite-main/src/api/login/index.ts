@@ -5,7 +5,7 @@ import { getUuid } from "@/utils/cache/cookies";
 /** 获取登录验证码 */
 export function getLoginCodeApi(url: string) {
   return request<Login.LoginCodeResponseData>({
-    url: url + "?crt_"+ new Date().getTime(),
+    url: url + "?crt_="+ new Date().getTime(),
     method: "get",
     responseType: 'blob'
   })
@@ -14,7 +14,7 @@ export function getLoginCodeApi(url: string) {
 /** 登录并返回 Token */
 export function loginApi(data: Login.LoginRequestData) {
   return request<Login.LoginResponseData>({
-    url: "auth/login",
+    url: "auth/doLogin",
     method: "post",
     headers:{
       uuid: getUuid(),

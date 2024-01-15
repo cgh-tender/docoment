@@ -2,9 +2,8 @@ package cn.com.cgh.auth.config;
 
 import cn.com.cgh.auth.filter.MyFilter;
 import cn.com.cgh.auth.filter.VerificationCodeFilter;
-import jakarta.servlet.*;
+import cn.com.cgh.core.util.ResponseImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.io.IOException;
-
 @Configuration
 @Slf4j
 public class OAuth2Config {
@@ -31,7 +28,7 @@ public class OAuth2Config {
     @Autowired
     private UserDetailsService userService;
 
-    @Value("${auth.whitelist:/login,/error,/}")
+    @Value("${auth.whitelist:/doLogin,/error,favicon.ico}")
     private String[] URL_WHITELIST;
 
     @Bean
@@ -45,22 +42,19 @@ public class OAuth2Config {
         http.cors(Customizer.withDefaults());
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(form -> form.
-                loginProcessingUrl("/login")
+                loginProcessingUrl("/doLogin")
+                .failureForwardUrl("/error")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler((request, response, authentication) -> {
-                    response.setContentType("text/html;charset=utf-8");
-                    response.getWriter().write("登录成功");
-                    System.out.println(authentication.getAuthorities());
                     System.out.println(authentication.getCredentials());
+                    System.out.println(authentication.getAuthorities());
                     System.out.println(authentication.getDetails());
                     System.out.println(authentication.getPrincipal());
+                    response.getWriter().write(response.getWriter().write(ResponseImpl.builder().message("登录成功").build().FULL().toString());
                 })
                 .failureHandler((request, response, exception) -> {
-                    System.out.println(exception.getMessage());
-                    response.setContentType("text/html;charset=utf-8");
-                    response.getWriter().write("登录失败");
-                    System.out.println(request.getParameter("username"));
+                    response.getWriter().write(ResponseImpl.builder().message(exception.getMessage()).build().FULL().toString());
                 })
         );
         http.addFilterBefore(new VerificationCodeFilter(), UsernamePasswordAuthenticationFilter.class);

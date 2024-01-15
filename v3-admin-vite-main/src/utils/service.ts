@@ -20,7 +20,9 @@ function createService() {
       return config
     },
     // 发送失败
-    (error) => Promise.reject(error)
+    (error) => {
+      Promise.reject(error)
+    }
   )
   // 响应拦截（可根据具体业务作出相应的调整）
   service.interceptors.response.use(

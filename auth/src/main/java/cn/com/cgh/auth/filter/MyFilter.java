@@ -49,7 +49,9 @@ public class MyFilter extends UsernamePasswordAuthenticationFilter {
             Assert.notNull(user, "SecurityUser can not be null");
             UsernamePasswordAuthenticationToken authRequest = UsernamePasswordAuthenticationToken.unauthenticated(user.getUsername(), user.getPassword());
             this.setDetails(Objects.requireNonNullElse(requestWrapper, request), authRequest);
-            return this.getAuthenticationManager().authenticate(authRequest);
+            Authentication authenticate = this.getAuthenticationManager().authenticate(authRequest);
+            log.info(JSONUtil.toJsonStr(authenticate));
+            return authenticate;
         }
     }
 }
