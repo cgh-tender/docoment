@@ -15,3 +15,22 @@ spring:
       server-addr: 127.0.0.1:8848
   application:
     name: login
+  data:
+    redis:
+      sentinel:
+        nodes:
+          - 127.0.0.1:63793
+          - 127.0.0.1:63794
+          - 127.0.0.1:63795
+        master: mymaster
+#        password: 123456
+      database: 0
+      timeout: 10000
+      password: 123456
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 1000
+          max-idle: 100
+          max-wait: 10000
+          min-idle: 10

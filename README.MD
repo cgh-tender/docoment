@@ -71,15 +71,15 @@ requirepass 123456
 ```
 
 ```bash
-docker run --restart=always --name redis-master --net mynet --ip 192.167.0.2 -v /Users/cgh/Tool/redis/config/redis_master.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63790:6379 -d redis:latest redis-server /etc/redis/redis.conf
+docker run --restart=always --name redis-master --net mynet --ip: 192.167.0.2 -v /Users/cgh/Tool/redis/config/redis_master.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63790:6379 -d redis:latest redis-server /etc/redis/redis.conf
 
 docker ps 
 docker inspect 1513d8e488a2
 192.167.0.2
 
 
-docker run --restart=always --name redis-slave-1 --net mynet --ip 192.167.0.3 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data1:/data -p 63791:6379 -d redis:latest redis-server /etc/redis/redis.conf
-docker run --restart=always --name redis-slave-2 --net mynet --ip 192.167.0.4 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data2:/data -p 63792:6379 -d redis:latest redis-server /etc/redis/redis.conf
+docker run --restart=always --name redis-slave-1 --net mynet --ip: 192.167.0.3 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data1:/data -p 63791:6379 -d redis:latest redis-server /etc/redis/redis.conf
+docker run --restart=always --name redis-slave-2 --net mynet --ip: 192.167.0.4 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data2:/data -p 63792:6379 -d redis:latest redis-server /etc/redis/redis.conf
 // slaveof 192.167.0.2 6379
 
 docker exec -it redis-master bash -c "redis-cli -h 127.0.0.1 -p 6379"
@@ -196,5 +196,256 @@ CREATE TENANT IF NOT EXISTS test1
 ALTER USER root IDENTIFIED BY '123456'
 >root
 ALTER USER test  IDENTIFIED BY '123456';
+
+```
+
+### Dockerfile create redis-sentinel:latest
+```bash 
+FROM redis:latest
+
+RUN touch /data/redis-sentinel.conf
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+
+#  docker build -t redis-sentinel:latest -f ./Dockerfile .
+```
+
+### redis sentinel.yml sentinel 配置
+```bash
+version: '3.8'
+
+services:
+  redis-master:
+    container_name: redis-master
+    image: redis:latest
+    hostname: redis-master
+    restart: always
+    networks:
+      redis-sentinel:
+        ipv4_address: 192.169.0.3
+    ports:
+      - "63790:6379"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+    volumes:
+      - redis-master:/data
+    command:
+      - redis-server
+      - --bind
+      - "0.0.0.0"
+      - --port
+      - "6379"
+      - --notify-keyspace-events
+      - "Ex"
+      - --requirepass
+      - "123456"
+      - --appendonly
+      - "yes"
+      - --masterauth
+      - "123456"
+
+  redis-slave1:
+    container_name: redis-slave1
+    image: redis:latest
+    hostname: redis-slave1
+    networks:
+      redis-sentinel:
+        ipv4_address: 192.169.0.4
+    restart: always
+    ports:
+      - "63791:6379"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+    depends_on:
+      - redis-master
+    volumes:
+      - redis-slave1:/data
+    command:
+      - redis-server
+      - --bind
+      - "0.0.0.0"
+      - --port
+      - "6379"
+      - --notify-keyspace-events
+      - "Ex"
+      - --requirepass
+      - "123456"
+      - --appendonly
+      - "yes"
+      - --masterauth
+      - "123456"
+      - --replicaof
+      - "redis-master 6379"
+
+  redis-slave2:
+    container_name: redis-slave2
+    image: redis:latest
+    hostname: redis-slave2
+    restart: always
+    networks:
+      redis-sentinel:
+        ipv4_address: 192.169.0.5
+    ports:
+      - "63792:6379"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+    depends_on:
+      - redis-master
+    volumes:
+      - redis-slave2:/data
+    command:
+      - redis-server
+      - --bind
+      - "0.0.0.0"
+      - --port
+      - "6379"
+      - --notify-keyspace-events
+      - "Ex"
+      - --requirepass
+      - "123456"
+      - --appendonly
+      - "yes"
+      - --masterauth
+      - "123456"
+      - --replicaof
+      - "redis-master 6379"
+
+  redis-sentinel1:
+    container_name: redis-sentinel1
+    image: redis-sentinel:latest
+    hostname: redis-sentinel1
+    restart: always
+    networks:
+      redis-sentinel:
+        ipv4_address: 192.169.0.6
+    ports:
+      - "63793:16379"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+    command:
+      - redis-sentinel
+      - "/data/redis-sentinel.conf"
+      - --bind
+      - "0.0.0.0"
+      - --port
+      - "16379"
+      - --sentinel resolve-hostnames yes
+      - --sentinel monitor mymaster redis-master 6379 2
+      - --sentinel auth-pass mymaster 123456
+
+  redis-sentinel2:
+    container_name: redis-sentinel2
+    image: redis-sentinel:latest
+    hostname: redis-sentinel2
+    restart: always
+    networks:
+      redis-sentinel:
+        ipv4_address: 192.169.0.7
+    ports:
+      - "63794:16379"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+    command:
+      - redis-sentinel
+      - "/data/redis-sentinel.conf"
+      - --bind
+      - "0.0.0.0"
+      - --port
+      - "16379"
+      - --sentinel resolve-hostnames yes
+      - --sentinel monitor mymaster redis-master 6379 2
+      - --sentinel auth-pass mymaster 123456
+
+  redis-sentinel3:
+    container_name: redis-sentinel3
+    image: redis-sentinel:latest
+    hostname: redis-sentinel3
+    restart: always
+    networks:
+      redis-sentinel:
+        ipv4_address: 192.169.0.8
+    ports:
+      - "63795:16379"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+    command:
+      - redis-sentinel
+      - "/data/redis-sentinel.conf"
+      - --bind
+      - "0.0.0.0"
+      - --port
+      - "16379"
+      - --sentinel resolve-hostnames yes
+      - --sentinel monitor mymaster redis-master 6379 2
+      - --sentinel auth-pass mymaster 123456
+
+
+volumes:
+  redis-master:
+  redis-slave1:
+  redis-slave2:
+
+networks:
+  redis-sentinel:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.169.0.0/16
+
+# docker-compose -f sentinel.yml up -d
+```
+### ping 通docker 容器
+```text
+https://github.com/wenjunxiao/mac-docker-connector/blob/master/README-ZH.md
+mac
+curl -sSL -o- https://github.com/wenjunxiao/mac-docker-connector/releases/download/v1.0/docker-connector-mac.tar.gz | tar -zxf - -C /usr/local/bin/
+brew install wenjunxiao/brew/docker-connector
+sudo brew services start docker-connector
+docker network ls --filter driver=bridge --format "{{.ID}}" | xargs docker network inspect --format "route {{range .IPAM.Config}}{{.Subnet}}{{end}}" >> "$(brew --prefix)/etc/docker-connector.conf"
+
+
+docker network ls --filter driver=bridge --format "{{.ID}}" | xargs docker network inspect --format "route {{range .IPAM.Config}}{{.Subnet}}{{end}}" >> /usr/local/etc/docker-connector.conf
+
+vi /usr/local/etc/docker-connector.conf
+    route 172.17.0.0/16
+    
+sudo brew services start docker-connector
+
+docker run -it -d --restart always --net host --cap-add NET_ADMIN --name connector wenjunxiao/mac-docker-connector
+
+如果需要共享给其它人使用，加上expose
+route 172.17.0.0/16 expose
+并增加监听端口、token 和 ip 分配
+expose 0.0.0.0:2512
+token user1 192.168.251.10
+token user2 192.168.251.11
+
+windows
+从 openVPN下载 https://build.openvpn.net/downloads/releases/
+http://build.openvpn.net/downloads/releases/latest/tap-windows-latest-stable.exe
+docker-accessor-win-i686.zip 或 docker-accessor-win-x86_64.zip 解压即可
+.\docker-accessor.exe -remote 192.168.1.100:2512 -token user2
+
+
 
 ```

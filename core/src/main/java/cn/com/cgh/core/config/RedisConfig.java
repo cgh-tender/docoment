@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,20 +18,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import redis.clients.jedis.ConnectionPoolConfig;
-import redis.clients.jedis.JedisPoolConfig;
 
 import java.time.Duration;
 import java.util.List;
@@ -46,45 +37,12 @@ import java.util.List;
  */
 @Slf4j
 @Configuration
-@ConditionalOnProperty(prefix = "spring", name = "data.redis.host")
+@ConditionalOnProperty(prefix = "spring", name = "data.redis.lettuce.pool.enabled",havingValue = "true")
 @EnableCaching
 @AutoConfigureBefore(value = {RedisAutoConfiguration.class})
 public class RedisConfig {
     static {
         log.info("RedisConfig:已启动");
-    }
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory(RedisProperties redisProperties){
-
-        //redis配置
-        RedisConfiguration redisConfiguration = new
-                RedisStandaloneConfiguration(redisProperties.getHost(),redisProperties.getPort());
-        ((RedisStandaloneConfiguration) redisConfiguration).setDatabase(redisProperties.getDatabase());
-        ((RedisStandaloneConfiguration) redisConfiguration).setPassword(redisProperties.getPassword());
-
-        //连接池配置
-        JedisPoolConfig genericObjectPoolConfig = new JedisPoolConfig();
-        genericObjectPoolConfig.setMaxIdle(redisProperties.getLettuce().getPool().getMaxIdle());
-        genericObjectPoolConfig.setMinIdle(redisProperties.getLettuce().getPool().getMinIdle());
-        genericObjectPoolConfig.setMaxTotal(redisProperties.getLettuce().getPool().getMaxActive());
-        genericObjectPoolConfig.setMaxWait(Duration.ofMillis(redisProperties.getLettuce().getPool().getMaxWait().toMillis()));
-
-        //redis客户端配置
-        LettucePoolingClientConfiguration.LettucePoolingClientConfigurationBuilder
-                builder =  LettucePoolingClientConfiguration.builder().
-                commandTimeout(Duration.ofMillis(redisProperties.getTimeout().toMillis()));
-
-//        builder.shutdownTimeout(Duration.ofMillis(redisProperties.getS));
-        builder.poolConfig(genericObjectPoolConfig);
-        LettuceClientConfiguration lettuceClientConfiguration = builder.build();
-
-        //根据配置和客户端配置创建连接
-        LettuceConnectionFactory lettuceConnectionFactory = new
-                LettuceConnectionFactory(redisConfiguration,lettuceClientConfiguration);
-        lettuceConnectionFactory .afterPropertiesSet();
-
-        return lettuceConnectionFactory;
     }
 
     @ConditionalOnMissingBean(
