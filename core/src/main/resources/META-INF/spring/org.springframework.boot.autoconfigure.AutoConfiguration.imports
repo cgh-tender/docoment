@@ -1,3 +1,4 @@
+cn.com.cgh.core.config.AuthBaseConfig
 cn.com.cgh.core.config.Properties
 cn.com.cgh.core.config.RedisConfig
 cn.com.cgh.core.config.CoreConfig

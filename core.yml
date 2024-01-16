@@ -1,18 +1,22 @@
 spring:
   data:
     redis:
-      client-type: lettuce
-      host: 127.0.0.1
-      password: 123456
+      sentinel:
+        nodes:
+          - 127.0.0.1:63793
+          - 127.0.0.1:63794
+          - 127.0.0.1:63795
+        master: mymaster
       database: 0
-      port: 63790
-      timeout: 2000
+      timeout: 10000
+      password: 123456
       lettuce:
         pool:
           enabled: true
-          max-active: 8
-          min-idle: 0
-          max-idle: 8
+          max-active: 1000
+          max-idle: 100
+          max-wait: 10000
+          min-idle: 10
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/cgh1?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true
     username: root

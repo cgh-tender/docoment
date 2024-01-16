@@ -14,4 +14,6 @@ public class MessageConstant {
     public static final String ACCOUNT_EXPIRED = "该账号已过期，请联系管理员!";
 
     public static final String PERMISSION_DENIED = "没有访问权限，请联系管理员!";
+    public static final String VERIFICATION_DENIED = "请输入正确的验证码!";
+    public static final String VERIFICATION_DENIED_LOSE = "验证码失效!";
 }

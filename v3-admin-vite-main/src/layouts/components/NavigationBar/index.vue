@@ -14,6 +14,7 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import Screenfull from "@/components/Screenfull/index.vue"
 import SearchMenu from "@/components/SearchMenu/index.vue"
 import { DeviceEnum } from "@/constants/app-key"
+import { ElMessage } from "element-plus"
 
 const router = useRouter()
 const appStore = useAppStore()

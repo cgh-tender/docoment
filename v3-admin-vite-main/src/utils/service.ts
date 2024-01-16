@@ -123,7 +123,7 @@ function createRequest(service: AxiosInstance) {
     }
     // 将默认配置 defaultConfig 和传入的自定义配置 config 进行合并成为 mergeConfig
     const mergeConfig = merge(defaultConfig, config)
-    console.log(mergeConfig);
+    console.log(mergeConfig)
     return service(mergeConfig)
   }
 }

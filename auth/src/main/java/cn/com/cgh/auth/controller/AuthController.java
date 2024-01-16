@@ -1,20 +1,19 @@
 package cn.com.cgh.auth.controller;
 
 import cn.com.cgh.romantic.login.ILoginController;
-import cn.com.cgh.romantic.login.IUmsUserServer;
 import cn.com.cgh.romantic.pojo.UserDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,6 +24,8 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private ILoginController iLoginController;
+    @Autowired
+    private SessionRegistry sessionRegistry;
 
     @PostMapping("/doLogin")
     public Map login(UserDto loginRequest) {
@@ -47,8 +48,8 @@ public class AuthController {
     }
 
     @GetMapping("/hello")
-    public String hello() {
-        return "helloWorld";
+    public List<Object> hello() {
+        return sessionRegistry.getAllPrincipals();
     }
 
     public record LoginRequest(String username, String password) {

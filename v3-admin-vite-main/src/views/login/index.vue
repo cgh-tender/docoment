@@ -2,7 +2,7 @@
 import { reactive, ref, watchEffect } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
-import { ElMessage, type FormInstance, type FormRules } from "element-plus";
+import { ElMessage, type FormInstance, type FormRules } from "element-plus"
 import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import { getLoginCodeApi } from "@/api/login"
 import { type LoginRequestData } from "@/api/login/types/login"
@@ -18,11 +18,13 @@ const loading = ref(false)
 /** 验证码图片 URL */
 const codeBaseUri = ref(import.meta.env.VITE_BASE_CODE_API)
 const src = ref("")
+const rememberMe = ref(false)
 /** 登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
   username: "admin",
   password: "12345678",
-  code: ""
+  code: "",
+  rememberMe: false
 })
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
@@ -67,15 +69,12 @@ const createCode = () => {
   // 先清空验证码的输入
   loginFormData.code = ""
   // 获取验证码
-  getLoginCodeApi(codeBaseUri.value)
-    .then((response) => {
-      const blob = new Blob([response], { type: 'image/jpg' });
-      src.value = URL.createObjectURL(blob)
-      }
-    )
+  getLoginCodeApi(codeBaseUri.value).then((response) => {
+    const blob = new Blob([ response ], { type: "image/jpg" })
+    src.value = URL.createObjectURL(blob)
+  })
 }
 createCode()
-
 </script>
 
 <template>
@@ -133,6 +132,16 @@ createCode()
                 </el-image>
               </template>
             </el-input>
+          </el-form-item>
+          <el-form-item prop="rememberMe">
+            <span>记住我</span>
+            <el-checkbox
+              v-model.trim="loginFormData.rememberMe"
+              type="checkbox"
+              tabindex="2"
+              :prefix-icon="Lock"
+              size="large"
+            />
           </el-form-item>
           <el-button :loading="loading" type="primary" size="large" @click.prevent="handleLogin">登 录</el-button>
         </el-form>

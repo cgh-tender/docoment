@@ -3,92 +3,6 @@
 create schema cgh1 collate utf8mb4_general_ci;
 ```
 
-
-## docker 创建网络段
-```bash
-docker network create --driver bridge --subnet 192.167.0.0/16 --gateway 192.167.0.1 mynet
-
-```
-
-## maven 热部署
-```bash
-mvn spring-boot:run
-```
-## docker安装mysql
-```bash
-docker pull mysql:8.0.11
-docker run --restart=always -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:8.0.11 
-```
-## 容器自启动
-```bash
-docker ps -a
-docker start mysql-test
-docker update --restart=always mysql-test
-```
-
-## redis master slave1 slave2
-### redis_master.config
-```text
-# 绑定
-bind 0.0.0.0
-# 连接保护模式关闭
-protected-mode no
-# 端口
-port 6379
-# 数据库数量
-databases 16
-# rdb快照规则
-# 在900秒（15分钟）后，如果至少更改了1个键
-save 900 1
-save 300 10
-save 60 10000
-# rdb快照文件名称
-dbfilename dump.rdb
-# 客户端连接数量设置
-maxclients 10000
-# AOF模式开启，默认关闭
-appendonly yes
-# 文件名
-appendfilename "appendonly.aof"
-# AOF同步机制 
-# 每秒同步
-appendfsync everysec
-# 文件大小切割
-auto-aof-rewrite-percentage 100
-auto-aof-rewrite-min-size 64mb
-# 淘汰机制设置
-maxmemory-policy noeviction
-cluster-enabled yes
-#密码设置
-masterauth 123456
-requirepass 123456
-```
-### redis_slave.conf
-```text
-replicaof 172.17.0.4 6379
-port 6379
-masterauth 123456
-requirepass 123456
-```
-
-```bash
-docker run --restart=always --name redis-master --net mynet --ip: 192.167.0.2 -v /Users/cgh/Tool/redis/config/redis_master.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data:/data -p 63790:6379 -d redis:latest redis-server /etc/redis/redis.conf
-
-docker ps 
-docker inspect 1513d8e488a2
-192.167.0.2
-
-
-docker run --restart=always --name redis-slave-1 --net mynet --ip: 192.167.0.3 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data1:/data -p 63791:6379 -d redis:latest redis-server /etc/redis/redis.conf
-docker run --restart=always --name redis-slave-2 --net mynet --ip: 192.167.0.4 -v /Users/cgh/Tool/redis/config/redis_slave.conf:/etc/redis/redis.conf -v /Users/cgh/Tool/redis/data2:/data -p 63792:6379 -d redis:latest redis-server /etc/redis/redis.conf
-// slaveof 192.167.0.2 6379
-
-docker exec -it redis-master bash -c "redis-cli -h 127.0.0.1 -p 6379"
-docker exec -it redis-slave-1 bash -c "redis-cli -h 127.0.0.1 -p 6379"
-docker exec -it redis-slave-2 bash -c "redis-cli -h 127.0.0.1 -p 6379"
-
-```
-
 ## docker 安装nacos
 
 ```bash
@@ -418,17 +332,12 @@ networks:
 ### ping 通docker 容器
 ```text
 https://github.com/wenjunxiao/mac-docker-connector/blob/master/README-ZH.md
+
 mac
 curl -sSL -o- https://github.com/wenjunxiao/mac-docker-connector/releases/download/v1.0/docker-connector-mac.tar.gz | tar -zxf - -C /usr/local/bin/
 brew install wenjunxiao/brew/docker-connector
 sudo brew services start docker-connector
 docker network ls --filter driver=bridge --format "{{.ID}}" | xargs docker network inspect --format "route {{range .IPAM.Config}}{{.Subnet}}{{end}}" >> "$(brew --prefix)/etc/docker-connector.conf"
-
-
-docker network ls --filter driver=bridge --format "{{.ID}}" | xargs docker network inspect --format "route {{range .IPAM.Config}}{{.Subnet}}{{end}}" >> /usr/local/etc/docker-connector.conf
-
-vi /usr/local/etc/docker-connector.conf
-    route 172.17.0.0/16
     
 sudo brew services start docker-connector
 
@@ -443,10 +352,38 @@ token user2 192.168.251.11
 
 windows
 从 openVPN下载 https://build.openvpn.net/downloads/releases/
-http://build.openvpn.net/downloads/releases/latest/tap-windows-latest-stable.exe
-docker-accessor-win-i686.zip 或 docker-accessor-win-x86_64.zip 解压即可
-.\docker-accessor.exe -remote 192.168.1.100:2512 -token user2
+https://build.openvpn.net/downloads/releases/latest/openvpn-latest-stable-amd64.msi
+https://github.com/wenjunxiao/mac-docker-connector/releases/download/v3.2/docker-accessor-win-x86_64.zip
+start-connector.bat
+or
+install-service.bat
+start-service.bat
 
 
+docker pull wenjunxiao/desktop-docker-connector
+docker run -it -d --restart always --net host --cap-add NET_ADMIN --name desktop-connector wenjunxiao/desktop-docker-connector
 
+```
+
+
+## docker安装mysql
+```bash
+docker pull mysql:8.0.11
+docker run --restart=always -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:8.0.11 
+```
+## docker 命令
+```bash
+docker network create --driver bridge --subnet 192.167.0.0/16 --gateway 192.167.0.1 mynet
+
+docker ps -a
+docker start mysql-test
+docker update --restart=always mysql-test
+docker inspect 1513d8e488a2
+
+docker exec -it redis-master bash -c "redis-cli -h 127.0.0.1 -p 6379"
+docker exec -it redis-slave-1 bash -c "redis-cli -h 127.0.0.1 -p 6379"
+docker exec -it redis-slave-2 bash -c "redis-cli -h 127.0.0.1 -p 6379"
+
+
+https://yiming_chang.gitee.io/vue-pure-admin/#/login
 ```

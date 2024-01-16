@@ -3,5 +3,5 @@ interface ApiResponseData<T> {
   code: number
   data: T
   message: string
-  msg: string
+  rememberMe: boolean
 }

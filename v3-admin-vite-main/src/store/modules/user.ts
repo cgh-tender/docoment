@@ -6,7 +6,7 @@ import { useTagsViewStore } from "./tags-view"
 import { useSettingsStore } from "./settings"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import router, { cleanRouter, Layouts } from "@/router"
-import { getRouterApi, getUserInfoApi, loginApi } from "@/api/login"
+import { getRouterApi, getUserInfoApi, loginApi, logOutApi } from "@/api/login"
 import { type LoginRequestData } from "@/api/login/types/login"
 import { type RouteRecordRaw } from "vue-router"
 import routeSettings from "@/config/route"
@@ -30,8 +30,8 @@ export const useUserStore = defineStore("user", () => {
     roles.value = value
   }
   /** 登录 */
-  const login = async ({ username, password, code }: LoginRequestData) => {
-    const { data } = await loginApi({ username, password, code })
+  const login = async ({ username, password, code, rememberMe }: LoginRequestData) => {
+    const { data } = await loginApi({ username, password, code, rememberMe })
     setToken(data.token)
     token.value = data.token
   }
@@ -112,12 +112,14 @@ export const useUserStore = defineStore("user", () => {
     await router.push("/")
   }
   /** 登出 */
-  const logout = () => {
+  const logout = async (): Promise<string> => {
+    const { message } = await logOutApi()
     removeToken()
     token.value = ""
     roles.value = []
     cleanRouter()
     _resetTagsView()
+    return message
   }
   /** 重置 Token */
   const resetToken = () => {
