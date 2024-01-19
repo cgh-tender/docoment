@@ -5,7 +5,6 @@ import cn.com.cgh.romantic.pojo.UserDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
@@ -21,8 +20,6 @@ import java.util.Map;
 @Slf4j
 public class AuthController {
     @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
     private ILoginController iLoginController;
     @Autowired
     private SessionRegistry sessionRegistry;
@@ -32,18 +29,13 @@ public class AuthController {
         log.info("===========");
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken
                 .authenticated(loginRequest.getUsername(), loginRequest.getPassword(), null);
-        Authentication authenticationResponse =
-                this.authenticationManager.authenticate(authenticationRequest);
-        boolean authenticated = authenticationResponse.isAuthenticated();
-        if (!authenticated) {
-            throw new RuntimeException("authentication failed");
-        }
+        log.info("{}", authenticationRequest);
         log.info("login");
         return iLoginController.login(loginRequest).getData();
     }
 
     @GetMapping("/error")
-    public String error(){
+    public String error() {
         return "error";
     }
 

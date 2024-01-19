@@ -2,7 +2,6 @@ import { type RouteRecordRaw, createRouter, RouteRecordName } from "vue-router"
 import { history, flatMultiLevelRoutes } from "./helper"
 import routeSettings from "@/config/route"
 import { usePermissionStoreHook } from "@/store/modules/permission"
-import { checkPermission } from "@/utils/permission"
 
 export const Layouts = () => import("@/layouts/index.vue")
 

@@ -34,8 +34,7 @@ const toggleSidebar = () => {
 
 /** 登出 */
 const logout = () => {
-  userStore.logout()
-  router.push("/login")
+  userStore.logout().finally(() => router.push("/login"))
 }
 </script>
 

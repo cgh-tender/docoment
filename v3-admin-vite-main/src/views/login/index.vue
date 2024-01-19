@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, watchEffect } from "vue"
+import { reactive, ref } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
 import { ElMessage, type FormInstance, type FormRules } from "element-plus"
@@ -18,7 +18,6 @@ const loading = ref(false)
 /** 验证码图片 URL */
 const codeBaseUri = ref(import.meta.env.VITE_BASE_CODE_API)
 const src = ref("")
-const rememberMe = ref(false)
 /** 登录表单数据 */
 const loginFormData: LoginRequestData = reactive({
   username: "admin",
@@ -33,7 +32,8 @@ const loginFormRules: FormRules = {
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" }
   ],
-  code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
+  code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+  rememberMe: []
 }
 /** 登录逻辑 */
 const handleLogin = () => {
@@ -70,7 +70,7 @@ const createCode = () => {
   loginFormData.code = ""
   // 获取验证码
   getLoginCodeApi(codeBaseUri.value).then((response) => {
-    const blob = new Blob([ response ], { type: "image/jpg" })
+    const blob = new Blob([response], { type: "image/jpg" })
     src.value = URL.createObjectURL(blob)
   })
 }
@@ -133,7 +133,7 @@ createCode()
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item prop="rememberMe">
+          <el-form-item prop="rememberMe" v-if="false">
             <span>记住我</span>
             <el-checkbox
               v-model.trim="loginFormData.rememberMe"

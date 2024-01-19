@@ -36,7 +36,15 @@ const settingsStore = useSettingsStore()
   background-color: var(--v3-body-bg-color);
   display: flex;
 }
+.el-fade-in-enter-active,
+.el-fade-in-leave-active {
+  transition: opacity 0.5s ease;
+}
 
+.el-fade-in-enter-from,
+.el-fade-in-leave-to {
+  opacity: 0;
+}
 .app-scrollbar {
   flex-grow: 1;
   overflow: auto;

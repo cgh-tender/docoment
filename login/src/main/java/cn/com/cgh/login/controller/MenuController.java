@@ -241,6 +241,13 @@ public class MenuController implements IMenuController<Menu> {
         menu.setKeepAlive(Boolean.TRUE);
         menu.setMeta(RouteMeta.builder().title("指令权限").roles(new String[]{"admin","editor"}).build());
         asyMenu.getChildren().add(menu);
+        menu = new Menu();
+        menu.setPath("directive");
+        menu.setName("umsUser");
+        menu.setComponent("permission/directive");
+        menu.setKeepAlive(Boolean.TRUE);
+        menu.setMeta(RouteMeta.builder().title("指令权限1").roles(new String[]{"admin","editor"}).build());
+        asyMenu.getChildren().add(menu);
     }
     @Override
     @GetMapping("/getMenu")
