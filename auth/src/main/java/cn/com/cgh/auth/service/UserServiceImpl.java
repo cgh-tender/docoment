@@ -1,7 +1,6 @@
 package cn.com.cgh.auth.service;
 
 import cn.com.cgh.auth.constant.MessageConstant;
-import cn.com.cgh.auth.pojo.SecurityUser;
 import cn.com.cgh.romantic.login.IUmsUserServer;
 import cn.com.cgh.romantic.pojo.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,16 +28,15 @@ public class UserServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(MessageConstant.USERNAME_PASSWORD_ERROR);
         }
         userDto.setClientId(clientId);
-        SecurityUser securityUser = new SecurityUser(userDto);
-        if (!securityUser.isEnabled()) {
+        if (!userDto.isEnabled()) {
             throw new DisabledException(MessageConstant.ACCOUNT_DISABLED);
-        } else if (!securityUser.isAccountNonLocked()) {
+        } else if (!userDto.isAccountNonLocked()) {
             throw new LockedException(MessageConstant.ACCOUNT_LOCKED);
-        } else if (!securityUser.isAccountNonExpired()) {
+        } else if (!userDto.isAccountNonExpired()) {
             throw new AccountExpiredException(MessageConstant.ACCOUNT_EXPIRED);
-        } else if (!securityUser.isCredentialsNonExpired()) {
+        } else if (!userDto.isCredentialsNonExpired()) {
             throw new CredentialsExpiredException(MessageConstant.CREDENTIALS_EXPIRED);
         }
-        return securityUser;
+        return userDto;
     }
 }

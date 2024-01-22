@@ -1,7 +1,7 @@
 package cn.com.cgh.auth.filter;
 
-import cn.com.cgh.auth.pojo.SecurityUser;
 import cn.com.cgh.core.util.RequestWrapper;
+import cn.com.cgh.romantic.pojo.UserDto;
 import cn.hutool.json.JSONUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,7 +32,7 @@ public class MyFilter extends UsernamePasswordAuthenticationFilter {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         } else {
             RequestWrapper requestWrapper = null;
-            SecurityUser user = null;
+            UserDto user = null;
             if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())
                     || "application/json;charset=UTF-8".equals(request.getContentType())){
                     requestWrapper = new RequestWrapper(request);
@@ -40,9 +40,9 @@ public class MyFilter extends UsernamePasswordAuthenticationFilter {
                     if (StringUtils.isEmpty(body)){
                         log.info("请求体为空");
                     }
-                user = JSONUtil.parseObj(body).toBean(SecurityUser.class);
+                user = JSONUtil.parseObj(body).toBean(UserDto.class);
             }else{
-                user = new SecurityUser();
+                user = new UserDto();
                 user.setUsername(request.getParameter("username"));
                 user.setPassword(request.getParameter("password"));
             }

@@ -19,6 +19,14 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>cn.com.cgh</groupId>
+            <artifactId>romanticApi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.com.cgh</groupId>
+            <artifactId>gallery</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
         </dependency>

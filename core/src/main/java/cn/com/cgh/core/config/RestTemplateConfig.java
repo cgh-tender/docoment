@@ -1,6 +1,6 @@
 package cn.com.cgh.core.config;
 
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
 import com.alibaba.cloud.sentinel.annotation.SentinelRestTemplate;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;

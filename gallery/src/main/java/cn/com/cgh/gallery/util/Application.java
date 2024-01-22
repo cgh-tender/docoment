@@ -1,4 +1,4 @@
-package cn.com.cgh.core.config;
+package cn.com.cgh.gallery.util;
 
 import lombok.Getter;
 import org.springframework.beans.BeansException;

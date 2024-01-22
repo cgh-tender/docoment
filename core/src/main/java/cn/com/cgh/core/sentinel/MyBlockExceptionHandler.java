@@ -1,6 +1,6 @@
 package cn.com.cgh.core.sentinel;
 
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityException;

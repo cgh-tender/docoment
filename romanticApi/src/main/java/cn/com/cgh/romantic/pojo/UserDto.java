@@ -1,17 +1,19 @@
-package cn.com.cgh.auth.pojo;
+package cn.com.cgh.romantic.pojo;
 
-import cn.com.cgh.romantic.pojo.UserDto;
+import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
-public class SecurityUser implements UserDetails {
-
+public class UserDto implements UserDetails {
     /**
      * ID
      */
@@ -27,6 +29,11 @@ public class SecurityUser implements UserDetails {
     /**
      * 用户状态
      */
+    private USER_STATUS status;
+    /**
+     * 用户状态
+     */
+    @Getter(AccessLevel.NONE)
     private Boolean enabled;
     /**
      * 登录客户端ID
@@ -35,39 +42,14 @@ public class SecurityUser implements UserDetails {
     /**
      * 权限数据
      */
-    private Collection<SimpleGrantedAuthority> authorities;
-
+    @TableField(exist = false)
+    private List<Role> roles;
+    @TableField(exist = false)
     private String code;
-
-    public SecurityUser() {
-
-    }
-
-    public SecurityUser(UserDto userDto) {
-        this.setId(userDto.getId());
-        this.setUsername(userDto.getUsername());
-        this.setPassword(userDto.getPassword());
-        this.setEnabled(userDto.getStatus() == 1);
-        this.setClientId(userDto.getClientId());
-        if (userDto.getRoles() != null) {
-            authorities = new ArrayList<>();
-            userDto.getRoles().forEach(item -> authorities.add(new SimpleGrantedAuthority(item)));
-        }
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
-
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.username;
+        return this.roles.stream().map(Role::getName).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
 
     @Override
@@ -87,7 +69,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.enabled;
+        return status.equals(USER_STATUS.NORMAL);
     }
-
 }

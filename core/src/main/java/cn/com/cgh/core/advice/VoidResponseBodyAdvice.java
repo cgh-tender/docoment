@@ -1,6 +1,6 @@
 package cn.com.cgh.core.advice;
 
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;

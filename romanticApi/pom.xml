@@ -9,16 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>romantic</artifactId>
-    <modules>
-        <module>gateway</module>
-        <module>gallery</module>
-        <module>core</module>
-        <module>login</module>
-        <module>jena</module>
-        <module>auth</module>
-        <module>romantic</module>
-    </modules>
+    <artifactId>romanticApi</artifactId>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -39,12 +30,11 @@
         </dependency>
         <dependency>
             <groupId>cn.com.cgh</groupId>
-            <artifactId>core</artifactId>
-            <scope>test</scope>
+            <artifactId>gallery</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.com.cgh</groupId>
-            <artifactId>core</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
     </dependencies>
 

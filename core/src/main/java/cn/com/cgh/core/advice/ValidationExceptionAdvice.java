@@ -1,31 +1,20 @@
 package cn.com.cgh.core.advice;
 
-import cn.com.cgh.core.util.ResponseImpl;
-import jakarta.annotation.Resource;
+import cn.com.cgh.gallery.util.ResponseImpl;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerExecutionChain;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,9 +22,6 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Order(100)
 public class ValidationExceptionAdvice {
-
-    @Resource
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     @ExceptionHandler(value = {BindException.class, ValidationException.class})
     @ResponseBody
@@ -83,21 +69,6 @@ public class ValidationExceptionAdvice {
             }
         }
         return  ResponseImpl.builder().message(msg).build().FULL();
-    }
-
-    /**
-     * 当前Controller方法
-     *
-     * @return
-     * @throws Exception
-     */
-    private Method currentControllerMethod() throws Exception {
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
-        ServletRequestAttributes sra = (ServletRequestAttributes) requestAttributes;
-        HandlerExecutionChain handlerChain = requestMappingHandlerMapping.getHandler(sra.getRequest());
-        assert handlerChain != null;
-        HandlerMethod handler = (HandlerMethod) handlerChain.getHandler();
-        return handler.getMethod();
     }
 
     private ResponseImpl handleConstraintViolationException(Exception e) throws Exception {

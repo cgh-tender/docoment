@@ -19,6 +19,7 @@ public class MyDaoAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+
         MyWebAuthenticationDetails details = (MyWebAuthenticationDetails) authentication.getDetails();
         if (details.getVerificationCodeLose()){
             throw new VerificationCodeException(MessageConstant.VERIFICATION_DENIED_LOSE);
@@ -26,6 +27,7 @@ public class MyDaoAuthenticationProvider extends DaoAuthenticationProvider {
         if (details.getVerificationCode()){
             throw new VerificationCodeException(MessageConstant.VERIFICATION_DENIED);
         }
+        
         super.additionalAuthenticationChecks(userDetails, authentication);
     }
 }

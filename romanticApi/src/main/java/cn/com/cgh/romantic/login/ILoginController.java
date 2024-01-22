@@ -1,6 +1,6 @@
 package cn.com.cgh.romantic.login;
 
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.romantic.pojo.UserDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;

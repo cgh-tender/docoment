@@ -3,6 +3,7 @@ package cn.com.cgh.core.config;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import cn.com.cgh.core.properties.LoginProperties;
 import cn.com.cgh.core.util.CoreDelay;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.nacos.api.config.listener.Listener;

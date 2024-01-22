@@ -1,6 +1,6 @@
 package cn.com.cgh.core.advice;
 
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

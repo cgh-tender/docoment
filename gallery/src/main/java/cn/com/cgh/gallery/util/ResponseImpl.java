@@ -1,4 +1,4 @@
-package cn.com.cgh.core.util;
+package cn.com.cgh.gallery.util;
 
 import cn.hutool.json.JSONUtil;
 import lombok.AllArgsConstructor;

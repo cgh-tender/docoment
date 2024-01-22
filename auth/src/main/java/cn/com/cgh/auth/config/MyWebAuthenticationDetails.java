@@ -12,7 +12,6 @@ public class MyWebAuthenticationDetails extends WebAuthenticationDetails {
     private Boolean verificationCode = Boolean.FALSE;
     // 验证码是否丢失
     private Boolean verificationCodeLose = Boolean.FALSE;
-    private RedisTemplate<String, Object> redisTemplateSO;
 
     public MyWebAuthenticationDetails(HttpServletRequest request,RedisTemplate<String, Object> redisTemplateSO) {
         super(request);

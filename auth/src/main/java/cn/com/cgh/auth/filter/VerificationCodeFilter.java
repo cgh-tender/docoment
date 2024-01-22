@@ -1,12 +1,11 @@
 package cn.com.cgh.auth.filter;
 
 import cn.com.cgh.auth.exception.VerificationCodeException;
-import cn.com.cgh.auth.pojo.SecurityUser;
-import cn.com.cgh.core.config.Application;
+import cn.com.cgh.gallery.util.Application;
 import cn.com.cgh.core.util.RequestWrapper;
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.pojo.UserDto;
 import cn.hutool.json.JSONUtil;
-import com.nimbusds.common.contenttype.ContentType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,7 +42,7 @@ public class VerificationCodeFilter extends OncePerRequestFilter {
                         if (StringUtils.isEmpty(body)){
                             log.info("请求体为空");
                         }
-                        code = JSONUtil.parseObj(body).toBean(SecurityUser.class).getCode();
+                        code = JSONUtil.parseObj(body).toBean(UserDto.class).getCode();
                     }
                 }
                 String verificationCode = (String) redisTemplateSO.opsForValue().get(uuid);

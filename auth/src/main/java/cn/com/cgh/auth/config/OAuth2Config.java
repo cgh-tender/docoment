@@ -1,7 +1,7 @@
 package cn.com.cgh.auth.config;
 
-import cn.com.cgh.auth.pojo.SecurityUser;
-import cn.com.cgh.core.util.ResponseImpl;
+import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.pojo.UserDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class OAuth2Config {
     @Autowired
     private RedisTemplate<String, Object> redisTemplateSO;
     @Autowired
-    private MyTokenRepository tokenRepository;
+    private MyAuthorizationManager myAuthorizationManager;
 
     @Value("${auth.whitelist:/doLogin,/error,favicon.ico,/hello}")
     private String[] URL_WHITELIST;
@@ -37,7 +37,7 @@ public class OAuth2Config {
         http.authorizeHttpRequests(authorizeHttpRequest ->
                 authorizeHttpRequest
                         .requestMatchers(URL_WHITELIST).permitAll() // 允许访问无需认证的路径
-                        .anyRequest().authenticated()
+                        .anyRequest().access(myAuthorizationManager)
         );
 
         http.cors(Customizer.withDefaults());
@@ -51,7 +51,7 @@ public class OAuth2Config {
                 .successHandler((request, response, authentication) -> {
                     log.info("登录成功");
                     Map<String, String> map = new HashMap<>();
-                    SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+                    UserDto securityUser = (UserDto) authentication.getPrincipal();
                     map.put("token", securityUser.getUsername());
                     response.getWriter().write(ResponseImpl.builder().message("登录成功").data(map).build().SUCCESS().toString());
                 })
@@ -61,13 +61,13 @@ public class OAuth2Config {
                     response.getWriter().write(ResponseImpl.builder().message(exception.getMessage()).build().FULL().toString());
                 })
         );
-        http.rememberMe(rememberMe ->
-                        rememberMe
+//        http.rememberMe(rememberMe ->
+//                        rememberMe
 //                        .rememberMeParameter("rememberMe")
 //                        .rememberMeCookieName("rememberMe")
 //                        .key("myKey")
-                                .tokenRepository(tokenRepository)
-        );
+//                                .tokenRepository(tokenRepository)
+//        );
 //        http.addFilterBefore(new VerificationCodeFilter(), UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAt(new MyFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
 //        http.sessionManagement(e -> e.invalidSessionStrategy((request, response) -> {
@@ -84,15 +84,6 @@ public class OAuth2Config {
                 log.error("登录失败1", exception);
             }, null);
         });
-//        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .userDetailsService(userService)
-//                .exceptionHandling(exceptionHandle -> exceptionHandle
-//                        .authenticationEntryPoint(loginAuthenticationEntryPoint)
-//                        .accessDeniedHandler(authAccessDeniedHandler)
-//                )
-//                .addFilterAfter(jwtAuthenticationFilter(), ExceptionTranslationFilter.class)
-//                .httpBasic(Customizer.withDefaults());
-        ;
         http.logout(logout ->
                 logout.invalidateHttpSession(true)
                         .logoutUrl("/logout")
