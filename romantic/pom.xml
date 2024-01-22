@@ -10,15 +10,6 @@
     </parent>
 
     <artifactId>romantic</artifactId>
-    <modules>
-        <module>gateway</module>
-        <module>gallery</module>
-        <module>core</module>
-        <module>login</module>
-        <module>jena</module>
-        <module>auth</module>
-        <module>romantic</module>
-    </modules>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
