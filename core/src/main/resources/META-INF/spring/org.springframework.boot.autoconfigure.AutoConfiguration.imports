@@ -1,5 +1,5 @@
 cn.com.cgh.core.config.AuthBaseConfig
-cn.com.cgh.core.config.IdWork
+cn.com.cgh.core.util.IdWork
 cn.com.cgh.core.config.Properties
 cn.com.cgh.core.config.RedisConfig
 cn.com.cgh.core.config.CoreConfig

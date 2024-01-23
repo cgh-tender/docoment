@@ -10,10 +10,10 @@ spring:
             - Path=/gallery/**
           filters:
             - StripPrefix=1
-        - id: login
-          uri: lb://login
+        - id: resource
+          uri: lb://resource
           predicates:
-            - Path=/login/**
+            - Path=/resource/**
           filters:
             - StripPrefix=1
         - id: auth

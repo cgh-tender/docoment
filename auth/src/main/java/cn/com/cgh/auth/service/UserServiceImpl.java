@@ -2,7 +2,7 @@ package cn.com.cgh.auth.service;
 
 import cn.com.cgh.auth.constant.MessageConstant;
 import cn.com.cgh.romantic.login.IUmsUserServer;
-import cn.com.cgh.romantic.pojo.UserDto;
+import cn.com.cgh.romantic.pojo.TbCfgUser;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -23,20 +23,20 @@ public class UserServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String clientId = request.getParameter("client_id");
-        UserDto userDto = adminService.loadUserByUsername(username).getData();
-        if (userDto==null) {
+        TbCfgUser tbCfgUser = adminService.loadUserByUsername(username).getData();
+        if (tbCfgUser ==null) {
             throw new UsernameNotFoundException(MessageConstant.USERNAME_PASSWORD_ERROR);
         }
-        userDto.setClientId(clientId);
-        if (!userDto.isEnabled()) {
+        tbCfgUser.setClientId(clientId);
+        if (!tbCfgUser.isEnabled()) {
             throw new DisabledException(MessageConstant.ACCOUNT_DISABLED);
-        } else if (!userDto.isAccountNonLocked()) {
+        } else if (!tbCfgUser.isAccountNonLocked()) {
             throw new LockedException(MessageConstant.ACCOUNT_LOCKED);
-        } else if (!userDto.isAccountNonExpired()) {
+        } else if (!tbCfgUser.isAccountNonExpired()) {
             throw new AccountExpiredException(MessageConstant.ACCOUNT_EXPIRED);
-        } else if (!userDto.isCredentialsNonExpired()) {
+        } else if (!tbCfgUser.isCredentialsNonExpired()) {
             throw new CredentialsExpiredException(MessageConstant.CREDENTIALS_EXPIRED);
         }
-        return userDto;
+        return tbCfgUser;
     }
 }

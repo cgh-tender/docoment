@@ -28,7 +28,7 @@ spring:
 
 log:
   level:
-    - name: cn.com.cgh.login
+    - name: cn.com.cgh.resource
       level: info
     - name: cn.com.cgh.auth
       level: info

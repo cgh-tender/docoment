@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
-@FeignClient(name = "login"
+@FeignClient(name = "resource"
         , fallbackFactory = IMenuController.TestFallbackFactory.class
-        , contextId = "login-1"
+        , contextId = "resource-1"
 )
 public interface IMenuController<T> {
     Logger logger = LoggerFactory.getLogger(IMenuController.class);

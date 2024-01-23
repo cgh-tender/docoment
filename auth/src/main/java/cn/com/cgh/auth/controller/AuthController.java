@@ -1,7 +1,7 @@
 package cn.com.cgh.auth.controller;
 
 import cn.com.cgh.romantic.login.ILoginController;
-import cn.com.cgh.romantic.pojo.UserDto;
+import cn.com.cgh.romantic.pojo.TbCfgUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class AuthController {
     private SessionRegistry sessionRegistry;
 
     @PostMapping("/doLogin")
-    public Map login(UserDto loginRequest) {
+    public Map login(TbCfgUser loginRequest) {
         log.info("===========");
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken
                 .authenticated(loginRequest.getUsername(), loginRequest.getPassword(), null);

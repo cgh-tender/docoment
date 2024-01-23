@@ -28,8 +28,8 @@ knife4j:
     strategy: discover
     discover:
       service-config:
-        login:
+        resource:
           - group-name: 用户服务
             order: 2
       excluded-services:
-#        - login.*
+#        - resource.*

@@ -38,14 +38,14 @@ export function logOutApi() {
 /** 获取用户详情 */
 export function getUserInfoApi() {
   return request<Login.UserInfoResponseData>({
-    url: "login/info",
+    url: "resource/info",
     method: "get"
   })
 }
 
 export function getRouterApi() {
   return request<Login.MenuInfoResponseData>({
-    url: "login/getMenu",
+    url: "resource/getMenu",
     method: "get"
   })
 }

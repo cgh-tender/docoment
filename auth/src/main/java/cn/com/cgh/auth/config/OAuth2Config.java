@@ -1,7 +1,7 @@
 package cn.com.cgh.auth.config;
 
 import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.pojo.UserDto;
+import cn.com.cgh.romantic.pojo.TbCfgUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class OAuth2Config {
                 .successHandler((request, response, authentication) -> {
                     log.info("登录成功");
                     Map<String, String> map = new HashMap<>();
-                    UserDto securityUser = (UserDto) authentication.getPrincipal();
+                    TbCfgUser securityUser = (TbCfgUser) authentication.getPrincipal();
                     map.put("token", securityUser.getUsername());
                     response.getWriter().write(ResponseImpl.builder().message("登录成功").data(map).build().SUCCESS().toString());
                 })

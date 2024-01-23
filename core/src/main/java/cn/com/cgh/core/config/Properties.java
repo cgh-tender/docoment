@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 @RefreshScope
 public class Properties {
-    @Value("${spring.cache.cache-names:login,user,core,gateway}")
+    @Value("${spring.cache.cache-names:resource,user,core,gateway}")
     private List<String> cacheNames;
 
     @Value("${spring.datasource.url}")

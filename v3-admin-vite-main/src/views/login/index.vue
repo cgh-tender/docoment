@@ -58,7 +58,7 @@ const handleLogin = () => {
     }
   })
 }
-codeBaseUri.value = "login/getCode.gif"
+codeBaseUri.value = "resource/getCode.gif"
 // gif
 // circle
 // line

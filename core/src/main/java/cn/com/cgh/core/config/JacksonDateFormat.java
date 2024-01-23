@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
@@ -30,7 +31,7 @@ public class JacksonDateFormat {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilder() {
         return builder -> {
-            TimeZone tz = TimeZone.getTimeZone("UTC");
+            TimeZone tz = TimeZone.getTimeZone("GMT-8");
             DateFormat df = new SimpleDateFormat(pattern);
             df.setTimeZone(tz);
             builder.failOnEmptyBeans(false)
@@ -46,7 +47,7 @@ public class JacksonDateFormat {
     }
 
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        return builder -> builder.serializerByType(LocalDateTime.class, localDateTimeDeserializer());
+    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer(LocalDateTimeSerializer localDateTimeSerializer) {
+        return builder -> builder.serializerByType(LocalDateTime.class, localDateTimeSerializer);
     }
 }

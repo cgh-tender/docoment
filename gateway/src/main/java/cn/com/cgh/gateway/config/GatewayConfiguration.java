@@ -79,9 +79,9 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
 
     private static void initGateWatGroup() {
 //        Set<ApiDefinition> definitions = new HashSet<>();
-//        ApiDefinition api1 = new ApiDefinition("login")
+//        ApiDefinition api1 = new ApiDefinition("resource")
 //                .setPredicateItems(new HashSet<ApiPredicateItem>() {{
-//                    add(new ApiPathPredicateItem().setPattern("/login/**")
+//                    add(new ApiPathPredicateItem().setPattern("/resource/**")
 //                            /**
 //                             * 匹配策略：
 //                             * URL_MATCH_STRATEGY_EXACT：url精确匹配
@@ -141,7 +141,7 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
 //                )
 //        );
 
-        rules.add(new GatewayFlowRule("login")
+        rules.add(new GatewayFlowRule("resource")
                         /**
                          * 规则是针对 API Gateway 的 route（RESOURCE_MODE_ROUTE_ID）
                          * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。

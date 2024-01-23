@@ -4,7 +4,7 @@ import cn.com.cgh.auth.exception.VerificationCodeException;
 import cn.com.cgh.gallery.util.Application;
 import cn.com.cgh.core.util.RequestWrapper;
 import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.pojo.UserDto;
+import cn.com.cgh.romantic.pojo.TbCfgUser;
 import cn.hutool.json.JSONUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -42,7 +42,7 @@ public class VerificationCodeFilter extends OncePerRequestFilter {
                         if (StringUtils.isEmpty(body)){
                             log.info("请求体为空");
                         }
-                        code = JSONUtil.parseObj(body).toBean(UserDto.class).getCode();
+                        code = JSONUtil.parseObj(body).toBean(TbCfgUser.class).getCode();
                     }
                 }
                 String verificationCode = (String) redisTemplateSO.opsForValue().get(uuid);
