@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 商品销售统计 Mapper 接口
  * </p>
  *
- * @author baomidou
+ * @author cgh
  * @since 2024-01-05
  */
 @Mapper

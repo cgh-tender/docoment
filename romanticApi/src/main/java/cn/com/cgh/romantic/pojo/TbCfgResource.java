@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 /**
  * 菜单表
- * @author baomidou
+ * @author cgh
  * @since 2024-01-05
  */
 @Getter

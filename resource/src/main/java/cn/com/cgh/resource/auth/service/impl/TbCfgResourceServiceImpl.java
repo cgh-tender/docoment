@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * 商品销售统计 服务实现类
  * </p>
  *
- * @author baomidou
+ * @author cgh
  * @since 2024-01-05
  */
 @Service

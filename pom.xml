@@ -164,6 +164,13 @@
                 <version>${mybatis.generator.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>2.3</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>p6spy</groupId>
                 <artifactId>p6spy</artifactId>
                 <version>${p6spy.version}</version>

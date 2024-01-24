@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * 商品销售统计 服务类
  * </p>
  *
- * @author baomidou
+ * @author cgh
  * @since 2024-01-05
  */
 public interface ITbCfgResourceService extends IService<TbCfgResource> {
