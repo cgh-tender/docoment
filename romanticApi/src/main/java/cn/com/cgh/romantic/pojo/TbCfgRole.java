@@ -2,10 +2,12 @@ package cn.com.cgh.romantic.pojo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 角色表
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "角色表")
 public class TbCfgRole extends TbBaseEntity{

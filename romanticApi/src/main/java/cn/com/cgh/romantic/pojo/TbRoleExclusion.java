@@ -2,7 +2,9 @@ package cn.com.cgh.romantic.pojo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "角色互斥表")
 public class TbRoleExclusion extends TbBaseEntity{

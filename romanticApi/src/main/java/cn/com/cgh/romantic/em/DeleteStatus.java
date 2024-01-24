@@ -15,6 +15,7 @@ public enum DeleteStatus implements IEnum<Integer> {
     /**
      * 删除
      */
-    private final int value;
+    private final Integer value;
     private final String desc;
+
 }

@@ -68,7 +68,9 @@ public class NotVoidResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpResponse serverHttpResponse) {
         if (body == null) {
             return ResponseImpl.builder().build().SUCCESS();
-        } else {
+        } else if (body instanceof ResponseImpl) {
+            return body;
+        }else{
             if (logger.isDebugEnabled()) {
                 String path = serverHttpRequest.getURI().getPath();
                 logger.debug("Graceful Response:非空返回值，执行封装:path={}", path);

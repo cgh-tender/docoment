@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-public class MenuController implements IMenuController<Menu> {
+public class MenuController implements IMenuController {
     @Retryable(retryFor = Exception.class,maxAttempts = 3,backoff = @Backoff(delay = 3600,multiplier = 1.5))
     public Map call(){
         log.info("成功");

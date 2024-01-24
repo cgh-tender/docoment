@@ -1,4 +1,4 @@
-package cn.com.cgh.core.config;
+package cn.com.cgh.core.config.db;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +15,4 @@ import java.util.List;
 public class Properties {
     @Value("${spring.cache.cache-names:resource,user,core,gateway}")
     private List<String> cacheNames;
-
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.username}")
-    private String username;
-    @Value("${spring.datasource.password}")
-    private String password;
-    @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
 }

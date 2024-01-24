@@ -68,7 +68,7 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return  ResponseImpl.builder().message(msg).build().FULL();
+        return ResponseImpl.builder().message(msg).build().FULL();
     }
 
     private ResponseImpl handleConstraintViolationException(Exception e) throws Exception {

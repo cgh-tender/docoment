@@ -1,5 +1,6 @@
 package cn.com.cgh.core.config;
 
+import cn.com.cgh.core.config.db.Properties;
 import cn.com.cgh.core.interfac.RedisMessageAdvice;
 import cn.com.cgh.core.util.Constants;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;

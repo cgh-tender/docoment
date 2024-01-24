@@ -1,6 +1,6 @@
 package cn.com.cgh.core.util;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.LocalDateTime;
@@ -9,11 +9,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 public class IdWork {
     private static final long BEGIN_TIMESTAMP = 1669503600L;
-
-    private final RedisTemplate<String,Object> redisTemplateSO;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplateSO;
     private static final int COUNT_BITS = 32;
     private final static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy:MM:dd");
 

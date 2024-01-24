@@ -16,6 +16,6 @@ public enum UserStatus implements IEnum<Integer> {
      */
     LOCK(1, "锁定");
 
-    private final int value;
+    private final Integer value;
     private final String desc;
 }

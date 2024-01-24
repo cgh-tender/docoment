@@ -10,6 +10,6 @@ public enum ResourceStatus implements IEnum<Integer> {
     MENU(0, "菜单"),
     BUTTON(1, "按钮");
 
-    private final int value;
+    private final Integer value;
     private final String desc;
 }

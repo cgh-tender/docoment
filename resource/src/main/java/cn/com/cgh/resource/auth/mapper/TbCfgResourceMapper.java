@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-01-05
  */
 @Mapper
-public interface SysResourceMapper extends BaseMapper<TbCfgResource> {
+public interface TbCfgResourceMapper extends BaseMapper<TbCfgResource> {
 
 }

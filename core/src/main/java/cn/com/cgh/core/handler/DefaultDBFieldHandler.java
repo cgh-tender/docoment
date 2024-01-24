@@ -1,17 +1,21 @@
-package cn.com.cgh.romantic.handler;
+package cn.com.cgh.core.handler;
 
 import cn.com.cgh.core.util.IdWork;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.Objects;
 
-@AllArgsConstructor
+@Slf4j
 public class DefaultDBFieldHandler implements MetaObjectHandler {
-    private final IdWork idWork;
+    static {
+        log.info("DefaultDBFieldHandler:已启动");
+    }
+    @Autowired
+    private IdWork idWork;
     @Override
     public void insertFill(MetaObject metaObject) {
         // 当前登录用户信息

@@ -1,6 +1,5 @@
 package cn.com.cgh.core.util;
 
-import cn.com.cgh.gallery.util.Application;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cloud.commons.util.InetUtils;
 

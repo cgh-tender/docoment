@@ -13,24 +13,21 @@ import java.util.List;
         , fallbackFactory = IMenuController.TestFallbackFactory.class
         , contextId = "resource-1"
 )
-public interface IMenuController<T> {
+public interface IMenuController {
     Logger logger = LoggerFactory.getLogger(IMenuController.class);
 
     @GetMapping("/getMenu")
-    public List<T> queryMenu();
+    List queryMenu();
 
 
     @Component
-    class TestFallbackFactory<T> implements FallbackFactory<IMenuController<T>> {
+    class TestFallbackFactory<T> implements FallbackFactory<IMenuController> {
 
         @Override
-        public IMenuController<T> create(Throwable cause) {
-            return new IMenuController() {
-                @Override
-                public List queryMenu() {
-                    logger.info("ssssss");
-                    return null;
-                }
+        public IMenuController create(Throwable cause) {
+            return () -> {
+                logger.info("ssssss");
+                return null;
             };
         }
 

@@ -15,6 +15,6 @@ public enum GenderStatus implements IEnum<Integer> {
      * 锁定
      */
     FEMALE(1, "女");
-    private final int value;
+    private final Integer value;
     private final String desc;
 }

@@ -17,4 +17,9 @@ public class Constants {
 
     public static final String REDIS_CACHE_MANAGER_NAME = "empRedisCacheManager";
     public static final String REQUEST_IP_NAME = "X-Real-IP";
+
+
+    public static final String MASTER = "master";
+    public static final String SLAVE1 = "slave1";
+    public static final String SLAVE2 = "slave2";
 }

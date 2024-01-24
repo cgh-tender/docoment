@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author baomidou
  * @since 2024-01-05
  */
-public interface ISysResourceService extends IService<TbCfgResource> {
+public interface ITbCfgResourceService extends IService<TbCfgResource> {
 
 }

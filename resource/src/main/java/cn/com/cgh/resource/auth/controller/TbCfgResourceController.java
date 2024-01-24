@@ -1,7 +1,7 @@
 package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.romantic.pojo.TbCfgResource;
-import cn.com.cgh.resource.auth.service.ISysResourceService;
+import cn.com.cgh.resource.auth.service.ITbCfgResourceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/sysResource")
 @Tag(name = "商品销售统计")
-public class SysResourceController {
+public class TbCfgResourceController {
     @Autowired
-    private ISysResourceService ISysResourceService;
+    private ITbCfgResourceService ITbCfgResourceService;
     @GetMapping("/list")
     @Operation(summary = "分页用户列表")
-    public List<TbCfgResource> querySysResourceList() {
-        return ISysResourceService.query().list();
+    public List<TbCfgResource> queryTbCfgResourceList() {
+        return ITbCfgResourceService.query().list();
     }
 
 }
