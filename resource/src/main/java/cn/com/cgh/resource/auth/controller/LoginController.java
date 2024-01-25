@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.controller;
 
-import cn.com.cgh.romantic.pojo.TbCfgUser;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 

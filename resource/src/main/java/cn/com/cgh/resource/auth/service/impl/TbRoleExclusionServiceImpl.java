@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.TbRoleExclusion;
+import cn.com.cgh.romantic.pojo.resource.TbRoleExclusion;
 import cn.com.cgh.resource.auth.mapper.TbRoleExclusionMapper;
 import cn.com.cgh.resource.auth.service.ITbRoleExclusionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

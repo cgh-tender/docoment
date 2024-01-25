@@ -2,7 +2,7 @@ package cn.com.cgh.auth.service;
 
 import cn.com.cgh.auth.constant.MessageConstant;
 import cn.com.cgh.romantic.login.IUmsUserServer;
-import cn.com.cgh.romantic.pojo.TbCfgUser;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;

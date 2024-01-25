@@ -58,11 +58,8 @@ const handleLogin = () => {
     }
   })
 }
-codeBaseUri.value = "resource/getCode.gif"
-// gif
-// circle
-// line
-// shear
+
+codeBaseUri.value = import.meta.env.VITE_BASE_CODE_API
 
 /** 创建验证码 */
 const createCode = () => {

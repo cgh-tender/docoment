@@ -1,7 +1,7 @@
 package cn.com.cgh.resource.auth.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
  * @author cgh
  * @since 2024-01-24
  */
-@Controller
+@RestController
 @RequestMapping("/tbRoleExclusion")
 public class TbRoleExclusionController {
 

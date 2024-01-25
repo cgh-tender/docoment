@@ -1,13 +1,13 @@
-package cn.com.cgh.romantic.pojo;
+package cn.com.cgh.romantic.pojo.resource;
 
+import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-
-import java.io.Serializable;
 
 /**
  * <p>
@@ -17,12 +17,14 @@ import java.io.Serializable;
  * @author cgh
  * @since 2024-01-24
  */
-@Getter
-@Setter
+
 @Accessors(chain = true)
 @TableName("tb_cfg_datasource")
 @Schema(name = "TbCfgDatasource对象", description = "数据库连接表")
-public class TbCfgDatasource implements Serializable {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TbCfgDatasource extends TbBaseEntity {
 
     @Schema(name = "数据库连接地址")
     @TableField("url")

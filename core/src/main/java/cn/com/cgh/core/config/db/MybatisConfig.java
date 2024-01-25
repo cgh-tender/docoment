@@ -22,6 +22,8 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -34,6 +36,7 @@ import java.util.Map;
 @Setter
 @Slf4j
 public class MybatisConfig {
+    private static final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
     static {
         log.info("MybatisConfig:已启动");
     }
@@ -83,9 +86,10 @@ public class MybatisConfig {
     }
 
     @Bean(name = "globalConfig")
-    public GlobalConfig globalConfig(DefaultDBFieldHandler defaultDBFieldHandler) {
+    public GlobalConfig globalConfig(DefaultDBFieldHandler defaultDBFieldHandler,CustomIdGenerator customIdGenerator) {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.setMetaObjectHandler(defaultDBFieldHandler);
+        globalConfig.setIdentifierGenerator(customIdGenerator);
         return globalConfig;
     }
 
@@ -97,7 +101,9 @@ public class MybatisConfig {
         configuration.setDefaultScriptingLanguage(MybatisXMLLanguageDriver.class);
         configuration.setJdbcTypeForNull(JdbcType.NULL);
         factoryBean.setConfiguration(configuration);
+        factoryBean.setMapperLocations(resourceResolver.getResources("classpath*:mapper/**/*.xml"));
         factoryBean.setGlobalConfig(globalConfig);
+        factoryBean.setTypeHandlersPackage("cn.com.cgh.**.typeHandler");
         factoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
         return factoryBean.getObject();
     }

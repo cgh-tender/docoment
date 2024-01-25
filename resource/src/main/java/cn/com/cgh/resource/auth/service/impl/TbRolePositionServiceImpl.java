@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.TbRolePosition;
+import cn.com.cgh.romantic.pojo.resource.TbRolePosition;
 import cn.com.cgh.resource.auth.mapper.TbRolePositionMapper;
 import cn.com.cgh.resource.auth.service.ITbRolePositionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

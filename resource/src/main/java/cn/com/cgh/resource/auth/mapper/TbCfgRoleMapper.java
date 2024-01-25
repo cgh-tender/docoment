@@ -1,8 +1,11 @@
 package cn.com.cgh.resource.auth.mapper;
 
-import cn.com.cgh.romantic.pojo.TbCfgRole;
+import cn.com.cgh.romantic.pojo.resource.TbCfgRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +18,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TbCfgRoleMapper extends BaseMapper<TbCfgRole> {
 
+    List<TbCfgRole> queryAllByUserId(@Param("userId")Long userId);
 }

@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.TbRoleGroup;
+import cn.com.cgh.romantic.pojo.resource.TbRoleGroup;
 import cn.com.cgh.resource.auth.mapper.TbRoleGroupMapper;
 import cn.com.cgh.resource.auth.service.ITbRoleGroupService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

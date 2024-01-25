@@ -1,4 +1,4 @@
-package cn.com.cgh.resource.pojo;
+package cn.com.cgh.romantic.pojo.resource.child;
 
 import lombok.Builder;
 import lombok.Getter;

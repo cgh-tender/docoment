@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service;
 
-import cn.com.cgh.romantic.pojo.TbCfgUser;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-01-24
  */
 public interface ITbCfgUserService extends IService<TbCfgUser> {
+
+    TbCfgUser queryOneByUsername(String username);
 
 }

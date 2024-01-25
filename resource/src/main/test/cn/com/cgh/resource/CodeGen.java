@@ -1,4 +1,4 @@
-package cn.com.resource;
+package cn.com.cgh.resource;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;

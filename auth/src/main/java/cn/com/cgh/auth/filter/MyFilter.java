@@ -1,7 +1,7 @@
 package cn.com.cgh.auth.filter;
 
 import cn.com.cgh.core.util.RequestWrapper;
-import cn.com.cgh.romantic.pojo.TbCfgUser;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.hutool.json.JSONUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,14 +34,14 @@ public class MyFilter extends UsernamePasswordAuthenticationFilter {
             RequestWrapper requestWrapper = null;
             TbCfgUser user = null;
             if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())
-                    || "application/json;charset=UTF-8".equals(request.getContentType())){
-                    requestWrapper = new RequestWrapper(request);
-                    String body = requestWrapper.getBody();
-                    if (StringUtils.isEmpty(body)){
-                        log.info("请求体为空");
-                    }
+                    || "application/json;charset=UTF-8".equals(request.getContentType())) {
+                requestWrapper = new RequestWrapper(request);
+                String body = requestWrapper.getBody();
+                if (StringUtils.isEmpty(body)) {
+                    log.info("请求体为空");
+                }
                 user = JSONUtil.parseObj(body).toBean(TbCfgUser.class);
-            }else{
+            } else {
                 user = new TbCfgUser();
                 user.setUsername(request.getParameter("username"));
                 user.setPassword(request.getParameter("password"));

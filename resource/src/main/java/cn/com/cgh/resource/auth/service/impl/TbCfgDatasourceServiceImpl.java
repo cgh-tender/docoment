@@ -2,7 +2,7 @@ package cn.com.cgh.resource.auth.service.impl;
 
 import cn.com.cgh.resource.auth.mapper.TbCfgDatasourceMapper;
 import cn.com.cgh.resource.auth.service.ITbCfgDatasourceService;
-import cn.com.cgh.romantic.pojo.TbCfgDatasource;
+import cn.com.cgh.romantic.pojo.resource.TbCfgDatasource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

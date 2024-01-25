@@ -1,18 +1,11 @@
 package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
-import cn.com.cgh.romantic.em.GenderStatus;
-import cn.com.cgh.romantic.em.UserStatus;
-import cn.com.cgh.romantic.pojo.TbCfgUser;
-import cn.hutool.json.JSONUtil;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -22,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author cgh
  * @since 2024-01-24
  */
-@Controller
+@RestController
 @Slf4j
 @RequestMapping("/user")
 public class TbCfgUserController {
@@ -33,24 +26,12 @@ public class TbCfgUserController {
 
     @PostMapping
     public String add(TbCfgUser user){
-        user.setUsername("admin");
-        user.setPassword("123456");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(UserStatus.NORMAL);
-        user.setPhone("18334774205");
-        user.setEmail("late_tender@163.com");
-        user.setGender(GenderStatus.MALE);
-        tbCfgUserService.save(user);
-        return "保存成功";
+        boolean save = tbCfgUserService.save(user);
+        return save?"添加成功":"添加失败";
     }
 
     @GetMapping("/loadByUsername/{username}")
     public TbCfgUser loadByUsername(@PathVariable String username) {
-        TbCfgUser tbCfgUser = new TbCfgUser();
-        tbCfgUser.setUsername(username);
-        tbCfgUser.setPassword(passwordEncoder.encode("12345678"));
-        tbCfgUser.setStatus(UserStatus.NORMAL);
-        log.info(JSONUtil.toJsonStr(tbCfgUser));
-        return tbCfgUser;
+        return tbCfgUserService.queryOneByUsername(username);
     }
 }

@@ -37,20 +37,31 @@ create table IF NOT EXISTS tb_cfg_datasource
 create table IF NOT EXISTS tb_cfg_resource
 (
     id          bigint(20) NOT NULL auto_increment comment '主键',
-    code        bigint(20) NOT NULL comment '菜单code',
-    parent_code bigint(20) NOT NULL comment '父菜单code',
-    name        varchar(64) NOT NULL comment '菜单名称',
-    description        varchar(256) DEFAULT NULL comment '描述',
-    deleted   tinyint(2) DEFAULT 0 comment '是否删除 1: 是，0：否',
-    url       varchar(256) NOT NULL comment '菜单url',
-    status    tinyint(2) NOT NULL comment '资源类型',
+    parent_id bigint(20) DEFAULT 0 comment '父菜单code',
     create_by bigint(20) NOT NULL comment '创建人',
     create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
     update_by bigint(20) NOT NULL comment '最终修改人',
     update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+    name        varchar(64) NOT NULL comment '菜单名称',
+    path       varchar(256) NOT NULL comment '菜单url',
+    description        varchar(256) DEFAULT NULL comment '描述',
+    deleted   tinyint(2) DEFAULT 0 comment '是否删除 1: true 删除，0：false 活跃',
+    status    tinyint(2) DEFAULT 0 comment '资源类型',
+    redirect    varchar(32) DEFAULT NULL comment '重定向 地址',
+    alias    varchar(64) DEFAULT NULL comment '路由别名',
+    before_enter    varchar(128) DEFAULT NULL comment '独享路由守卫',
+    before_route_leave    varchar(128) comment '离开该组件时被调用',
+    component    varchar(128) comment '获取跳转页面的地址',
+    keep_alive  tinyint(2) DEFAULT 0 comment '是否开启缓存页面 1: 是，0：否',
+    meta  varchar(512) comment '路由元数据',
+    sort  tinyint(2) DEFAULT 0 comment '排序',
     PRIMARY KEY (id) USING BTREE,
-    KEY         idx_code_ware (code,parent_code) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='菜单表';
+    KEY         idx_code_ware (id,parent_id) USING BTREE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='菜单表';
+INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, update_time, name, path, description, deleted, status, redirect, alias, before_enter, before_route_leave, component, keep_alive, meta, sort) VALUES (157586258510479372, 0, 1, '2024-01-25 14:55:11', 1, '2024-01-25 14:55:11', 'Permission', '/permission', null, 0, 0, '/permission/page', null, null, null, 'Layouts', 0, '{"activeMenu":"","affix":null,"alwaysShow":true,"breadcrumb":null,"elIcon":"","hidden":null,"keepAlive":null,"roles":["admin","editor"],"svgIcon":"lock","title":"权限管理"}', 0);
+INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, update_time, name, path, description, deleted, status, redirect, alias, before_enter, before_route_leave, component, keep_alive, meta, sort) VALUES (157587010129756173, 157586258510479372, 1, '2024-01-25 14:58:05', 1, '2024-01-25 14:58:05', 'PagePermission', 'page', null, 0, 0, null, null, null, null, 'permission/page', 1, '{"activeMenu":"","affix":null,"alwaysShow":null,"breadcrumb":null,"elIcon":"","hidden":null,"keepAlive":null,"roles":[],"svgIcon":"","title":"页面权限"}', 0);
+INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, update_time, name, path, description, deleted, status, redirect, alias, before_enter, before_route_leave, component, keep_alive, meta, sort) VALUES (157587010129756174, 157586258510479372, 1, '2024-01-25 14:58:05', 1, '2024-01-25 14:58:05', 'DirectivePermission', 'directive', null, 0, 0, null, null, null, null, 'permission/directive', 1, '{"activeMenu":"","affix":null,"alwaysShow":null,"breadcrumb":null,"elIcon":"","hidden":null,"keepAlive":null,"roles":[],"svgIcon":"","title":"指令权限"}', 0);
+INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, update_time, name, path, description, deleted, status, redirect, alias, before_enter, before_route_leave, component, keep_alive, meta, sort) VALUES (157587010129756175, 157586258510479372, 1, '2024-01-25 14:58:05', 1, '2024-01-25 14:58:05', 'umsUser', 'directive', null, 0, 0, null, null, null, null, 'permission/directive', 1, '{"activeMenu":"","affix":null,"alwaysShow":null,"breadcrumb":null,"elIcon":"","hidden":null,"keepAlive":null,"roles":[],"svgIcon":"","title":"指令权限1"}', 0);
 
 CREATE TABLE IF NOT EXISTS tb_cfg_user
 (
@@ -59,7 +70,8 @@ CREATE TABLE IF NOT EXISTS tb_cfg_user
     create_time datetime   NOT NULL COMMENT '创建时间',
     update_time datetime   NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     update_by   bigint(20) NOT NULL COMMENT '更新者',
-    username        varchar(128) DEFAULT NULL COMMENT '用户名称',
+    username        varchar(128) NOT NULL COMMENT '用户名称',
+    password        varchar(128) NOT NULL COMMENT '密码',
     phone       varchar(20) DEFAULT NULL COMMENT '手机号',
     email       varchar(20) DEFAULT NULL COMMENT '邮箱',
     gender tinyint(2) DEFAULT NULL COMMENT '性别',
@@ -67,6 +79,8 @@ CREATE TABLE IF NOT EXISTS tb_cfg_user
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
+INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (1, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'admin', '{bcrypt}$2a$10$erkqLdvTsaccM.aMC1g/fOBixc2WQH/f6iEWximSb06Xh86gM3LyK', '18334774205', 'late_tender@163.com', 0, 0);
+INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (2, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'test', '{bcrypt}$2a$10$CT7jn1Pri2JBcVIaBle8Ie9tViTnKiwjbh5cOa6MX/CrKv2BAiqze', '18334774205', 'late_tender@163.com', 0, 0);
 
 CREATE TABLE IF NOT EXISTS tb_cfg_role
 (
@@ -77,10 +91,12 @@ CREATE TABLE IF NOT EXISTS tb_cfg_role
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     name        varchar(255) DEFAULT NULL COMMENT '名称',
     description varchar(255) DEFAULT NULL COMMENT '描述',
-    parent_id   bigint(20)   DEFAULT NULL COMMENT '父ID',
+    parent_id   bigint(20)   DEFAULT 0 COMMENT '父ID',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='组织表';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='角色表';
+INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (1, 1, '2024-01-25 16:14:37', '2024-01-25 08:14:54', 1, 'admin', '超级管理员', 0);
+INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:14:38', '2024-01-25 08:14:54', 1, 'test', '测试人员', 0);
 
 CREATE TABLE IF NOT EXISTS tb_user_role
 (
@@ -94,6 +110,9 @@ CREATE TABLE IF NOT EXISTS tb_user_role
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户角色关系表';
+INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (157607312440164375, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 1, 1);
+INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (157607312440164376, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 2);
+
 
 CREATE TABLE IF NOT EXISTS tb_cfg_organization
 (

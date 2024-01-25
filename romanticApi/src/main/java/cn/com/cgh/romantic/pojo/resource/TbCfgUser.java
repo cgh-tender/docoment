@@ -1,11 +1,12 @@
-package cn.com.cgh.romantic.pojo;
+package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.em.GenderStatus;
 import cn.com.cgh.romantic.em.UserStatus;
+import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "用户表")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TbCfgUser extends TbBaseEntity implements UserDetails {
     /**
      * 用户名
@@ -51,7 +55,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
     /**
      * 角色列表
      */
-    @TableField(exist = false)
+    @TableField(exist = false,typeHandler = FastjsonTypeHandler.class)
     private List<TbCfgRole> tbCfgRoles;
     @TableField(exist = false)
     private String code;

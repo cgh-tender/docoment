@@ -20,7 +20,6 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         // 当前登录用户信息
         if (Objects.nonNull(metaObject)) {
-            this.setFieldValByName("id", idWork.nextId(), metaObject);
             this.setFieldValByName("createBy", 1L, metaObject);
             this.setFieldValByName("updateBy", 1L, metaObject);
             this.setFieldValByName("createTime", new Date(), metaObject);

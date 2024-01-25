@@ -4,7 +4,7 @@ import cn.com.cgh.auth.exception.VerificationCodeException;
 import cn.com.cgh.core.util.Application;
 import cn.com.cgh.core.util.RequestWrapper;
 import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.pojo.TbCfgUser;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.hutool.json.JSONUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

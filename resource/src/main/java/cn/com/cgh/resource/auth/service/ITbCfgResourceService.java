@@ -1,7 +1,9 @@
 package cn.com.cgh.resource.auth.service;
 
-import cn.com.cgh.romantic.pojo.TbCfgResource;
+import cn.com.cgh.romantic.pojo.resource.TbCfgResource;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbCfgResourceService extends IService<TbCfgResource> {
 
+    List<TbCfgResource> queryTbCfgResourceList();
 }

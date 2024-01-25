@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.cgh.resource.auth.mapper.TbCfgRoleMapper">
+    <resultMap id="base" type="cn.com.cgh.romantic.pojo.resource.TbCfgRole"
+               extends="cn.com.cgh.resource.auth.mapper.BasePojoMapper.base">
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="description" property="description" jdbcType="VARCHAR" />
+        <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+
+        <collection property="children"
+                    select="queryAllChildren"
+                    column="id"
+                    ofType="cn.com.cgh.romantic.pojo.resource.TbCfgRole"
+                    typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+    </resultMap>
+    <select id="queryAllChildren" resultMap="base">
+        select r.id,r.name,r.description,r.parent_id from tb_cfg_role r where r.parent_id = ${id}
+    </select>
+
+    <select id="queryAllByUserId" resultMap="base">
+        select r.id,r.name,r.description,r.parent_id from tb_cfg_role r,tb_user_role ur where r.id = ur.role_id and ur.user_id = ${userId}
+    </select>
 
 </mapper>

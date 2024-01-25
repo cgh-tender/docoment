@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.mapper;
 
-import cn.com.cgh.romantic.pojo.TbCfgOrganization;
+import cn.com.cgh.romantic.pojo.resource.TbCfgOrganization;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

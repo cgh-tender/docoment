@@ -1,8 +1,8 @@
-package cn.com.cgh.romantic.pojo;
+package cn.com.cgh.romantic.pojo.resource;
 
+import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 /**
  * 用户-角色表关系表
@@ -10,7 +10,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "用户-角色表")
-public class TbUserRole extends TbBaseEntity{
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TbUserRole extends TbBaseEntity {
    @Schema(description = "用户id")
    private Long userId;
    @Schema(description = "用户角色id")

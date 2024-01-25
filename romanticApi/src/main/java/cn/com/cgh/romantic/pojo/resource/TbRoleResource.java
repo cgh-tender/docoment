@@ -1,14 +1,17 @@
-package cn.com.cgh.romantic.pojo;
+package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.em.ResourceStatus;
+import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "角色资源关系表")
-public class TbRoleResource extends TbBaseEntity{
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TbRoleResource extends TbBaseEntity {
     @Schema(description = "角色id")
     private Long roleId;
     @Schema(description = "资源id")

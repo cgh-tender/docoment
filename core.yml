@@ -60,6 +60,14 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
+mybatis-plus:
+  mapper-locations:
+    - classpath*:/mapper/**/*.xml
+  type-handlers-package: cn.com.cgh.**.typeHandler
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 log:
   level:
     - name: cn.com.cgh.resource

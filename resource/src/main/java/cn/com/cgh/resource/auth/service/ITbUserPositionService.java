@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service;
 
-import cn.com.cgh.romantic.pojo.TbUserPosition;
+import cn.com.cgh.romantic.pojo.resource.TbUserPosition;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

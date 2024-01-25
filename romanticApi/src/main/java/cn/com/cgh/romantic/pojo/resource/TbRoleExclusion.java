@@ -1,13 +1,16 @@
-package cn.com.cgh.romantic.pojo;
+package cn.com.cgh.romantic.pojo.resource;
 
+import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "角色互斥表")
-public class TbRoleExclusion extends TbBaseEntity{
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TbRoleExclusion extends TbBaseEntity {
     @Schema(description = "角色1")
     private Long roleIdOne;
     @Schema(description = "角色2")

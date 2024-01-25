@@ -1,8 +1,11 @@
 package cn.com.cgh.resource.auth.mapper;
 
-import cn.com.cgh.romantic.pojo.TbCfgResource;
+import cn.com.cgh.romantic.pojo.resource.TbCfgResource;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +17,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface TbCfgResourceMapper extends BaseMapper<TbCfgResource> {
-
+    List<TbCfgResource> queryTbCfgResourceList(@Param("parentId") Long parentId);
 }

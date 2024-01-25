@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.TbUserOrganization;
+import cn.com.cgh.romantic.pojo.resource.TbUserOrganization;
 import cn.com.cgh.resource.auth.mapper.TbUserOrganizationMapper;
 import cn.com.cgh.resource.auth.service.ITbUserOrganizationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

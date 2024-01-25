@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.cgh.resource.auth.mapper.TbCfgResourceMapper">
+    <resultMap id="base" type="cn.com.cgh.romantic.pojo.resource.TbCfgResource">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="parent_id" property="parentId" jdbcType="BIGINT" />
+        <result column="before_enter" property="beforeEnter" jdbcType="VARCHAR" />
+        <result column="before_route_leave" property="beforeRouteLeave" jdbcType="VARCHAR" />
+        <result column="redirect" property="redirect" jdbcType="VARCHAR" />
+        <result column="keep_alive" property="keepAlive" jdbcType="BOOLEAN" />
+        <result column="component" property="component" jdbcType="VARCHAR" />
+        <result column="meta" property="meta" jdbcType="VARCHAR" typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+        <result column="alias" property="alias" jdbcType="VARCHAR" typeHandler="cn.com.cgh.romantic.typeHandler.MyArrayTypeHandler"/>
+        <result column="path" property="path" jdbcType="VARCHAR" />
+        <collection property="children"
+                    select="queryTbCfgResourceList"
+                    column="id"
+                    ofType="cn.com.cgh.romantic.pojo.resource.TbCfgResource"
+                    javaType="ArrayList"/>
+    </resultMap>
+    <select id="queryTbCfgResourceList" resultMap="base">
+        select id,name,parent_id,before_enter,before_route_leave,redirect,keep_alive,component,meta,alias,path from tb_cfg_resource where status = 0 and parent_id = ${parentId} and deleted = 0 order by sort
+    </select>
+</mapper>

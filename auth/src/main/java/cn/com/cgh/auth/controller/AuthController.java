@@ -1,7 +1,7 @@
 package cn.com.cgh.auth.controller;
 
 import cn.com.cgh.romantic.login.ILoginController;
-import cn.com.cgh.romantic.pojo.TbCfgUser;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

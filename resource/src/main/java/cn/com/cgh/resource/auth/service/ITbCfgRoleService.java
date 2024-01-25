@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.service;
 
-import cn.com.cgh.romantic.pojo.TbCfgRole;
+import cn.com.cgh.romantic.pojo.resource.TbCfgRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
