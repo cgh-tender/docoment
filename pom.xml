@@ -16,6 +16,7 @@
         <module>jena</module>
         <module>auth</module>
         <module>romanticApi</module>
+        <module>log</module>
     </modules>
 
     <properties>

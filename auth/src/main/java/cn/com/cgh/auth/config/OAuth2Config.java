@@ -1,5 +1,8 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.auth.handler.FailureHandler;
+import cn.com.cgh.auth.handler.MyLogoutSuccessHandler;
+import cn.com.cgh.auth.handler.SuccessHandler;
 import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,18 +51,8 @@ public class OAuth2Config {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .authenticationDetailsSource(new MyWebAuthenticationDetailsSource(redisTemplateSO))
-                .successHandler((request, response, authentication) -> {
-                    log.info("登录成功");
-                    Map<String, String> map = new HashMap<>();
-                    TbCfgUser securityUser = (TbCfgUser) authentication.getPrincipal();
-                    map.put("token", securityUser.getUsername());
-                    response.getWriter().write(ResponseImpl.builder().message("登录成功").data(map).build().SUCCESS().toString());
-                })
-                .failureHandler((request, response, exception) -> {
-                    log.error("登录失败");
-                    log.error(exception.getMessage());
-                    response.getWriter().write(ResponseImpl.builder().message(exception.getMessage()).build().FULL().toString());
-                })
+                .successHandler(new SuccessHandler())
+                .failureHandler(new FailureHandler())
         );
 //        http.rememberMe(rememberMe ->
 //                        rememberMe
@@ -88,12 +81,7 @@ public class OAuth2Config {
                 logout.invalidateHttpSession(true)
                         .logoutUrl("/logout")
                         .deleteCookies("Border", "rememberMe")
-                        .logoutSuccessHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-                            log.info("退出成功");
-                            response.getWriter().write(ResponseImpl.builder().message("退出成功").build().SUCCESS().toString());
-                        }).addLogoutHandler((HttpServletRequest request, HttpServletResponse response, Authentication authentication) -> {
-                            log.info("开始退出登录");
-                        })
+                        .logoutSuccessHandler(new MyLogoutSuccessHandler())
         );
         return http.build();
     }

@@ -174,6 +174,13 @@ docker exec -it redis-slave-2 bash -c "redis-cli -h 127.0.0.1 -p 6379"
 https://yiming_chang.gitee.io/vue-pure-admin/#/login
 ```
 
-
+## docker 安装 rabbitMQ
+```bash
+docker run --restart=always -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
+username: guest
+password: guest
+http://127.0.0.1:15672/#/
+https://blog.csdn.net/qq_35387940/article/details/100514134
+```
 
 docker run -it --name redis-master -d -p 6300:6300 redis redis-server --requirepass redispassword --port 6300
