@@ -1,4 +1,7 @@
-## 
+## vue Test
+[testDocument](https://cn.vitest.dev/guide/test-context.html)
+
+## create databases
 ```sql
 create schema cgh1 collate utf8mb4_general_ci;
 ```
@@ -179,8 +182,8 @@ https://yiming_chang.gitee.io/vue-pure-admin/#/login
 docker run --restart=always -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
 username: guest
 password: guest
-http://127.0.0.1:15672/#/
-https://blog.csdn.net/qq_35387940/article/details/100514134
 ```
+[rabitMq](http://127.0.0.1:15672/#/)  
+[docement](https://blog.csdn.net/qq_35387940/article/details/100514134)  
 
 docker run -it --name redis-master -d -p 6300:6300 redis redis-server --requirepass redispassword --port 6300

@@ -16,7 +16,7 @@
         <module>jena</module>
         <module>auth</module>
         <module>romanticApi</module>
-        <module>log</module>
+        <module>oasis</module>
     </modules>
 
     <properties>
@@ -340,11 +340,11 @@
 <!--            <name>aliyun</name>-->
 <!--            <url>https://maven.aliyun.com/nexus/content/groups/public</url>-->
 <!--        </repository>-->
-        <repository>
-            <id>central2</id>
-            <name>central2</name>
-            <url>http://maven.buaa.edu.cn/nexus/content/repositories/releases/</url>
-        </repository>
+<!--        <repository>-->
+<!--            <id>central2</id>-->
+<!--            <name>central2</name>-->
+<!--            <url>http://maven.buaa.edu.cn/nexus/content/repositories/releases/</url>-->
+<!--        </repository>-->
     </repositories>
 
 </project>

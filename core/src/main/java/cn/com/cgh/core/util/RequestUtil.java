@@ -1,5 +1,6 @@
 package cn.com.cgh.core.util;
 
+import com.alibaba.cloud.nacos.util.InetIPv6Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cloud.commons.util.InetUtils;
 
@@ -8,6 +9,8 @@ import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 
 public class RequestUtil {
+    protected static InetUtils inetUtils;
+    protected static InetIPv6Utils inetIPv6Utils;
     public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -18,7 +21,7 @@ public class RequestUtil {
         }
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
-            if (ip.equals("127.0.0.1")) {
+            if ("127.0.0.1".equals(ip)) {
                 // 根据网卡取本机配置的 IP
                 InetAddress inet = null;
                 try {
@@ -51,10 +54,23 @@ public class RequestUtil {
         // 如果查找不到 IP,可以返回 127.0.0.1，可以做一定的处理，但是这里不考虑
         return ip;
     }
+    /**
+     * 获取本地IP地址
+     * @return 本地IP地址
+     */
     public static String getLocalAddress(){
-        InetUtils inetUtils = Application.getBean(InetUtils.class);
+        if (inetUtils == null){
+            inetUtils = Application.getBean(InetUtils.class);
+        }
         return inetUtils.findFirstNonLoopbackAddress().getHostAddress();
     }
+    public static String getLocalIpV6Address(){
+        if (inetIPv6Utils == null){
+            inetIPv6Utils = Application.getBean(InetIPv6Utils.class);
+        }
+        return inetIPv6Utils.findIPv6Address();
+    }
+
 
     public static String getMacAddress() throws Exception {
         // 取mac地址

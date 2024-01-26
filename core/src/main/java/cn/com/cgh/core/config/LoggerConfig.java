@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import cn.com.cgh.core.properties.LoginProperties;
-import cn.com.cgh.core.util.CoreDelay;
+import cn.com.cgh.core.util.BaseCoreDelay;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.nacos.api.config.listener.Listener;
 import lombok.extern.slf4j.Slf4j;
@@ -48,15 +48,15 @@ public class LoggerConfig implements ApplicationRunner {
             }
             @Override
             public void receiveConfigInfo(String s) {
-                DelayQueue<CoreDelay> queue = new DelayQueue<CoreDelay>();
-                queue.put(new CoreDelay("test", 3, TimeUnit.NANOSECONDS){
+                DelayQueue<BaseCoreDelay> queue = new DelayQueue<BaseCoreDelay>();
+                queue.put(new BaseCoreDelay("test", 3, TimeUnit.NANOSECONDS){
                     @Override
                     public void run() {
                         runFlyway();
                     }
                 });
                 try {
-                    CoreDelay take = queue.take();
+                    BaseCoreDelay take = queue.take();
                     take.run();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);

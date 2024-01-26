@@ -23,10 +23,6 @@
         </dependency>
         <dependency>
             <groupId>cn.com.cgh</groupId>
-            <artifactId>gallery</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.com.cgh</groupId>
             <artifactId>romanticApi</artifactId>
         </dependency>
         <dependency>

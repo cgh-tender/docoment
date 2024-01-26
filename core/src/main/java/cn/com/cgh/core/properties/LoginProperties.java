@@ -20,6 +20,5 @@ public class LoginProperties {
     public static class LevelProperties {
         private String name;
         private String level;
-
     }
 }

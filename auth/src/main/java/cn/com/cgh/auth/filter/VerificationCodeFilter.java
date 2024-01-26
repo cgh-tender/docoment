@@ -24,7 +24,7 @@ public class VerificationCodeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Boolean enableVerificationCode = Application.getApplicationContext().getEnvironment().getProperty("enableVerificationCode", Boolean.class, Boolean.FALSE);
-        if (!enableVerificationCode || !("/login".equals(request.getRequestURI()) && request.getMethod().equals("POST"))) {
+        if (!enableVerificationCode || !("/login".equals(request.getRequestURI()) && "POST".equals(request.getMethod()))) {
             filterChain.doFilter(request, response);
         } else {
             try {

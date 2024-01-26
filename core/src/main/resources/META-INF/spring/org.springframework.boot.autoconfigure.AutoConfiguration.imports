@@ -1,5 +1,6 @@
 cn.com.cgh.core.config.AuthBaseConfig
 cn.com.cgh.core.util.IdWork
+cn.com.cgh.core.util.SendQueue
 
 cn.com.cgh.core.config.db.Properties
 cn.com.cgh.core.config.db.MybatisConfig
@@ -17,6 +18,7 @@ cn.com.cgh.core.config.ansy.AsyncConfig
 cn.com.cgh.core.properties.LoginProperties
 cn.com.cgh.core.config.LoggerConfig
 cn.com.cgh.core.config.JacksonDateFormat
+cn.com.cgh.core.config.MqConnectionFactory
 
 cn.com.cgh.core.handler.DefaultDBFieldHandler
 

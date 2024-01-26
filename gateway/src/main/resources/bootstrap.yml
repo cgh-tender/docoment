@@ -24,6 +24,12 @@ spring:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+        - id: swain
+          uri: lb://swain
+          predicates:
+            - Path=/swain/**
+          filters:
+            - StripPrefix=1
     nacos:
       config:
         extension-configs:

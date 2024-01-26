@@ -1,11 +1,11 @@
-package cn.com.cgh.log;
+package cn.com.cgh.oasis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LogApplication {
+public class OasisApplication {
     public static void main(String[] args) {
-        SpringApplication.run(LogApplication.class, args);
+        SpringApplication.run(OasisApplication.class, args);
     }
 }

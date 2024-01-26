@@ -3,7 +3,7 @@
 
     <contextName>logback</contextName>
     <springProperty scope="context" name="project.name" source="spring.application.name"/>
-    <property name="log.name" value="logs/${project.name}"/>
+    <property name="log.name" value="../logs/${project.name}"/>
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
