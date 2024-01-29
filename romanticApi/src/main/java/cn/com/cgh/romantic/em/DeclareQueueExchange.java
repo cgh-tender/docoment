@@ -1,4 +1,4 @@
-package cn.com.cgh.core.em;
+package cn.com.cgh.romantic.em;
 
 import lombok.Getter;
 

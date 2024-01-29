@@ -1,7 +1,7 @@
 package cn.com.cgh.oasis.config;
 
-import cn.com.cgh.core.em.DeclareQueueExchange;
-import cn.com.cgh.core.em.DeclareQueueName;
+import cn.com.cgh.romantic.em.DeclareQueueExchange;
+import cn.com.cgh.romantic.em.DeclareQueueName;
 import com.rabbitmq.client.*;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

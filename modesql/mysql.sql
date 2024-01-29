@@ -23,38 +23,38 @@ CREATE TABLE t_ware_sale_statistics
 
 create table IF NOT EXISTS tb_cfg_datasource
 (
-    id          bigint(20) NOT NULL auto_increment comment '主键',
-    create_by bigint(20) NOT NULL comment '创建人',
-    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-    update_by bigint(20) NOT NULL comment '最终修改人',
-    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    url         varchar(256) NOT NULL comment '数据库连接地址',
-    username         varchar(256) NOT NULL comment '数据库连接用户名',
-    password         varchar(256) NOT NULL comment '数据库连接密码',
+    id          bigint(20) NOT NULL auto_increment COMMENT '主键',
+    create_by bigint(20) NOT NULL COMMENT '创建人',
+    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by bigint(20) NOT NULL COMMENT '最终修改人',
+    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    url         varchar(256) NOT NULL COMMENT '数据库连接地址',
+    username         varchar(256) NOT NULL COMMENT '数据库连接用户名',
+    password         varchar(256) NOT NULL COMMENT '数据库连接密码',
     PRIMARY KEY (id) USING BTREE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='数据库连接表';
 
 create table IF NOT EXISTS tb_cfg_resource
 (
-    id          bigint(20) NOT NULL auto_increment comment '主键',
-    parent_id bigint(20) DEFAULT 0 comment '父菜单code',
-    create_by bigint(20) NOT NULL comment '创建人',
-    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-    update_by bigint(20) NOT NULL comment '最终修改人',
-    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-    name        varchar(64) NOT NULL comment '菜单名称',
-    path       varchar(256) NOT NULL comment '菜单url',
-    description        varchar(256) DEFAULT NULL comment '描述',
-    deleted   tinyint(2) DEFAULT 0 comment '是否删除 1: true 删除，0：false 活跃',
-    status    tinyint(2) DEFAULT 0 comment '资源类型',
-    redirect    varchar(32) DEFAULT NULL comment '重定向 地址',
-    alias    varchar(64) DEFAULT NULL comment '路由别名',
-    before_enter    varchar(128) DEFAULT NULL comment '独享路由守卫',
-    before_route_leave    varchar(128) comment '离开该组件时被调用',
-    component    varchar(128) comment '获取跳转页面的地址',
-    keep_alive  tinyint(2) DEFAULT 0 comment '是否开启缓存页面 1: 是，0：否',
-    meta  varchar(512) comment '路由元数据',
-    sort  tinyint(2) DEFAULT 0 comment '排序',
+    id          bigint(20) NOT NULL auto_increment COMMENT '主键',
+    parent_id bigint(20) DEFAULT 0 COMMENT '父菜单code',
+    create_by bigint(20) NOT NULL COMMENT '创建人',
+    create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by bigint(20) NOT NULL COMMENT '最终修改人',
+    update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    name        varchar(64) NOT NULL COMMENT '菜单名称',
+    path       varchar(256) NOT NULL COMMENT '菜单url',
+    description        varchar(256) DEFAULT NULL COMMENT '描述',
+    deleted   tinyint(2) DEFAULT 0 COMMENT '是否删除 1: true 删除，0：false 活跃',
+    status    tinyint(2) DEFAULT 0 COMMENT '资源类型',
+    redirect    varchar(32) DEFAULT NULL COMMENT '重定向 地址',
+    alias    varchar(64) DEFAULT NULL COMMENT '路由别名',
+    before_enter    varchar(128) DEFAULT NULL COMMENT '独享路由守卫',
+    before_route_leave    varchar(128) COMMENT '离开该组件时被调用',
+    component    varchar(128) COMMENT '获取跳转页面的地址',
+    keep_alive  tinyint(2) DEFAULT 0 COMMENT '是否开启缓存页面 1: 是，0：否',
+    meta  varchar(512) COMMENT '路由元数据',
+    sort  tinyint(2) DEFAULT 0 COMMENT '排序',
     PRIMARY KEY (id) USING BTREE,
     KEY         idx_code_ware (id,parent_id) USING BTREE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='菜单表';
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS tb_role_exclusion
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     role_id_one     bigint(20) DEFAULT NULL COMMENT '角色id1',
     role_id_two     bigint(20) DEFAULT NULL COMMENT '角色id2',
-    description     varchar(256) DEFAULT null comment '描述',
+    description     varchar(256) DEFAULT null COMMENT '描述',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色互斥关系表';
@@ -257,8 +257,39 @@ CREATE TABLE IF NOT EXISTS tb_role_resource
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     role_id     bigint(20) DEFAULT NULL COMMENT '角色id',
     resource_id     bigint(20) DEFAULT NULL COMMENT '资源id',
-    type    tinyint(2) DEFAULT null comment '资源类型',
+    type    tinyint(2) DEFAULT null COMMENT '资源类型',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色资源关系表';
 
+CREATE TABLE IF NOT EXISTS tb_controller_log
+(
+    id                   bigint(20) NOT NULL auto_increment COMMENT '主键',
+    create_by            bigint(20) NOT NULL COMMENT '创建人',
+    create_time          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by            bigint(20) NOT NULL COMMENT '最终修改人',
+    update_time          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    http_method          varchar(10) COMMENT '方法名称',
+    request_url          varchar(255) COMMENT '请求的 URL',
+    client_ip            varchar(15) COMMENT '录请求的客户端 IP 地址',
+    request_body         text COMMENT '记录请求体内容，使用 TEXT 类型',
+    response_status_code varchar(255) COMMENT '响应状态码',
+    response_body        text COMMENT '响应体',
+    user_agent           varchar(255) COMMENT '请求的用户代理信息',
+    PRIMARY KEY (id) USING BTREE
+);
+
+CREATE TABLE IF NOT EXISTS tb_login_log
+(
+    id                   bigint(20) NOT NULL auto_increment COMMENT '主键',
+    create_by            bigint(20) NOT NULL COMMENT '创建人',
+    create_time          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by            bigint(20) NOT NULL COMMENT '最终修改人',
+    update_time          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+    username            varchar(255) NOT NULL COMMENT '用户名',
+    client_ip            varchar(255) NOT NULL COMMENT '客户端IP地址',
+    logout_time          datetime NOT NULL COMMENT '登出时间',
+    login_status         varchar(255) NOT NULL COMMENT '登录状态',
+    user_agent           varchar(255) NOT NULL COMMENT '请求的用户代理信息',
+    PRIMARY KEY (id) USING BTREE
+);

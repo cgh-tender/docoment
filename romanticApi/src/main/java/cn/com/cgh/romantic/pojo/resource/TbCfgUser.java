@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.apache.ibatis.type.EnumTypeHandler;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,6 +37,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 用户状态
      */
     @Schema(description = "用户状态 0 : 正常，1锁定")
+    @TableField(typeHandler = EnumTypeHandler.class)
     private UserStatus status;
     /**
      * 手机号
@@ -51,6 +53,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 性别
      */
     @Schema(description = "性别：0男 1女")
+    @TableField(typeHandler = EnumTypeHandler.class)
     private GenderStatus gender;
     /**
      * 角色列表

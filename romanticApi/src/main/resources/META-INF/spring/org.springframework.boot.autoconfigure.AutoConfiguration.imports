@@ -1,1 +1,4 @@
 cn.com.cgh.romantic.config.OpenfeignConfig
+cn.com.cgh.romantic.config.MqConnectionFactory
+
+cn.com.cgh.romantic.util.SendQueue

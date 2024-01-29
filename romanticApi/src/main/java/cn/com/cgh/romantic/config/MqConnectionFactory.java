@@ -1,14 +1,21 @@
-package cn.com.cgh.core.config;
+package cn.com.cgh.romantic.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
 @ConditionalOnClass(RabbitProperties.class)
+@Slf4j
 public class MqConnectionFactory {
+    static {
+        log.info("MqConnectionFactory:已启动");
+    }
 
     @Bean
     @Primary
@@ -29,5 +36,26 @@ public class MqConnectionFactory {
         return cachingConnectionFactory;
     }
 
+    @Bean
+    public Jackson2JsonMessageConverter jsonConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
 
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setConfirmCallback((correlationData, ack, cause) -> {
+            if (ack) {
+                log.info("消息：{}发送成功", correlationData.getId());
+            } else {
+                log.error("消息：{}发送失败，失败原因为：{}", correlationData.getId(), cause);
+            }
+        });
+        template.setMandatory(true);
+        template.setReturnsCallback(returned -> {
+            log.error("消息：{}路由失败, 失败原因为：{}", returned.getMessage().toString(), returned.getReplyText());
+        });
+        return template;
+    }
 }

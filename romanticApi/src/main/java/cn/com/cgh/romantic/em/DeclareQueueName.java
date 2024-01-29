@@ -1,4 +1,4 @@
-package cn.com.cgh.core.em;
+package cn.com.cgh.romantic.em;
 
 import lombok.Getter;
 
@@ -15,6 +15,10 @@ public enum DeclareQueueName {
      * 死信队列
      */
     DEAD_QUEUE_NAME_SUFFIX("_dead"),
+    /**
+     * 路由后缀
+     */
+    ROUTING_QUEUE_NAME_SUFFIX("_routing"),
     /**
      * 普通队列
      */

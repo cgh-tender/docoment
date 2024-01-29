@@ -20,10 +20,10 @@ public class CodeGen {
 
         // 全局配置
         GlobalConfig config = new GlobalConfig.Builder()
-                .outputDir("/Users/cgh/worker/docoment/resource/src/main/java/")
+                .outputDir("/Users/cgh/worker/docoment/oasis/src/main/java/")
                 .enableSwagger().commentDate("yyyy-MM-dd").build();
         PackageConfig pc = new PackageConfig.Builder()
-                .parent("cn.com.cgh.resource.auth")
+                .parent("cn.com.cgh.oasis.log")
                 .entity("pojo")
                 .mapper("mapper")
                 .xml("xml")
@@ -36,20 +36,9 @@ public class CodeGen {
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig.Builder()
-                .addInclude("tb_cfg_group" ,
-                        "tb_cfg_organization" ,
-                        "tb_cfg_position" ,
-                        "tb_cfg_role" ,
-                        "tb_cfg_user" ,
-                        "tb_role_exclusion" ,
-                        "tb_role_group" ,
-                        "tb_role_organization" ,
-                        "tb_role_position" ,
-                        "tb_role_resource" ,
-                        "tb_user_group" ,
-                        "tb_user_organization" ,
-                        "tb_user_position" ,
-                        "tb_user_role")
+                .addInclude("tb_controller_log" ,
+                        "tb_login_log"
+                       )
                 .entityBuilder()
                .enableLombok()
                 .enableChainModel()

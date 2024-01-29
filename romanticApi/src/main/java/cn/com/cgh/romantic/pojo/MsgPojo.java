@@ -1,4 +1,4 @@
-package cn.com.cgh.core.pojo;
+package cn.com.cgh.romantic.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MsgPojo {
+public class MsgPojo<T> {
     private Long id;
-    private Object msg;
+    private T msg;
 }
