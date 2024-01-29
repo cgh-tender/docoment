@@ -3,6 +3,7 @@ package cn.com.cgh.core.config.db;
 import cn.com.cgh.core.handler.DefaultDBFieldHandler;
 import cn.com.cgh.core.util.Constants;
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
@@ -16,6 +17,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -35,6 +38,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Slf4j
+@AutoConfigureBefore(value = {MybatisPlusAutoConfiguration.class})
 public class MybatisConfig {
     private static final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
     static {

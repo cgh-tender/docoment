@@ -13,7 +13,6 @@ import java.util.Date;
 @Data
 public class TbBaseEntity implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
-    @TableField(fill = FieldFill.INSERT)
     @Schema(description = "主键")
     private Long id;
     @TableField(fill = FieldFill.INSERT)

@@ -1,8 +1,11 @@
 package cn.com.cgh.core.em;
 
+import lombok.Getter;
+
 /**
  * 队列名称枚举
  */
+@Getter
 public enum DeclareQueueName {
     /**
      * 延迟队列
@@ -25,10 +28,6 @@ public enum DeclareQueueName {
 
     DeclareQueueName(String queueName) {
         this.queueName = queueName;
-    }
-
-    public String getQueueName() {
-        return queueName;
     }
 
 }

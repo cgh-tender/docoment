@@ -21,6 +21,7 @@ public class MqConnectionFactory {
                                                         String password,
                                                         String vhost) {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory();
+//        cachingConnectionFactory.setUri("amqp://"+username+":"+password+"@"+addresses+"/"+vhost);
         cachingConnectionFactory.setAddresses(addresses);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeoutException;
 
 @AllArgsConstructor
 public class SendQueue {
-    private final ConnectionFactory masterConnectionFactory;
+    private final ConnectionFactory connectionFactory;
 
     public void doSendMsg2DelayQueue(MsgPojo delayMsgVo) throws IOException, TimeoutException {
         // 根据id 动态生成队列名称
@@ -29,13 +29,12 @@ public class SendQueue {
         String delayQueueName = queueName + DeclareQueueName.DELAY_QUEUE_NAME_SUFFIX.getQueueName();
         String deadQueueName = queueName + DeclareQueueName.DEAD_QUEUE_NAME_SUFFIX.getQueueName();
         // 注意：下述声明交换机和队列的操作是可以重入的，MQ并不会报错
-        try (Connection connection = masterConnectionFactory.createConnection();
+        try (Connection connection = connectionFactory.createConnection();
              Channel channel = connection.createChannel(false)) {
             // 声明死信交换机
             channel.exchangeDeclare(DeclareQueueExchange.DEAD_EXCHANGE.getExchangeName(), BuiltinExchangeType.DIRECT);
             // 声明死信队列
-            AMQP.Queue.DeclareOk deadQueueDeclareOk = channel.queueDeclare(deadQueueName,
-                    true, false, false, null);
+            channel.queueDeclare(deadQueueName,true, false, false, null);
             // 定时任务 绑定消费者，避免出现多个消费者以及重启后无法消费存量消息的问题
             //  注意：因为需要保证消费顺序，所以此处仅声明一个消费者
             // 死信队列和交换机绑定

@@ -1,8 +1,11 @@
 package cn.com.cgh.core.em;
 
+import lombok.Getter;
+
 /**
  * 队列名称枚举
  */
+@Getter
 public enum DeclareQueueExchange {
     /**
      * 交换机
@@ -15,16 +18,24 @@ public enum DeclareQueueExchange {
     /**
      * 延迟队列交换机
      */
-    DELAY_EXCHANGE("delayExchange");
+    DELAY_EXCHANGE("delayExchange"),
+    /**
+     * 扇型交换机
+     */
+    FANOUT_EXCHANGE("fanoutExchange"),
+    /**
+     * 主题交换机
+     */
+    TOPIC_EXCHANGE("topicExchange"),
+    /**
+     * 头部换机
+     */
+    HEADERS_EXCHANGE("headersExchange");
 
     private final String exchangeName;
 
     DeclareQueueExchange(String exchangeName) {
         this.exchangeName = exchangeName;
-    }
-
-    public String getExchangeName() {
-        return exchangeName;
     }
 
 }

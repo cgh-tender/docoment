@@ -6,7 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("cn.com.cgh.resource.**.mapper")
 @Slf4j
 public class ResourceApplication {
 
