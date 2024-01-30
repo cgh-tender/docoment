@@ -27,7 +27,7 @@ spring:
     master:
       type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://127.0.0.1:3306/cgh1?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/cgh1?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
       username: root
       password: 123456
       hikari:
@@ -46,7 +46,7 @@ spring:
     slave1:
       type: com.zaxxer.hikari.HikariDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://127.0.0.1:3306/cgh2?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/cgh2?useUnicode=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
       username: root
       password: 123456
       hikari:

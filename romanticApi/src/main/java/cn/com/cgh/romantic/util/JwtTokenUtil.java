@@ -12,6 +12,7 @@ import cn.hutool.jwt.signers.JWTSignerUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.authority.AuthorityUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class JwtTokenUtil {
     private static final String JWT_CACHE_KEY = "jwt:userId:";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
+    public static final String USER_ID = "jwt-id";
     private static final String EXPIRE_IN = "expire_in";
 
     private final RedisTemplate<String, Object> redisTemplateSO;
@@ -56,6 +58,9 @@ public class JwtTokenUtil {
     public void flushTimeout(String username) {
         redisTemplateSO.expire(JWT_CACHE_KEY + username, 10, TimeUnit.MINUTES);
     }
+    public Boolean notExists(String username) {
+        return !redisTemplateSO.hasKey(JWT_CACHE_KEY + username);
+    }
 
     //生成令牌
     private Map<String, Object> buildToken(Long userId, String username) {
@@ -64,7 +69,7 @@ public class JwtTokenUtil {
         //生成刷新令牌
         String refreshToken = generateRefreshToken(userId, username, null);
         //存储两个令牌及过期时间，返回结果
-        Map<String, Object> tokenMap = new HashMap<>(2);
+        Map<String, Object> tokenMap = new HashMap<>(4);
         tokenMap.put(ACCESS_TOKEN, accessToken);
         tokenMap.put(REFRESH_TOKEN, refreshToken);
         tokenMap.put(EXPIRE_IN, 10);
@@ -137,7 +142,7 @@ public class JwtTokenUtil {
     }
 
     public String token(String token){
-        return token == null ? token : token.replace(JWT_TOKEN_PREFIX, "");
+        return token == null ? null : token.replace(JWT_TOKEN_PREFIX, "");
     }
 
     /**
