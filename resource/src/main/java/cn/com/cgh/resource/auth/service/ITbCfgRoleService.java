@@ -3,6 +3,8 @@ package cn.com.cgh.resource.auth.service;
 import cn.com.cgh.romantic.pojo.resource.TbCfgRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Set;
+
 /**
  * <p>
  * 组织表 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbCfgRoleService extends IService<TbCfgRole> {
 
+    Set<String> queryUserRoles(Long userId);
 }

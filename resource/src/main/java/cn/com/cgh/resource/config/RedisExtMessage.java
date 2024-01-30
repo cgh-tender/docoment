@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.config;
 
-import cn.com.cgh.core.interfac.RedisMessageAdvice;
+import cn.com.cgh.romantic.interfac.RedisMessageAdvice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.PatternTopic;

@@ -53,7 +53,9 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
             response.setStatusCode(HttpStatus.OK);
             statusCode = ((ResponseStatusException) ex).getStatusCode();
         }
-        return response.writeWith(Mono.just(response.bufferFactory().wrap(
+        return response.writeWith(Mono.just(response
+                .bufferFactory()
+                .wrap(
                 JSONObject.toJSONString(new JSONObject()
                         .fluentPut("code", "1")
                         .fluentPut("statusCode", Objects.requireNonNull(statusCode).value())

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum ResourceStatus implements IEnum<Integer> {
+public enum ResourceStatus implements DisplayedEnum {
     /**
      * 菜单
      */
@@ -17,5 +17,5 @@ public enum ResourceStatus implements IEnum<Integer> {
     BUTTON(1, "按钮");
 
     private final Integer value;
-    private final String desc;
+    private final String label;
 }

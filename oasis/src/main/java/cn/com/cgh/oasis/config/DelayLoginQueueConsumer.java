@@ -1,8 +1,8 @@
 package cn.com.cgh.oasis.config;
 
-import cn.com.cgh.core.util.Application;
 import cn.com.cgh.oasis.log.service.ITbLoginLogService;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
+import cn.com.cgh.romantic.util.Application;
 import cn.hutool.json.JSONUtil;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;

@@ -2,7 +2,7 @@ package cn.com.cgh.romantic.util;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
-import cn.hutool.crypto.asymmetric.AsymmetricAlgorithm;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.JWT;
@@ -18,41 +18,47 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static cn.com.cgh.romantic.constant.AuthConstant.JWT_TOKEN_PREFIX;
+import static cn.com.cgh.romantic.util.KeyConstant.CONTENT_INSTANCE;
+
 @AllArgsConstructor
 @Slf4j
 public class JwtTokenUtil {
-
-
     private static final String JWT_CACHE_KEY = "jwt:userId:";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
     private static final String EXPIRE_IN = "expire_in";
 
-//    private final RedisTemplate<String, Object> redisTemplateSO;
+    private final RedisTemplate<String, Object> redisTemplateSO;
 
-    private static final RSA RSA_RSA = new RSA(AsymmetricAlgorithm.RSA.getValue(),KeyConstant.PUBLIC_KEY,KeyConstant.PRIVATE_KEY);
+    public static final RSA RSA_RSA = new RSA(CONTENT_INSTANCE,KeyConstant.PRIVATE_KEY,KeyConstant.PUBLIC_KEY);
 
     /**
      * 生成 token 令牌主方法
      * @param userId 用户Id或用户名
      * @return 令token牌
      */
-    public Map<String, Object> generateTokenAndRefreshToken(Integer userId, String username) {
+    public Map<String, Object> generateTokenAndRefreshToken(Long userId, String username) {
         //生成令牌及刷新令牌
         Map<String, Object> tokenMap = buildToken(userId, username);
         //redis缓存结果
-        cacheToken(userId, tokenMap);
+        cacheToken(username, tokenMap);
         return tokenMap;
     }
 
     //将token缓存进redis
-    private void cacheToken(Integer userId, Map<String, Object> tokenMap) {
-//        redisTemplateSO.opsForHash().put(JWT_CACHE_KEY + userId, ACCESS_TOKEN, tokenMap.get(ACCESS_TOKEN));
-//        redisTemplateSO.opsForHash().put(JWT_CACHE_KEY + userId, REFRESH_TOKEN, tokenMap.get(REFRESH_TOKEN));
-//        redisTemplateSO.expire(String.valueOf(userId), 10, TimeUnit.MINUTES);
+    private void cacheToken(String username, Map<String, Object> tokenMap) {
+        redisTemplateSO.opsForHash().put(JWT_CACHE_KEY + username, ACCESS_TOKEN, tokenMap.get(ACCESS_TOKEN));
+        redisTemplateSO.opsForHash().put(JWT_CACHE_KEY + username, REFRESH_TOKEN, tokenMap.get(REFRESH_TOKEN));
+        flushTimeout(username);
     }
+
+    public void flushTimeout(String username) {
+        redisTemplateSO.expire(JWT_CACHE_KEY + username, 10, TimeUnit.MINUTES);
+    }
+
     //生成令牌
-    private Map<String, Object> buildToken(Integer userId, String username) {
+    private Map<String, Object> buildToken(Long userId, String username) {
         //生成token令牌
         String accessToken = generateToken(userId, username, null);
         //生成刷新令牌
@@ -69,22 +75,21 @@ public class JwtTokenUtil {
      * @param payloads 令牌中携带的附加信息
      * @return 令牌
      */
-    public String generateToken(Integer userId, String username,
+    public String generateToken(Long userId, String username,
                                 Map<String,String> payloads) {
         Map<String, Object> claims = buildClaims(userId, username, payloads);
         return generateToken(claims);
     }
-    public String generateRefreshToken(Integer userId, String username, Map<String,String> payloads) {
+    public String generateRefreshToken(Long userId, String username, Map<String,String> payloads) {
         Map<String, Object> claims = buildClaims(userId, username, payloads);
         return generateRefreshToken(claims);
     }
     //构建map存储令牌需携带的信息
-    private Map<String, Object> buildClaims(Integer userId, String username, Map<String, String> payloads) {
+    private Map<String, Object> buildClaims(Long userId, String username, Map<String, String> payloads) {
         int payloadSizes = payloads == null? 0 : payloads.size();
         Map<String, Object> payload = new HashMap<>(payloadSizes + 2);
         DateTime now = DateTime.now();
         DateTime newTime = now.offsetNew(DateField.MINUTE, 10);
-        log.info(newTime.toTimeStr());
         //签发时间
         payload.put(JWTPayload.ISSUED_AT, now);
         //过期时间
@@ -93,7 +98,8 @@ public class JwtTokenUtil {
         payload.put(JWTPayload.NOT_BEFORE, now);
         //载荷
         payload.put(JWTPayload.SUBJECT, username);
-        payload.put(JWTPayload.JWT_ID, userId);
+        payload.put(JWTPayload.AUDIENCE, userId);
+        payload.put(JWTPayload.JWT_ID, UUID.randomUUID().toString());
         if(payloadSizes > 0){
             payload.putAll(payloads);
         }
@@ -105,17 +111,16 @@ public class JwtTokenUtil {
      * 刷新令牌并生成新令牌
      * 并将新结果缓存进redis
      */
-    public Map<String, Object> refreshTokenAndGenerateToken(Integer userId, String username) {
+    public Map<String, Object> refreshTokenAndGenerateToken(Long userId, String username) {
         Map<String, Object> tokenMap = buildToken(userId, username);
-//        redisTemplateSO.delete(JWT_CACHE_KEY + userId);
-        cacheToken(userId, tokenMap);
+        redisTemplateSO.delete(JWT_CACHE_KEY + username);
+        cacheToken(username, tokenMap);
         return tokenMap;
     }
 
     //缓存中删除token
-    public boolean removeToken(String userId) {
-//        return Boolean.TRUE.equals(redisTemplateSO.delete(JWT_CACHE_KEY + userId));
-        return false;
+    public boolean removeToken(String username) {
+        return Boolean.TRUE.equals(redisTemplateSO.delete(JWT_CACHE_KEY + username));
     }
 
     /**
@@ -125,14 +130,15 @@ public class JwtTokenUtil {
      * @return 用户名
      */
     public String getUserNameFromToken(String token) {
-        JWT jwt = new JWT(token);
-        return String.valueOf(jwt.getPayload().getClaim(JWTPayload.SUBJECT));
+        return String.valueOf(new JWT(token(token)).getPayload().getClaim(JWTPayload.SUBJECT));
     }
-    public String getUserIdFromToken(String token) {
-        JWT jwt = new JWT(token);
-        return String.valueOf(jwt.getPayload().getClaim(JWTPayload.SUBJECT));
+    public Long getUserIdFromToken(String token) {
+        return Long.valueOf(String.valueOf(new JWT(token(token)).getPayload().getClaim(JWTPayload.AUDIENCE)));
     }
 
+    public String token(String token){
+        return token == null ? token : token.replace(JWT_TOKEN_PREFIX, "");
+    }
 
     /**
      * 判断令牌是否不存在 redis 中
@@ -141,10 +147,10 @@ public class JwtTokenUtil {
      * @return true=不存在，false=存在
      */
     public Boolean isRefreshTokenNotExistCache(String token) {
-//        String userId = getUserIdFromToken(token);
-//        String refreshToken = (String)redisTemplateSO.opsForHash().get(JWT_CACHE_KEY + userId, REFRESH_TOKEN);
-//        return refreshToken == null || !refreshToken.equals(token);
-        return false;
+        token = token(token);
+        Long userId = getUserIdFromToken(token);
+        String refreshToken = (String)redisTemplateSO.opsForHash().get(JWT_CACHE_KEY + userId, REFRESH_TOKEN);
+        return refreshToken == null || !refreshToken.equals(token);
     }
 
     /**
@@ -157,7 +163,7 @@ public class JwtTokenUtil {
         String refreshedToken;
         try {
             JSONObject claims = getClaimsFromToken(token);
-            claims.put(JWTPayload.ISSUED_AT, new Date());
+            claims.set(JWTPayload.ISSUED_AT, new Date());
             refreshedToken = generateToken(claims);
         } catch (Exception e) {
             refreshedToken = null;
@@ -171,7 +177,7 @@ public class JwtTokenUtil {
      * @return 令牌
      */
     private String generateToken(Map<String, Object> claims) {
-        return JWTUtil.createToken(claims, JWTSignerUtil.createSigner("RSA", RSA_RSA.getPublicKey()));
+        return JWTUtil.createToken(claims, JWTSignerUtil.createSigner(CONTENT_INSTANCE, RSA_RSA.getPrivateKey()));
     }
     /**
      * 生成刷新令牌 refreshToken，有效期是令牌的 2 倍
@@ -180,8 +186,7 @@ public class JwtTokenUtil {
      */
     private String generateRefreshToken(Map<String, Object> claims) {
         DateTime dateTime = (DateTime) claims.get(JWTPayload.EXPIRES_AT);
-        dateTime.offsetNew(DateField.MINUTE, 10);
-        log.info(dateTime.toTimeStr());
+        dateTime = dateTime.offsetNew(DateField.MINUTE, 10);
         claims.put(JWTPayload.EXPIRES_AT, dateTime);
         return generateToken(claims);
     }
@@ -196,11 +201,4 @@ public class JwtTokenUtil {
         JSONObject claimsJson = new JWT(token).getPayload().getClaimsJson();
         return claimsJson;
     }
-
-    public static void main(String[] args) {
-        JwtTokenUtil jwtTokenUtil = new JwtTokenUtil();
-        Map<String, Object> test = jwtTokenUtil.generateTokenAndRefreshToken(1, "test");
-        System.out.println(test);
-    }
-
 }

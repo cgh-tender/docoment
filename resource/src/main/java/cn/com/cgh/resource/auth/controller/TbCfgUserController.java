@@ -32,6 +32,7 @@ public class TbCfgUserController {
 
     @GetMapping("/loadByUsername/{username}")
     public TbCfgUser loadByUsername(@PathVariable String username) {
-        return tbCfgUserService.queryOneByUsername(username);
+        TbCfgUser tbCfgUser = tbCfgUserService.queryOneByUsername(username);
+        return tbCfgUser;
     }
 }

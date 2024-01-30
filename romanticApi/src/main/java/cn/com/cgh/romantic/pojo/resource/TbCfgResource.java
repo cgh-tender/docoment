@@ -2,6 +2,7 @@ package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.em.DeleteStatus;
 import cn.com.cgh.romantic.em.ResourceStatus;
+import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import cn.com.cgh.romantic.pojo.resource.child.RouteMeta;
 import cn.com.cgh.romantic.typeHandler.MyArrayTypeHandler;
@@ -11,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.BooleanTypeHandler;
-import org.apache.ibatis.type.EnumTypeHandler;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class TbCfgResource extends TbBaseEntity {
     @Schema(description = "path")
     private String path;
     @Schema(description = "资源类别 0 菜单 2 按钮")
-    @TableField(typeHandler = EnumTypeHandler.class)
+    @TableField(typeHandler = DefaultEnumTypeHandler.class)
     private ResourceStatus status;
     @Schema(description = "是否删除 1: 是，0：否")
     @TableField(typeHandler = BooleanTypeHandler.class)

@@ -36,7 +36,6 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(SQLException.class)
     public ResponseImpl sqlException(HttpServletRequest req, HttpServletResponse rsp, Exception ex) {
-
         LOGGER.error("!!! request uri:{} from {} server exception:{}", req.getRequestURI(), RequestUtil.getIpAddr(req), ex == null ? null : ex);
         return ResponseImpl.builder().code("1002").message(ex == null ? null : ex.getMessage()).build().FULL();
     }

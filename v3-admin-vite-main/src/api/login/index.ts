@@ -5,9 +5,9 @@ import {getToken, getUuid} from "@/utils/cache/cookies";
 /** 获取登录验证码 */
 export function getLoginCodeApi(url: string) {
   return request<Login.LoginCodeResponseData>({
-    url: url + "?crt_="+ new Date().getTime(),
+    url: url + "?crt_=" + new Date().getTime(),
     method: "get",
-    responseType: 'blob'
+    responseType: "blob"
   })
 }
 
@@ -45,7 +45,7 @@ export function getUserInfoApi() {
 
 export function getRouterApi() {
   return request<Login.MenuInfoResponseData>({
-    url: "resource/getMenu",
+    url: "resource/resource",
     method: "get"
   })
 }

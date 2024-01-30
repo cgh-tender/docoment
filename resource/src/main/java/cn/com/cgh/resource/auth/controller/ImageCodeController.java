@@ -1,7 +1,7 @@
 package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.core.util.Constants;
-import cn.com.cgh.core.util.IdWork;
+import cn.com.cgh.romantic.util.IdWork;
 import cn.hutool.captcha.*;
 import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.json.JSONUtil;

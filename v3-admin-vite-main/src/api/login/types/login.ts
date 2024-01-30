@@ -12,7 +12,9 @@ export interface LoginRequestData {
 
 export type LoginCodeResponseData = ApiResponseData<{ data: string; url: string }>
 
-export type LoginResponseData = ApiResponseData<{ token: string }>
+export type LoginResponseData = ApiResponseData<{
+  access_token: string
+}>
 
 export type UserInfoResponseData = ApiResponseData<{ username: string; roles: string[] }>
 

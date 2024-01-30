@@ -32,8 +32,8 @@ export const useUserStore = defineStore("user", () => {
   /** 登录 */
   const login = async ({ username, password, code, rememberMe }: LoginRequestData) => {
     const { data } = await loginApi({ username, password, code, rememberMe })
-    setToken(data.token)
-    token.value = data.token
+    setToken(data.access_token)
+    token.value = data.access_token
   }
 
   const _flushRouter = (routes: RouteRecordRaw[]): RouteRecordRaw[] => {

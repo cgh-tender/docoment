@@ -16,6 +16,6 @@ public enum DeleteStatus implements IEnum<Boolean> {
      * 删除
      */
     private final Boolean value;
-    private final String desc;
+    private final String label;
 
 }

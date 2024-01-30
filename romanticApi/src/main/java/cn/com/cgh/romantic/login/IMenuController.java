@@ -16,7 +16,7 @@ import java.util.List;
 public interface IMenuController {
     Logger logger = LoggerFactory.getLogger(IMenuController.class);
 
-    @GetMapping("/getMenu")
+    @GetMapping("")
     List queryMenu();
 
 

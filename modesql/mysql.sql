@@ -17,7 +17,7 @@ CREATE TABLE t_ware_sale_statistics
     modify_time      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最终修改时间',
     is_delete        tinyint(2) DEFAULT '2' COMMENT '是否删除，1：是，2：否',
     PRIMARY KEY (id) USING BTREE,
-    KEY                idx_business_ware (business_id,ware_inside_code) USING BTREE
+    KEY idx_business_ware (business_id,ware_inside_code) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='商品销售统计';
 
 
@@ -286,10 +286,12 @@ CREATE TABLE IF NOT EXISTS tb_login_log
     create_time          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_by            bigint(20) NOT NULL COMMENT '最终修改人',
     update_time          datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-    username            varchar(255) NOT NULL COMMENT '用户名',
-    client_ip            varchar(255) NOT NULL COMMENT '客户端IP地址',
-    logout_time          datetime NOT NULL COMMENT '登出时间',
-    login_status         varchar(255) NOT NULL COMMENT '登录状态',
-    user_agent           varchar(255) NOT NULL COMMENT '请求的用户代理信息',
-    PRIMARY KEY (id) USING BTREE
+    username             varchar(255) NOT NULL COMMENT '用户名',
+    user_id              bigint(20) NOT NULL COMMENT '用户id',
+    client_ip            varchar(255) COMMENT '客户端IP地址',
+    logout_time          datetime COMMENT '登出时间',
+    login_status         tinyint(2) COMMENT '登录状态',
+    user_agent           varchar(255) COMMENT '请求的用户代理信息',
+    PRIMARY KEY (id) USING BTREE,
+    KEY idx_userid (user_id)
 );

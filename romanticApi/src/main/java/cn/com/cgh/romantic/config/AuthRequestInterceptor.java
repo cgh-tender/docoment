@@ -4,6 +4,9 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author cgh
+ */
 @Slf4j
 public class AuthRequestInterceptor implements RequestInterceptor {
     public AuthRequestInterceptor() {
@@ -12,6 +15,5 @@ public class AuthRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         log.info("feign拦截器");
-        template.header("Authorization", "Bearer " + "123456");
     }
 }

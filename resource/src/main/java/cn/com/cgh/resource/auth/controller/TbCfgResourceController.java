@@ -44,7 +44,7 @@ public class TbCfgResourceController {
         throw new RuntimeException("获取验证码失败");
     }
 
-    @GetMapping("")
+    @GetMapping()
     public List<TbCfgResource> queryMenu() {
         return ITbCfgResourceService.queryTbCfgResourceList();
     }

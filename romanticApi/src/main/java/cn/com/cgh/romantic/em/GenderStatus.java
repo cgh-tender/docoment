@@ -1,12 +1,15 @@
 package cn.com.cgh.romantic.em;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * @author cgh
+ */
+
 @Getter
 @AllArgsConstructor
-public enum GenderStatus implements IEnum<Integer> {
+public enum GenderStatus implements DisplayedEnum {
     /**
      * 正常
      */
@@ -16,5 +19,6 @@ public enum GenderStatus implements IEnum<Integer> {
      */
     FEMALE(1, "女");
     private final Integer value;
-    private final String desc;
+    private final String label;
+
 }

@@ -60,13 +60,13 @@ public class RequestUtil {
      */
     public static String getLocalAddress(){
         if (inetUtils == null){
-            inetUtils = Application.getBean(InetUtils.class);
+            inetUtils = CoreApplication.getBean(InetUtils.class);
         }
         return inetUtils.findFirstNonLoopbackAddress().getHostAddress();
     }
     public static String getLocalIpV6Address(){
         if (inetIPv6Utils == null){
-            inetIPv6Utils = Application.getBean(InetIPv6Utils.class);
+            inetIPv6Utils = CoreApplication.getBean(InetIPv6Utils.class);
         }
         return inetIPv6Utils.findIPv6Address();
     }

@@ -1,7 +1,7 @@
 package cn.com.cgh.resource.config;
 
 
-import cn.com.cgh.romantic.config.Constants;
+import cn.com.cgh.romantic.constant.Constants;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;

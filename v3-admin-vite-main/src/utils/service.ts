@@ -28,6 +28,7 @@ function createService() {
   service.interceptors.response.use(
     (response) => {
       // apiData 是 api 返回的数据
+      console.log(response)
       const apiData = response.data
       // 二进制数据则直接返回
       const responseType = response.request?.responseType

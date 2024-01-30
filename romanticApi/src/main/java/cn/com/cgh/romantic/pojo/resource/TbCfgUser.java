@@ -3,11 +3,11 @@ package cn.com.cgh.romantic.pojo.resource;
 import cn.com.cgh.romantic.em.GenderStatus;
 import cn.com.cgh.romantic.em.UserStatus;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
+import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import org.apache.ibatis.type.EnumTypeHandler;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,7 +37,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 用户状态
      */
     @Schema(description = "用户状态 0 : 正常，1锁定")
-    @TableField(typeHandler = EnumTypeHandler.class)
+    @TableField(typeHandler = DefaultEnumTypeHandler.class)
     private UserStatus status;
     /**
      * 手机号
@@ -50,22 +50,23 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
     @Schema(description = "邮箱")
     private String email;
     /**
+     * 角色列表
+     */
+    @TableField(exist = false)
+    private List<TbCfgRole> tbCfgRoles;
+    /**
      * 性别
      */
     @Schema(description = "性别：0男 1女")
-    @TableField(typeHandler = EnumTypeHandler.class)
+    @TableField(typeHandler = DefaultEnumTypeHandler.class)
     private GenderStatus gender;
-    /**
-     * 角色列表
-     */
-    @TableField(exist = false,typeHandler = FastjsonTypeHandler.class)
-    private List<TbCfgRole> tbCfgRoles;
     @TableField(exist = false)
     private String code;
     @TableField(exist = false)
     private String clientId;
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.tbCfgRoles.stream().map(TbCfgRole::getName).map(SimpleGrantedAuthority::new).collect(Collectors.toSet());
     }
