@@ -58,8 +58,8 @@ public class JwtTokenUtil {
     public void flushTimeout(String username) {
         redisTemplateSO.expire(JWT_CACHE_KEY + username, 10, TimeUnit.MINUTES);
     }
-    public Boolean notExists(String username) {
-        return !redisTemplateSO.hasKey(JWT_CACHE_KEY + username);
+    public Boolean exists(String username) {
+        return redisTemplateSO.hasKey(JWT_CACHE_KEY + username);
     }
 
     //生成令牌

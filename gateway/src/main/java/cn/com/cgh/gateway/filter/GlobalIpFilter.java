@@ -72,7 +72,7 @@ public class GlobalIpFilter implements GlobalFilter {
         String username = jwtTokenUtil.getUserNameFromToken(token);
         Assert.notNull(userId,"无权访问。");
 
-        Assert.isTrue(jwtTokenUtil.notExists(username),"登录超时。");
+        Assert.isTrue(jwtTokenUtil.exists(username),"登录超时。");
 
         builder.header(USER_ID, String.valueOf(userId)).build();
 
