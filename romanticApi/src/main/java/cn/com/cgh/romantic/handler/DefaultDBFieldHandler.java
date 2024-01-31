@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * @author cgh
+ */
 @Slf4j
 public class DefaultDBFieldHandler implements MetaObjectHandler {
     static {
@@ -19,18 +22,26 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         // 当前登录用户信息
-        if (Objects.nonNull(metaObject)) {
-            this.setFieldValByName("createBy", 1L, metaObject);
+        if (Objects.isNull(metaObject.getValue("updateBy"))) {
             this.setFieldValByName("updateBy", 1L, metaObject);
+        }
+        if (Objects.isNull(metaObject.getValue("createTime"))) {
             this.setFieldValByName("createTime", new Date(), metaObject);
+        }
+        if (Objects.isNull(metaObject.getValue("createBy"))) {
+            this.setFieldValByName("createBy", 1L, metaObject);
+        }
+        if (Objects.isNull(metaObject.getValue("updateTime"))) {
             this.setFieldValByName("updateTime", new Date(), metaObject);
         }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        if (Objects.nonNull(metaObject)) {
+        if (Objects.isNull(metaObject.getValue("updateBy"))) {
             this.setFieldValByName("updateBy", 1L, metaObject);
+        }
+        if (Objects.isNull(metaObject.getValue("updateTime"))) {
             this.setFieldValByName("updateTime", new Date(), metaObject);
         }
     }

@@ -184,6 +184,5 @@ username: guest
 password: guest
 ```
 [rabitMq](http://127.0.0.1:15672/#/)  
-[docement](https://blog.csdn.net/qq_35387940/article/details/100514134)  
 
 docker run -it --name redis-master -d -p 6300:6300 redis redis-server --requirepass redispassword --port 6300

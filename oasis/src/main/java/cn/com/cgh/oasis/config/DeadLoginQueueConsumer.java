@@ -36,12 +36,11 @@ public class DeadLoginQueueConsumer extends DefaultConsumer {
                 this.ibLoginLogService = Application.getBean(ITbLoginLogService.class);
             }
             String jsonString = new String(body, StandardCharsets.UTF_8);
-            log.info("", jsonString);
-            TbLoginLog loginLog =  JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
-            ibLoginLogService.save(loginLog);
+            log.info(jsonString);
+            TbLoginLog loginLog = JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
+            ibLoginLogService.saveOrUpdate(loginLog);
         } catch (Exception e) {
-            System.out.println("DeadLoginQueueConsumer handleDelivery error: " + e.getMessage());
-            System.out.println("DeadLoginQueueConsumer handleDelivery error: " + body);
+            e.printStackTrace();
             getChannel().basicNack(envelope.getDeliveryTag(), false, true);
         }
         getChannel().basicAck(envelope.getDeliveryTag(), false);

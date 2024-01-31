@@ -1,12 +1,9 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.auth.filter.SendLogFilter;
 import cn.com.cgh.auth.handler.FailureHandler;
 import cn.com.cgh.auth.handler.MyLogoutSuccessHandler;
 import cn.com.cgh.auth.handler.SuccessHandler;
-import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,13 +12,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @Slf4j
@@ -68,7 +62,7 @@ public class OAuth2Config {
 //                    response.getWriter().write(ResponseImpl.builder().message("会话失效").build().FULL().toString());
 //                }).maximumSessions(1)// 最多一个人登录。
 //        );
-
+        http.addFilterBefore(new SendLogFilter(), UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling(e -> {
             e.accessDeniedHandler((request, response, exception) -> {
                 log.error("登录失败", exception);

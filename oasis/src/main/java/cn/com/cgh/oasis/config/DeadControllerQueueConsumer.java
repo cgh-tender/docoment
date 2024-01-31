@@ -36,9 +36,9 @@ public class DeadControllerQueueConsumer extends DefaultConsumer {
                 this.ibControllerLogService = Application.getBean(ITbControllerLogService.class);
             }
             String jsonString = new String(body, StandardCharsets.UTF_8);
-            log.info("", jsonString);
+            log.info(jsonString);
             TbControllerLog controllerLog = JSONUtil.parse(jsonString).toBean(TbControllerLog.class);
-            ibControllerLogService.save(controllerLog);
+            ibControllerLogService.saveOrUpdate(controllerLog);
         } catch (Exception e) {
             System.out.println("DeadControllerQueueConsumer handleDelivery error: " + e.getMessage());
             System.out.println("DeadControllerQueueConsumer handleDelivery error: " + body);

@@ -36,11 +36,11 @@ public class DelayLoginQueueConsumer extends DefaultConsumer {
                 this.iLogService = Application.getBean(ITbLoginLogService.class);
             }
             String jsonString = new String(body, StandardCharsets.UTF_8);
-            log.info("", jsonString);
+            log.info(jsonString);
             TbLoginLog loginLog = JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
-            iLogService.save(loginLog);
+            iLogService.saveOrUpdate(loginLog);
         } catch (Exception e) {
-            e.fillInStackTrace();
+            e.printStackTrace();
             // 注意此处获取的源队列的channel
             getChannel().basicNack(envelope.getDeliveryTag(), false, true);
         }

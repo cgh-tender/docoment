@@ -1,6 +1,5 @@
 package cn.com.cgh.romantic.em;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.Getter;
 
 /**
@@ -15,7 +14,11 @@ public enum LoginStatus implements DisplayedEnum {
     /**
      * 登录失败
      */
-    ERROR(1, "登录失败");
+    ERROR(1, "登录失败"),
+    /**
+     * 登录失败
+     */
+    IN(2, "正在登录");
     @Getter
     private final Integer value;
     private final String label;

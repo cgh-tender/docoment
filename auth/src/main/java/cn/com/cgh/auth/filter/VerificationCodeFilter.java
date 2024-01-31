@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -46,11 +47,8 @@ public class VerificationCodeFilter extends OncePerRequestFilter {
                     }
                 }
                 String verificationCode = (String) redisTemplateSO.opsForValue().get(uuid);
-                if (StringUtils.isBlank(verificationCode)){
-                    throw new VerificationCodeException("验证码已失效");
-                }else if (!StringUtils.equalsIgnoreCase(verificationCode, code)) {
-                    throw new VerificationCodeException("验证码输入错误");
-                }
+                Assert.notNull(verificationCode, "验证码已失效");
+                Assert.isTrue(StringUtils.equalsIgnoreCase(verificationCode, code), "验证码输入错误");
                 filterChain.doFilter(Objects.requireNonNullElse(requestWrapper, request), response);
             } catch (VerificationCodeException e) {
                 response.getOutputStream().write(JSONUtil.toJsonStr(ResponseImpl.builder()

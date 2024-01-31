@@ -23,8 +23,8 @@ public class FailureHandler implements AuthenticationFailureHandler {
             jwtTokenUtil = Application.getBean(JwtTokenUtil.class);
             sendQueue = Application.getBean(SendQueue.class);
         }
-        log.error("登录失败");
         log.error(exception.getMessage());
-        response.getWriter().write(ResponseImpl.builder().message(exception.getMessage()).build().FULL().toString());
+        String message = exception.getMessage();
+        response.getWriter().write(ResponseImpl.builder().message(message).build().FULL().toString());
     }
 }

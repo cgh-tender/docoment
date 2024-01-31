@@ -38,7 +38,7 @@ public class DelayControllerQueueConsumer extends DefaultConsumer {
             String jsonString = new String(body, StandardCharsets.UTF_8);
             log.info("", jsonString);
             TbControllerLog controllerLog = JSONUtil.parse(jsonString).toBean(TbControllerLog.class);
-            ibControllerLogService.save(controllerLog);
+            ibControllerLogService.saveOrUpdate(controllerLog);
         } catch (Exception e) {
             e.fillInStackTrace();
             // 注意此处获取的源队列的channel

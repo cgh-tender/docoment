@@ -1,14 +1,15 @@
 package cn.com.cgh.romantic.pojo.oasis;
 
 import cn.com.cgh.romantic.em.LoginStatus;
-import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
-import cn.hutool.core.codec.Base64;
+import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
+
+import java.util.Date;
 
 /**
  * @author cgh
@@ -29,7 +30,7 @@ public class TbLoginLog extends TbBaseEntity {
     @Schema(description = "录请求的客户端 IP 地址")
     private String clientIp;
     @Schema(description = "登出时间")
-    private String logoutTime;
+    private Date logoutTime;
     /**
      * 成功登录、密码错误、账号被锁定
      */
@@ -40,6 +41,10 @@ public class TbLoginLog extends TbBaseEntity {
     private String userAgent;
 
     public String getUserAgent() {
-        return userAgent != null ? new String(Base64.decode(userAgent.split("\\.")[1])) : userAgent;
+        return userAgent != null ?
+                userAgent.split("\\.").length == 3 ?
+                        userAgent.split("\\.")[1]
+                        : userAgent
+                : null;
     }
 }
