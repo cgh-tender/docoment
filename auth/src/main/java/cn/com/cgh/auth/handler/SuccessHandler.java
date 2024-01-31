@@ -10,6 +10,7 @@ import cn.com.cgh.romantic.util.Application;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.SendQueue;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.jwt.JWTPayload;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static cn.com.cgh.romantic.constant.RomanticConstant.X_REAL_IP;
@@ -38,7 +40,10 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         }
         log.info("登录成功");
         TbCfgUser securityUser = (TbCfgUser) authentication.getPrincipal();
-        Map<String, Object> map = jwtTokenUtil.generateTokenAndRefreshToken(securityUser.getId(), securityUser.getUsername());
+        Map<String, String> payload = new HashMap<>();
+        String id = SendLogFilter.THREAD_LOCAL_LOG_ID.get() + "";
+        payload.put(JWTPayload.JWT_ID, id);
+        Map<String, Object> map = jwtTokenUtil.generateTokenAndRefreshToken(securityUser.getId(), securityUser.getUsername(),payload);
         TbLoginLog loginLog = TbLoginLog.builder()
                 .username(securityUser.getUsername())
                 .userId(securityUser.getId())

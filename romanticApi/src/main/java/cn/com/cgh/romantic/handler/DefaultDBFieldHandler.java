@@ -17,8 +17,6 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
     static {
         log.info("DefaultDBFieldHandler:已启动");
     }
-    @Autowired
-    private IdWork idWork;
     @Override
     public void insertFill(MetaObject metaObject) {
         // 当前登录用户信息

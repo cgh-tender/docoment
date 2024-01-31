@@ -65,9 +65,9 @@ public class JwtTokenUtil {
      * @param userId 用户Id或用户名
      * @return 令token牌
      */
-    public Map<String, Object> generateTokenAndRefreshToken(Long userId, String username) {
+    public Map<String, Object> generateTokenAndRefreshToken(Long userId, String username,Map<String, String> payload) {
         //生成令牌及刷新令牌
-        Map<String, Object> tokenMap = buildToken(userId, username);
+        Map<String, Object> tokenMap = buildToken(userId, username,payload);
         //redis缓存结果
         cacheToken(username, tokenMap);
         return tokenMap;
@@ -91,10 +91,7 @@ public class JwtTokenUtil {
     }
 
     //生成令牌
-    private Map<String, Object> buildToken(Long userId, String username) {
-        Map<String, String> payload = new HashMap<>();
-        String id = idWork.nextId() + "";
-        payload.put(JWTPayload.JWT_ID, id);
+    private Map<String, Object> buildToken(Long userId, String username, Map<String, String> payload) {
         //生成token令牌
         String accessToken = generateToken(userId, username, payload);
         //生成刷新令牌
@@ -103,8 +100,8 @@ public class JwtTokenUtil {
         Map<String, Object> tokenMap = new HashMap<>(4);
         tokenMap.put(ACCESS_TOKEN, accessToken);
         tokenMap.put(REFRESH_TOKEN, refreshToken);
+        tokenMap.put(JWTPayload.JWT_ID, payload.get(JWTPayload.JWT_ID));
         tokenMap.put(EXPIRE_IN, 10);
-        tokenMap.put(JWTPayload.JWT_ID, id);
         return tokenMap;
     }
 
@@ -153,9 +150,9 @@ public class JwtTokenUtil {
      * 并将新结果缓存进redis
      */
     public Map<String, Object> refreshTokenAndGenerateToken(Long userId, String username) {
-        Map<String, Object> tokenMap = buildToken(userId, username);
-        redisTemplateSO.delete(JWT_CACHE_KEY + tokenMap.get(JWTPayload.JWT_ID));
-        cacheToken(username, tokenMap);
+        Map<String, Object> tokenMap = buildToken(userId, username,new HashMap<>());
+//        redisTemplateSO.delete(JWT_CACHE_KEY + tokenMap.get(JWTPayload.JWT_ID));
+//        cacheToken(username, tokenMap);
         return tokenMap;
     }
 

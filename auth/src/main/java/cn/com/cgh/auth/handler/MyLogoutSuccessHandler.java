@@ -18,7 +18,7 @@ import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_TOKEN_HEADER;
 public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
     private JwtTokenUtil jwtTokenUtil;
     @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         if (jwtTokenUtil == null){
             jwtTokenUtil = Application.getBean(JwtTokenUtil.class);
         }
