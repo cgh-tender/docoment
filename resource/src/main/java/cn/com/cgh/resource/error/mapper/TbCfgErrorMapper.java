@@ -1,6 +1,6 @@
-package cn.com.cgh.oasis.log.mapper;
+package cn.com.cgh.resource.error.mapper;
 
-import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
+import cn.com.cgh.romantic.pojo.gateway.TbCfgError;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-01-29
  */
 @Mapper
-public interface TbLoginLogMapper extends BaseMapper<TbLoginLog> {
+public interface TbCfgErrorMapper extends BaseMapper<TbCfgError> {
 
 }

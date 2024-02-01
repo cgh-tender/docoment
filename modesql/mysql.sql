@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS t_ware_sale_statistics;
 CREATE TABLE t_ware_sale_statistics
 (
-    id               bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    id               bigint(20) NOT NULL COMMENT '主键id',
     business_id      bigint(20) NOT NULL COMMENT '业务机构编码',
     ware_inside_code bigint(20) NOT NULL COMMENT '商品自编码',
     weight_sale_cnt_day double (16,4) DEFAULT NULL COMMENT '平均日销量',
@@ -15,7 +15,7 @@ CREATE TABLE t_ware_sale_statistics
     create_time      datetime(3) NOT NULL COMMENT '创建时间',
     modify_user      bigint(20) DEFAULT NULL COMMENT '最终修改人',
     modify_time      datetime(3) NOT NULL COMMENT '最终修改时间',
-    is_delete        tinyint(2) DEFAULT '2' COMMENT '是否删除，1：是，2：否',
+    is_delete        tinyint(2) DEFAULT 2 COMMENT '是否删除，1：是，2：否',
     PRIMARY KEY (id) USING BTREE,
     KEY idx_business_ware (business_id,ware_inside_code) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='商品销售统计';
@@ -23,7 +23,7 @@ CREATE TABLE t_ware_sale_statistics
 
 create table IF NOT EXISTS tb_cfg_datasource
 (
-    id          bigint(20) NOT NULL auto_increment COMMENT '主键',
+    id          bigint(20) NOT NULL COMMENT '主键',
     create_by bigint(20) NOT NULL COMMENT '创建人',
     create_time datetime(3) NOT NULL COMMENT '创建时间',
     update_by bigint(20) NOT NULL COMMENT '最终修改人',
@@ -36,7 +36,7 @@ create table IF NOT EXISTS tb_cfg_datasource
 
 create table IF NOT EXISTS tb_cfg_resource
 (
-    id          bigint(20) NOT NULL auto_increment COMMENT '主键',
+    id          bigint(20) NOT NULL COMMENT '主键',
     parent_id bigint(20) DEFAULT 0 COMMENT '父菜单code',
     create_by bigint(20) NOT NULL COMMENT '创建人',
     create_time datetime(3) NOT NULL COMMENT '创建时间',
@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS tb_cfg_user
     password        varchar(128) NOT NULL COMMENT '密码',
     phone       varchar(20) DEFAULT NULL COMMENT '手机号',
     email       varchar(20) DEFAULT NULL COMMENT '邮箱',
-    gender tinyint(2) DEFAULT NULL COMMENT '性别',
-    status  tinyint(2) DEFAULT NULL COMMENT '用户状态',
+    gender tinyint(2) DEFAULT 0 COMMENT '性别',
+    status  tinyint(2) DEFAULT 0 COMMENT '用户状态',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
@@ -257,14 +257,14 @@ CREATE TABLE IF NOT EXISTS tb_role_resource
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     role_id     bigint(20) DEFAULT NULL COMMENT '角色id',
     resource_id     bigint(20) DEFAULT NULL COMMENT '资源id',
-    type    tinyint(2) DEFAULT null COMMENT '资源类型',
+    type    tinyint(2) DEFAULT 0 COMMENT '资源类型',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色资源关系表';
 
 CREATE TABLE IF NOT EXISTS tb_controller_log
 (
-    id                   bigint(20) NOT NULL auto_increment COMMENT '主键',
+    id                   bigint(20) NOT NULL COMMENT '主键',
     create_by            bigint(20) NOT NULL COMMENT '创建人',
     create_time          datetime(3) NOT NULL COMMENT '创建时间',
     update_by            bigint(20) NOT NULL COMMENT '最终修改人',
@@ -277,11 +277,11 @@ CREATE TABLE IF NOT EXISTS tb_controller_log
     response_body        text COMMENT '响应体',
     user_agent           varchar(255) COMMENT '请求的用户代理信息',
     PRIMARY KEY (id) USING BTREE
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='接口日志表';
 
 CREATE TABLE IF NOT EXISTS tb_login_log
 (
-    id                   bigint(20) NOT NULL auto_increment COMMENT '主键',
+    id                   bigint(20) NOT NULL COMMENT '主键',
     create_by            bigint(20) NOT NULL COMMENT '创建人',
     create_time          datetime(3) NOT NULL COMMENT '创建时间',
     update_by            bigint(20) NOT NULL COMMENT '最终修改人',
@@ -290,8 +290,23 @@ CREATE TABLE IF NOT EXISTS tb_login_log
     user_id              bigint(20) NOT NULL COMMENT '用户id',
     client_ip            varchar(255) COMMENT '客户端IP地址',
     logout_time          datetime(3) COMMENT '登出时间',
-    login_status         tinyint(2) COMMENT '登录状态',
+    login_status         tinyint(2) DEFAULT 1 COMMENT '登录状态',
     user_agent           varchar(255) COMMENT '请求的用户代理信息',
     PRIMARY KEY (id) USING BTREE,
     KEY idx_userid (user_id)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='登录日志表';
+
+create TABLE IF NOT EXISTS tb_cfg_error(
+    id                   bigint(20) NOT NULL COMMENT '主键',
+    create_by            bigint(20) NOT NULL COMMENT '创建人',
+    create_time          datetime(3) NOT NULL COMMENT '创建时间',
+    update_by            bigint(20) NOT NULL COMMENT '最终修改人',
+    update_time          datetime(3) NOT NULL COMMENT '修改时间',
+    code                 bigint(10) NOT NULL COMMENT '异常码',
+    target_code          bigint(10) DEFAULT 0 COMMENT '异常码对应提示码表',
+    message              varchar(255) NOT NULL COMMENT '异常信息',
+    PRIMARY KEY (id) USING BTREE,
+    KEY idx_code (code),
+    KEY idx_target_code (target_code)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='异常的操作码表';
+

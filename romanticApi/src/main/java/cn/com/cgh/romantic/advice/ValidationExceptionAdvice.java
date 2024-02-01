@@ -1,4 +1,4 @@
-package cn.com.cgh.core.advice;
+package cn.com.cgh.romantic.advice;
 
 import cn.com.cgh.gallery.util.ResponseImpl;
 import jakarta.validation.ConstraintViolation;

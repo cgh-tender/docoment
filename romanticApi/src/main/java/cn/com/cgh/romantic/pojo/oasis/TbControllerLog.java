@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpMethod;
 
 /**
  * @author cgh
@@ -19,7 +20,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class TbControllerLog extends TbBaseEntity {
     @Schema(description = "方法名称")
-    private String httpMethod;
+    private HttpMethod httpMethod;
     @Schema(description = "请求的 URL")
     private String requestUrl;
     @Schema(description = "录请求的客户端 IP 地址")

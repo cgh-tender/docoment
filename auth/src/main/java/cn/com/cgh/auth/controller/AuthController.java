@@ -1,49 +1,43 @@
 package cn.com.cgh.auth.controller;
 
-import cn.com.cgh.romantic.login.ILoginController;
-import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
+import cn.com.cgh.romantic.pojo.auth.AuthCheckEntity;
+import cn.com.cgh.romantic.server.resource.IResourceErrorController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
-
+/**
+ * @author cgh
+ */
 @RestController
+@RequestMapping()
 @Tag(name = "AuthController", description = "认证中心登录认证")
 @Slf4j
 public class AuthController {
     @Autowired
-    private ILoginController iLoginController;
-    @Autowired
-    private SessionRegistry sessionRegistry;
+    private IResourceErrorController iResourceErrorController;
 
-    @PostMapping("/doLogin")
-    public Map login(TbCfgUser loginRequest) {
-        log.info("===========");
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken
-                .authenticated(loginRequest.getUsername(), loginRequest.getPassword(), null);
-        log.info("{}", authenticationRequest);
-        log.info("login");
-        return iLoginController.login(loginRequest).getData();
+    /**
+     * 接口权限
+     */
+    @GetMapping("/controllerCheckAuth")
+    public Boolean controllerCheckAuth(AuthCheckEntity authCheckEntity) {
+        /**
+         * 接口权限
+         */
+        String url = authCheckEntity.getUrl();
+        HttpMethod method = authCheckEntity.getMethod();
+        iResourceErrorController.getErrorMessage(0L);
+
+        return Boolean.TRUE;
     }
 
     @GetMapping("/error")
     public String error() {
         return "error";
-    }
-
-    @GetMapping("/hello")
-    public List<Object> hello() {
-        return sessionRegistry.getAllPrincipals();
-    }
-
-    public record LoginRequest(String username, String password) {
     }
 }

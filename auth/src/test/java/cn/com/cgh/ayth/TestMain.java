@@ -1,11 +1,11 @@
 package cn.com.cgh.ayth;
 
-import java.text.MessageFormat;
+import java.util.regex.Pattern;
 
 public class TestMain {
     public static void main(String[] args) {
-        String JWT_CACHE_KEY = "jwt:username:{0}:{1}";
-        String format = MessageFormat.format(JWT_CACHE_KEY, "123", "456");
-        System.out.println(format);
+        Pattern REGEX = Pattern.compile("^[0-9]*$");
+        boolean b = REGEX.matcher("123445").find();
+        System.out.println(b);
     }
 }

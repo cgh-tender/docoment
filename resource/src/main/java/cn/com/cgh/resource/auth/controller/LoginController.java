@@ -10,9 +10,9 @@ import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.SendQueue;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.FormSubmitEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -66,7 +66,7 @@ public class LoginController {
     public String senQuery() {
         sendQueue.doSendControllerQueue(MsgPojo.builder().id(idWork.nextId()).msg(
                 TbControllerLog.builder()
-                        .httpMethod(FormSubmitEvent.MethodType.GET.name())
+                        .httpMethod(HttpMethod.GET)
                         .requestUrl("/send")
                         .clientIp("127.0.0.1")
                         .userAgent("admin")

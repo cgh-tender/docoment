@@ -1,4 +1,4 @@
-package cn.com.cgh.romantic.login;
+package cn.com.cgh.romantic.server.resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @FeignClient(name = "resource"
         , fallbackFactory = IMenuController.TestFallbackFactory.class
-        , contextId = "resource-1"
+        , contextId = "resource-menu"
 )
 public interface IMenuController {
     Logger logger = LoggerFactory.getLogger(IMenuController.class);

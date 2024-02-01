@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -48,29 +46,17 @@ public class OAuth2Config {
                 .successHandler(new SuccessHandler())
                 .failureHandler(new FailureHandler())
         );
-//        http.rememberMe(rememberMe ->
-//                        rememberMe
-//                        .rememberMeParameter("rememberMe")
-//                        .rememberMeCookieName("rememberMe")
-//                        .key("myKey")
-//                                .tokenRepository(tokenRepository)
-//        );
-//        http.addFilterBefore(new VerificationCodeFilter(), UsernamePasswordAuthenticationFilter.class);
-//        http.addFilterAt(new MyFilter(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
-//        http.sessionManagement(e -> e.invalidSessionStrategy((request, response) -> {
-//                    log.error("会话失效");
-//                    response.getWriter().write(ResponseImpl.builder().message("会话失效").build().FULL().toString());
-//                }).maximumSessions(1)// 最多一个人登录。
-//        );
+
         http.addFilterBefore(new SendLogFilter(), UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling(e -> {
             e.accessDeniedHandler((request, response, exception) -> {
-                log.error("登录失败", exception);
+                log.error("异常1 (0)", exception);
             });
             e.defaultAuthenticationEntryPointFor((request, response, exception) -> {
-                log.error("登录失败1", exception);
+                log.error("异常2 (0)", exception);
             }, null);
         });
+
         http.logout(logout ->
                 logout.invalidateHttpSession(true)
                         .logoutUrl("/logout")
@@ -78,20 +64,5 @@ public class OAuth2Config {
                         .logoutSuccessHandler(new MyLogoutSuccessHandler())
         );
         return http.build();
-    }
-
-//    @Bean
-//    public JdbcUserDetailsManager jdbcUserDetailsManager() {
-//        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager();
-//        jdbcUserDetailsManager.setDataSource(dataSource);
-//        jdbcUserDetailsManager.
-//        return jdbcUserDetailsManager;
-//    }
-
-    //https://www.bilibili.com/video/BV1kj41167rK?p=13&spm_id_from=pageDriver&vd_source=73701b660d71a9d73d9f59e543cc85e7
-
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
     }
 }

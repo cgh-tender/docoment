@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
  * @author cgh
  */
 @PropertySource(value = "classpath:bootstrap.properties")
-@EnableFeignClients(basePackages = {"cn.com.cgh.romantic"})
+@EnableFeignClients(basePackages = {"cn.com.cgh.romantic.server.**"})
 @Slf4j
 public class OpenfeignConfig {
     static {

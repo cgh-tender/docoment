@@ -18,7 +18,11 @@ public enum LoginStatus implements DisplayedEnum {
     /**
      * 登录失败
      */
-    IN(2, "正在登录");
+    IN(2, "正在登录"),
+    /**
+     * 登录失败
+     */
+    LOGOUT(3, "退出登录");
     @Getter
     private final Integer value;
     private final String label;

@@ -10,6 +10,9 @@ import lombok.*;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author cgh
+ */
 @Data
 public class TbBaseEntity implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)

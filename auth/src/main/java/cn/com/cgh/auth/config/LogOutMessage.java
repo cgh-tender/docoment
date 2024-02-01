@@ -1,5 +1,6 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.romantic.em.LoginStatus;
 import cn.com.cgh.romantic.interfac.RedisMessageAdvice;
 import cn.com.cgh.romantic.pojo.MsgPojo;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
@@ -36,6 +37,7 @@ public class LogOutMessage implements RedisMessageAdvice {
             Long tokenId = Long.valueOf(users[2]);
             TbLoginLog logOut = TbLoginLog.builder()
                     .username(username)
+                    .loginStatus(LoginStatus.LOGOUT)
                     .logoutTime(new Date())
                     .build();
             logOut.setId(tokenId);
@@ -45,7 +47,7 @@ public class LogOutMessage implements RedisMessageAdvice {
                             .msg(logOut)
                             .build()
             );
+            log.info("redis删除key:{}", new String(message.getBody()));
         }
-        log.info("redis删除key:{}", new String(message.getBody()));
     }
 }

@@ -1,6 +1,9 @@
 package cn.com.cgh.gateway.filter;
 
+import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.gateway.config.Properties;
+import cn.com.cgh.romantic.pojo.auth.AuthCheckEntity;
+import cn.com.cgh.romantic.server.auth.IAuthCheckController;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.KeyConstant;
 import cn.hutool.http.Method;
@@ -10,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -30,6 +34,9 @@ public class GlobalIpFilter implements GlobalFilter {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private Properties properties;
+    @Lazy
+    @Autowired
+    private IAuthCheckController iAuthCheckController;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -38,7 +45,7 @@ public class GlobalIpFilter implements GlobalFilter {
         ServerHttpRequest.Builder builder = request.mutate()
                 //将获取的真实ip存入header微服务方便获取
                 .header("X-Real-IP", request.getRemoteAddress().getHostString());
-        if (request.getMethod().equals(Method.OPTIONS)) {
+        if (Method.OPTIONS.equals(request.getMethod())) {
             return chain.filter(exchange);
         }
 
@@ -49,8 +56,10 @@ public class GlobalIpFilter implements GlobalFilter {
             String[] split1 = path.split("\s");
             if (split1.length > 1) {
                 if (matcher.match(split1[1], url)) {
-                    allPermission = Boolean.TRUE;
-                    break;
+                    if (split1[0].equals(request.getMethod().name())) {
+                        allPermission = Boolean.TRUE;
+                        break;
+                    }
                 }
             } else if (matcher.match(split1[0], url)) {
                 allPermission = Boolean.TRUE;
@@ -71,6 +80,9 @@ public class GlobalIpFilter implements GlobalFilter {
 
         String key = MessageFormat.format(JWT_CACHE_KEY, username, id);
         Assert.isTrue(jwtTokenUtil.exists(key), "登录超时。");
+
+        ResponseImpl<Boolean> resource = iAuthCheckController.controllerCheckAuth(AuthCheckEntity.builder().url(url).method(request.getMethod()).build());
+        Assert.isTrue(resource.getData(), "无权访问。");
 
         builder.header(USER_ID, String.valueOf(userId)).build();
 

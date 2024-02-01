@@ -5,6 +5,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
+/**
+ * @author cgh
+ */
 public class MyWebAuthenticationDetailsSource extends WebAuthenticationDetailsSource {
 
     private final RedisTemplate<String, Object> redisTemplateSO;

@@ -2,8 +2,8 @@ package cn.com.cgh.auth.service;
 
 import cn.com.cgh.auth.constant.MessageConstant;
 import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.login.IUmsUserServer;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
+import cn.com.cgh.romantic.server.resource.ILoginController;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserDetailsService {
     @Autowired
     private HttpServletRequest request;
     @Autowired
-    private IUmsUserServer adminService;
+    private ILoginController adminService;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String clientId = request.getParameter("client_id");
