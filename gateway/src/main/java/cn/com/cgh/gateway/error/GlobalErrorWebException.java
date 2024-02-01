@@ -52,6 +52,7 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
      */
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        ex.printStackTrace();
         ServerHttpResponse response = exchange.getResponse();
         if (response.isCommitted()) {
             return Mono.error(ex);

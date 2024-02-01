@@ -30,7 +30,7 @@ public class AuthController {
          * 接口权限
          */
         String url = authCheckEntity.getUrl();
-        HttpMethod method = authCheckEntity.getMethod();
+        String httpMethod = authCheckEntity.getHttpMethod();
         iResourceErrorController.getErrorMessage(0L);
 
         return Boolean.TRUE;

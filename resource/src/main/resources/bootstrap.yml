@@ -3,3 +3,6 @@ spring:
     active: dev
   application:
     name: resource
+feign:
+  httpclient:
+    enabled: true

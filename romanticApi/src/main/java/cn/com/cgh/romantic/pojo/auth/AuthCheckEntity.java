@@ -15,5 +15,5 @@ import org.springframework.http.HttpMethod;
 @Builder
 public class AuthCheckEntity {
     private String url;
-    private HttpMethod method;
+    private String httpMethod;
 }

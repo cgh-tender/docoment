@@ -1,5 +1,6 @@
 package cn.com.cgh.romantic.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -13,7 +14,11 @@ import java.util.stream.Collectors;
 /**
  * @author cgh
  */
+@Slf4j
 public class AuthBaseConfig {
+    static {
+        log.info("AuthBaseConfig:已启动");
+    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

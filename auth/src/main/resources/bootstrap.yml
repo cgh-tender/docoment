@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  application:
+    name: auth
   mvc:
     path-match:
       matching-strategy: ANT_PATH_MATCHER

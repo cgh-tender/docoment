@@ -96,6 +96,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseBody
     public ResponseImpl requestMethod(HttpRequestMethodNotSupportedException ex) {
+        ex.printStackTrace();
         LOGGER.error("请求方式有误：{}", ex.getMethod());
         return ResponseImpl.builder().code("99999").message("请求方式有误:" + ex.getMethod()).build().FULL();
     }

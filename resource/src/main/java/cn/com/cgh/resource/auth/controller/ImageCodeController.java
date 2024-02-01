@@ -1,6 +1,9 @@
 package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.core.util.Constants;
+import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.pojo.auth.AuthCheckEntity;
+import cn.com.cgh.romantic.server.auth.IAuthCheckController;
 import cn.com.cgh.romantic.util.IdWork;
 import cn.hutool.captcha.*;
 import cn.hutool.captcha.generator.RandomGenerator;
@@ -30,6 +33,8 @@ public class ImageCodeController {
     private RedisTemplate<String,Object> redisTemplateSO;
     @Autowired
     private IdWork idWork;
+    @Autowired
+    private IAuthCheckController iAuthCheckController;
     private Integer width = 100;
     private Integer height = 40;
     private Integer codeCount = 4;
@@ -47,6 +52,8 @@ public class ImageCodeController {
 //    )
     public void getCodeGif(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GifCaptcha gifCaptcha = CaptchaUtil.createGifCaptcha(width, height, codeCount);
+        ResponseImpl<Boolean> booleanResponse = iAuthCheckController.controllerCheckAuth(AuthCheckEntity.builder().build());
+        log.info(booleanResponse.getData()+"");
         query(response, gifCaptcha);
     }
 

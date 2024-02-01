@@ -24,7 +24,7 @@ public class OAuth2Config {
     @Autowired
     private MyAuthorizationManager myAuthorizationManager;
 
-    @Value("${auth.whitelist:/doLogin,/error,favicon.ico,/hello}")
+    @Value("${auth.whitelist:/doLogin,/error,/favicon.ico,/hello}")
     private String[] URL_WHITELIST;
 
     @Bean

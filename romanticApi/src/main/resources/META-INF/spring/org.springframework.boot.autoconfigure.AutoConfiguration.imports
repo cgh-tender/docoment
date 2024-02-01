@@ -6,6 +6,7 @@ cn.com.cgh.romantic.config.AuthBaseConfig
 cn.com.cgh.romantic.config.LoggerConfig
 cn.com.cgh.romantic.config.ValidationConfig
 cn.com.cgh.romantic.config.LoginProperties
+cn.com.cgh.romantic.config.WebClientConfig
 
 cn.com.cgh.romantic.util.Application
 cn.com.cgh.romantic.util.SendQueue
