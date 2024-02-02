@@ -9,11 +9,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import static cn.com.cgh.auth.constant.MessageConstant.USERNAME_PASSWORD_ERROR;
 
-@Component
+//@Component
 public class MyDaoAuthenticationProvider extends DaoAuthenticationProvider {
     public MyDaoAuthenticationProvider(UserDetailsService userDeleteService, PasswordEncoder passwordEncoder) {
         super.setUserDetailsService(userDeleteService);

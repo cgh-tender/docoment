@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
@@ -22,10 +23,10 @@ public interface ILoginController {
 
     @GetMapping("/login")
 //    @Cacheable(cacheNames = "login", cacheManager = Constants.REDIS_CACHE_MANAGER_NAME, key = "#code")
-    public ResponseImpl<Map> login(@RequestBody TbCfgUser user);
+    public Mono<ResponseImpl<Map>> login(@RequestBody TbCfgUser user);
 
     @GetMapping("/user/loadByUsername/{username}")
-    ResponseImpl<TbCfgUser> loadUserByUsername(@PathVariable String username);
+    Mono<ResponseImpl<TbCfgUser>> loadUserByUsername(@PathVariable String username);
 }
 
 class ILoginControllerConfiguration {
@@ -37,12 +38,12 @@ class ILoginControllerConfiguration {
 
 class ILoginControllerFallback implements ILoginController {
     @Override
-    public ResponseImpl<Map> login(@RequestBody TbCfgUser user) {
+    public Mono<ResponseImpl<Map>> login(TbCfgUser user) {
         return null;
     }
 
     @Override
-    public ResponseImpl<TbCfgUser> loadUserByUsername(String username) {
+    public Mono<ResponseImpl<TbCfgUser>> loadUserByUsername(String username) {
         return null;
     }
 }

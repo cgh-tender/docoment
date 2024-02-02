@@ -1,5 +1,6 @@
 package cn.com.cgh.resource.auth.controller;
 
+import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.resource.auth.service.ITbCfgRoleService;
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
 import cn.com.cgh.romantic.pojo.MsgPojo;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +57,22 @@ public class LoginController {
         Map<String, Object> map = new HashMap<>();
         map.put("roles", data);
         return map;
+    }
+    @GetMapping("/hello")
+    public String hello() {
+        return "hello";
+    }
+    @GetMapping("/hello1")
+    public ResponseImpl<String> hello1() {
+        return ResponseImpl.<String>builder().data("hello1").build().SUCCESS();
+    }
+    @GetMapping("/hello2")
+    public Mono<String> hello2() {
+        return Mono.just("hello2");
+    }
+    @GetMapping("/hello3")
+    public Mono<ResponseImpl> hello3() {
+        return Mono.just(ResponseImpl.<String>builder().data("hello3").build().SUCCESS());
     }
 
     @Autowired

@@ -1,8 +1,6 @@
 package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.core.util.Constants;
-import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.pojo.auth.AuthCheckEntity;
 import cn.com.cgh.romantic.server.auth.IAuthCheckController;
 import cn.com.cgh.romantic.util.IdWork;
 import cn.hutool.captcha.*;
@@ -52,8 +50,6 @@ public class ImageCodeController {
 //    )
     public void getCodeGif(HttpServletRequest request, HttpServletResponse response) throws IOException {
         GifCaptcha gifCaptcha = CaptchaUtil.createGifCaptcha(width, height, codeCount);
-        ResponseImpl<Boolean> booleanResponse = iAuthCheckController.controllerCheckAuth(AuthCheckEntity.builder().build());
-        log.info(booleanResponse.getData()+"");
         query(response, gifCaptcha);
     }
 

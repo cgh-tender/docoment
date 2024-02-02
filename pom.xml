@@ -342,6 +342,11 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>oss</id>
+            <name>oss</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
 <!--        <repository>-->
 <!--            <id>aliyunmaven</id>-->
 <!--            <name>aliyun</name>-->

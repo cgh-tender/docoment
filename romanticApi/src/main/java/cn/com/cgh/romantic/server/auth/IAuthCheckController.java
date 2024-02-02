@@ -3,8 +3,10 @@ package cn.com.cgh.romantic.server.auth;
 import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.romantic.pojo.auth.AuthCheckEntity;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
+import reactor.core.publisher.Mono;
 
 /**
  * @author cgh
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface IAuthCheckController {
 
     @GetMapping("/controllerCheckAuth")
-    ResponseImpl<Boolean> controllerCheckAuth(AuthCheckEntity authCheckEntity);
+    Mono<ResponseImpl<Boolean>> controllerCheckAuth(@SpringQueryMap AuthCheckEntity authCheckEntity);
 
 }
 class IAuthCheckControllerConfiguration {
@@ -29,7 +31,7 @@ class IAuthCheckControllerConfiguration {
 
 class IAuthCheckControllerFallback implements IAuthCheckController {
     @Override
-    public ResponseImpl<Boolean> controllerCheckAuth(AuthCheckEntity authCheckEntity) {
-        return ResponseImpl.<Boolean>builder().data(Boolean.FALSE).build().FULL();
+    public Mono<ResponseImpl<Boolean>> controllerCheckAuth(AuthCheckEntity authCheckEntity) {
+        return Mono.just(ResponseImpl.<Boolean>builder().data(Boolean.FALSE).build().FULL());
     }
 }

@@ -66,8 +66,8 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
         String message = null;
         log.info("GlobalErrorWebException {}",ex.getMessage());
         if (REGEX.matcher(ex.getMessage()).find()){
-            ResponseImpl<String> messageStr = iResourceErrorController.getErrorMessage(Long.valueOf(ex.getMessage()));
-            String data = messageStr.getData();
+            Mono<ResponseImpl<String>> responseMono = iResourceErrorController.getErrorMessage(Long.valueOf(ex.getMessage()));
+            String data = responseMono.map(re -> re.getData()).block();
             if (StringUtils.isNotBlank(data)){
                 message = data;
             }

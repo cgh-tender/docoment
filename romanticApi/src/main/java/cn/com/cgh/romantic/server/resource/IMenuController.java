@@ -1,11 +1,13 @@
 package cn.com.cgh.romantic.server.resource;
 
+import cn.com.cgh.gallery.util.ResponseImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public interface IMenuController {
     Logger logger = LoggerFactory.getLogger(IMenuController.class);
 
     @GetMapping("")
-    List queryMenu();
+    Mono<ResponseImpl<List>> queryMenu();
 
 
     @Component

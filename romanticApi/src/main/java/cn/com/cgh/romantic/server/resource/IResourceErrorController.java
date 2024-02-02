@@ -5,6 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import reactor.core.publisher.Mono;
 
 /**
  * @author cgh
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface IResourceErrorController {
 
     @GetMapping("/cfgError/{code}")
-    public ResponseImpl<String> getErrorMessage(@PathVariable Long code);
+    public Mono<ResponseImpl<String>> getErrorMessage(@PathVariable Long code);
 }
 
 class IResourceErrorControllerConfiguration {
@@ -29,7 +30,7 @@ class IResourceErrorControllerConfiguration {
 
 class IResourceErrorControllerFallback implements IResourceErrorController {
     @Override
-    public ResponseImpl<String> getErrorMessage(@PathVariable Long code) {
+    public Mono<ResponseImpl<String>> getErrorMessage(@PathVariable Long code) {
         return null;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * @author cgh
  */
 @Slf4j
+@EnableWebFlux
 public class AuthBaseConfig {
     static {
         log.info("AuthBaseConfig:已启动");

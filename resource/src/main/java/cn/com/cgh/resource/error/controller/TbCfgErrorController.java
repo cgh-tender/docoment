@@ -28,6 +28,6 @@ public class TbCfgErrorController {
             }else{
                 return tbCfgErrorService.lambdaQuery().eq(TbCfgError::getCode, targetCode).one().getMessage();
             }
-        }).orElseGet(null);
+        }).orElseGet(() -> "");
     }
 }

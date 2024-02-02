@@ -13,6 +13,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -25,25 +26,21 @@ public class ValidationExceptionAdvice {
 
     @ExceptionHandler(value = {BindException.class, ValidationException.class})
     @ResponseBody
-    public ResponseImpl exceptionHandler(Exception e) throws Exception {
-
+    public Mono<ResponseImpl> exceptionHandler(Exception e) throws Exception {
         if (e instanceof BindException) {
             return this.handleBindException((BindException) e);
         }
-
         if (e instanceof ConstraintViolationException) {
             return this.handleConstraintViolationException(e);
         }
-
-        return ResponseImpl.builder().build().FULL();
+        return Mono.just(ResponseImpl.builder().build().FULL());
     }
 
     //Controller方法的参数校验码
     //Controller方法>Controller类>DTO入参属性>DTO入参类>配置文件默认参数码>默认错误码
-    private ResponseImpl handleBindException(BindException e) throws Exception {
+    private Mono<ResponseImpl> handleBindException(BindException e) throws Exception {
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
         String msg = allErrors.stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(";"));
-
 
         //属性校验上的注解，只会取第一个属性上的注解，因此要配置
         //hibernate.validator.fail_fast=true
@@ -68,14 +65,13 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return ResponseImpl.builder().message(msg).build().FULL();
+        return Mono.just(ResponseImpl.builder().message(msg).build().FULL());
     }
 
-    private ResponseImpl handleConstraintViolationException(Exception e) throws Exception {
+    private Mono<ResponseImpl> handleConstraintViolationException(Exception e) throws Exception {
         ConstraintViolationException exception = (ConstraintViolationException) e;
         Set<ConstraintViolation<?>> violationSet = exception.getConstraintViolations();
         String msg = violationSet.stream().map(s -> s.getConstraintDescriptor().getMessageTemplate()).collect(Collectors.joining(";"));
-        return ResponseImpl.builder().message(msg).build().FULL();
+        return Mono.just(ResponseImpl.builder().message(msg).build().FULL());
     }
-
 }
