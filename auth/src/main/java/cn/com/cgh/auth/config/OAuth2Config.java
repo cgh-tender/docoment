@@ -123,6 +123,9 @@ public class OAuth2Config {
                return exchange.getResponse().writeWith(Mono.empty());
            });
         });
+//        http.httpBasic(c->{
+//            c.authenticationManager()
+//        })
 //        UsernamePasswordAuthenticationToken
 //        UsernamePasswordAuthenticationFilter
 //        http.formLogin(form -> form.
