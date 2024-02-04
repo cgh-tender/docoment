@@ -1,12 +1,19 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.core.util.RequestUtil;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,14 +22,22 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static org.springframework.web.reactive.socket.adapter.ContextWebSocketHandler.decorate;
 
 /**
  * @author cgh
@@ -34,12 +49,8 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    private final ExecutorService blockingExecutor;
-
-    public TokenServerSecurityContextRepository(ExecutorService blockingExecutor) {
-        this.blockingExecutor = blockingExecutor;
-    }
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
         log.info("TokenServerSecurityContextRepository save ");
@@ -66,26 +77,9 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
         }else if (request.getURI().getPath().equals("/login")){
             SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
             // 创建一个AtomicReference来存储请求体内容
-            AtomicReference<String> requestBodyRef = new AtomicReference<>();
-            ServerHttpRequest originalRequest = exchange.getRequest();
-            // 创建一个新的请求对象，将请求体转换为Mono<String>
-            Mono<SecurityContext> securityContextMono = DataBufferUtils.join(originalRequest.getBody())
-                    .map(dataBuffer -> {
-                        // 读取请求体并转换为字符串
-                        String body = decodeDataBufferToString(dataBuffer);
-                        log.info(body);
-                        // 清理数据缓冲区
-                        DataBufferUtils.release(dataBuffer);
-                        Authentication authentication = new UsernamePasswordAuthenticationToken(request.getQueryParams().getFirst("username"),
-                                passwordEncoder.encode(request.getQueryParams().getFirst("password"))
-                                , null);
-                        emptyContext.setAuthentication(authentication);
-                        return emptyContext;
-                    });
-            return securityContextMono.switchIfEmpty(Mono.defer(() -> {
-                // 如果请求体为空，那么就返回一个空的SecurityContext
-                return Mono.just(emptyContext);
-            }));
+            AtomicReference<String> mono = RequestUtil.getBody(exchange);
+            String s = mono.get();
+            System.out.println(s);
         }
         return Mono.empty();
     }

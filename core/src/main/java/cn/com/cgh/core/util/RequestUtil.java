@@ -4,8 +4,11 @@ import com.alibaba.cloud.nacos.util.InetIPv6Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.commons.util.InetUtils;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -13,13 +16,16 @@ import reactor.core.publisher.Mono;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Slf4j
 public class RequestUtil {
     protected static InetUtils inetUtils;
     protected static InetIPv6Utils inetIPv6Utils;
-    private static ServerCodecConfigurer serverCodecConfigurer;
+    protected static final List<HttpMessageReader<?>> messageReaders = HandlerStrategies.withDefaults().messageReaders();
+
     public ByteBuffer toSingleByteBuffer(DataBuffer dataBuffer) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(dataBuffer.readableByteCount());
         dataBuffer.read(byteBuffer.array());
@@ -27,12 +33,13 @@ public class RequestUtil {
         return byteBuffer;
     }
 
-    public static Mono<Map> getBody(ServerWebExchange exchange) {
-        if (serverCodecConfigurer == null){
-            serverCodecConfigurer = CoreApplication.getBean(ServerCodecConfigurer.class);
-        }
-        ServerRequest serverRequest = ServerRequest.create(exchange, serverCodecConfigurer.getReaders());
-        return serverRequest.bodyToMono(Map.class);
+    public static AtomicReference<String> getBody(ServerWebExchange exchange) {
+        AtomicReference<String> reference = new AtomicReference<>("");
+        String first = exchange.getRequest().getHeaders().getFirst("Content-Type");
+        System.out.println(first);
+        ServerRequest serverRequest = ServerRequest.create(exchange, messageReaders);
+        serverRequest.bodyToMono(String.class).subscribe(reference::set);
+        return reference;
     }
 
     public static Mono<String> getIpAddr(ServerWebExchange exchange) {
