@@ -23,6 +23,7 @@ import java.util.Map;
 public class MyAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
+        log.info("check Manager");
         return authentication.flatMap(a -> {
             Collection<? extends GrantedAuthority> authorities = a.getAuthorities();
             Map<String, Object> variables = context.getVariables();

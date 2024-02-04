@@ -9,15 +9,17 @@ import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.util.IdWork;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.SendQueue;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_TOKEN_HEADER;
 
 /**
  * @author cgh
@@ -50,8 +52,8 @@ public class LoginController {
      * @return
      */
     @GetMapping("/info")
-    public Map info(HttpServletRequest request) {
-        String authorization = request.getHeader("Authorization");
+    public Map info(ServerHttpRequest request) {
+        String authorization = request.getHeaders().getFirst(JWT_TOKEN_HEADER);
         Long userId = jwtTokenUtil.getUserIdFromToken(authorization);
         Set<String> data = iTbCfgRoleService.queryUserRoles(userId);
         Map<String, Object> map = new HashMap<>();

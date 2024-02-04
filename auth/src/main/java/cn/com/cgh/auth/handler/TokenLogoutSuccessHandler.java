@@ -1,36 +1,30 @@
 package cn.com.cgh.auth.handler;
 
 import cn.com.cgh.gallery.util.ResponseImpl;
-import cn.com.cgh.romantic.util.Application;
-import cn.com.cgh.romantic.util.JwtTokenUtil;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_TOKEN_HEADER;
-
+/**
+ * @author cgh
+ */
 @Slf4j
-public class MyLogoutSuccessHandler implements ServerLogoutSuccessHandler {
-    private JwtTokenUtil jwtTokenUtil;
+@Component
+public class TokenLogoutSuccessHandler implements ServerLogoutSuccessHandler {
     @Override
     public Mono<Void> onLogoutSuccess(WebFilterExchange exchange, Authentication authentication) {
-        if (jwtTokenUtil == null){
-            jwtTokenUtil = Application.getBean(JwtTokenUtil.class);
-        }
         ServerWebExchange exchange1 = exchange.getExchange();
         ServerHttpResponse response = exchange1.getResponse();
-        ServerHttpRequest request = exchange1.getRequest();
-        String token = jwtTokenUtil.token(request.getHeaders().getFirst(JWT_TOKEN_HEADER));
-        String username = jwtTokenUtil.getUserNameFromToken(token);
-        String id = jwtTokenUtil.getIdFromToken(token);
-        boolean b = jwtTokenUtil.removeToken(username, id);
-        log.info("退出 {}", b ? "成功" : "失败");
+        HttpHeaders httpHeaders = response.getHeaders();
+        httpHeaders.add("Content-Type", "application/json; charset=UTF-8");
+        httpHeaders.add("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         return response.writeWith(Mono.just(response.bufferFactory().wrap(
                 JSON.toJSONBytes(ResponseImpl.builder().message("退出成功").build().SUCCESS())
         )));

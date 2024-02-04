@@ -3,14 +3,15 @@ package cn.com.cgh.resource.auth.controller;
 import cn.com.cgh.core.util.Constants;
 import cn.com.cgh.romantic.server.auth.IAuthCheckController;
 import cn.com.cgh.romantic.util.IdWork;
+import cn.com.cgh.romantic.util.ResponseUtil;
 import cn.hutool.captcha.*;
 import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.json.JSONUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,7 +49,7 @@ public class ImageCodeController {
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeGif(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getCodeGif(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         GifCaptcha gifCaptcha = CaptchaUtil.createGifCaptcha(width, height, codeCount);
         query(response, gifCaptcha);
     }
@@ -61,7 +62,7 @@ public class ImageCodeController {
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeJpg(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getCodeJpg(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         CircleCaptcha circleCaptcha = CaptchaUtil.createCircleCaptcha(width, height, codeCount, 50);
         query(response, circleCaptcha);
     }
@@ -74,18 +75,18 @@ public class ImageCodeController {
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeJpg1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getCodeJpg1(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         AbstractCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(width, height, codeCount, 50);
         query(response, lineCaptcha);
     }
 
-    private void query(HttpServletResponse response, AbstractCaptcha abstractCaptcha) throws IOException {
+    private void query(ServerHttpResponse response, AbstractCaptcha abstractCaptcha) throws IOException {
         abstractCaptcha.setGenerator(new RandomGenerator(randomMsg, codeCount));
         abstractCaptcha.createCode();
         String id = getId();
         redisTemplateSO.opsForValue().set(id, abstractCaptcha.getCode(), 60, TimeUnit.SECONDS);
-        response.setHeader(Constants.UUID, id);
-        response.getOutputStream().write(abstractCaptcha.getImageBytes());
+        response.getHeaders().add(Constants.UUID, id);
+        ResponseUtil.writeResponse(response, abstractCaptcha.getImageBytes());
     }
 
 
@@ -97,7 +98,7 @@ public class ImageCodeController {
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeJpg2(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void getCodeJpg2(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         ShearCaptcha shearCaptcha = CaptchaUtil.createShearCaptcha(width, height, codeCount, 3);
         query(response, shearCaptcha);
     }

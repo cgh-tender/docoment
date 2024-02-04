@@ -84,6 +84,7 @@ public class GlobalIpFilter implements GlobalFilter {
         String key = MessageFormat.format(JWT_CACHE_KEY, username, id);
         Assert.isTrue(jwtTokenUtil.exists(key), "登录超时。");
 
+
         Mono<ResponseImpl<Boolean>> responseMono = iAuthCheckController.controllerCheckAuth(AuthCheckEntity.builder().url(url).httpMethod(request.getMethod().name()).build());
         responseMono.map(resource -> resource).subscribe(resource -> Assert.isTrue(resource.getData(), "无权访问。"));
 

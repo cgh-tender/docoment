@@ -24,7 +24,7 @@ public class AuthController {
     @Autowired
     private IResourceErrorController iResourceErrorController;
 
-    @RequestMapping("/doLogin")
+    @PostMapping("/login")
     public Map doLogin() {
         return new HashMap();
     }

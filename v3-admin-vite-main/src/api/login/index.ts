@@ -14,11 +14,12 @@ export function getLoginCodeApi(url: string) {
 /** 登录并返回 Token */
 export function loginApi(data: Login.LoginRequestData) {
   return request<Login.LoginResponseData>({
-    url: "auth/doLogin",
+    url: "auth/login",
     method: "post",
     headers: {
-      uuid: getUuid(),
-      "Content-Type": "application/x-www-form-urlencoded"
+      uuid: getUuid()
+      // ,
+      // "Content-Type": "application/x-www-form-urlencoded"
     },
     data
   })
