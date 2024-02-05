@@ -1,6 +1,5 @@
 package cn.com.cgh.core.advice;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,15 +26,12 @@ public class NotVoidResponseBodyAdvice {
     @Around("execution(* org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler.handleResult(..)) && args(exchange, result)")
     public Object handleResult(ProceedingJoinPoint point, ServerWebExchange exchange, HandlerResult result) throws Throwable {
         Object body = result.getReturnValue();
-        if (body instanceof Mono
-                || body instanceof Flux
-                || body == null
-        ){
+        if (body instanceof Mono || body instanceof Flux || body == null){
             return point.proceed();
-        } else if (!(body instanceof ResponseImpl)) {
+        } else if (!(body instanceof CoreResponseImpl)) {
             return point.proceed(Arrays.asList(
                     exchange,
-                    new HandlerResult(result.getHandler(), Mono.just(ResponseImpl.builder().data(body).build().SUCCESS()), result.getReturnTypeSource())
+                    new HandlerResult(result.getHandler(), Mono.just(CoreResponseImpl.builder().data(body).build().SUCCESS()), result.getReturnTypeSource())
             ).toArray());
         }
         return point.proceed();

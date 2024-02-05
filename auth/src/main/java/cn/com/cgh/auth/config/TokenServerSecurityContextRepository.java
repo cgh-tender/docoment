@@ -1,43 +1,25 @@
 package cn.com.cgh.auth.config;
 
-import cn.com.cgh.core.util.RequestUtil;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
+import cn.hutool.jwt.JWTPayload;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.codec.HttpMessageReader;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.springframework.web.reactive.socket.adapter.ContextWebSocketHandler.decorate;
+import static cn.com.cgh.core.util.Constants.UUID;
 
 /**
  * @author cgh
@@ -51,6 +33,8 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
         log.info("TokenServerSecurityContextRepository save ");
@@ -60,43 +44,33 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
+        String path = request.getURI().getPath();
+        if ("/login".equals(path)){
+            String uuid = request.getHeaders().getFirst(UUID);
+            String uuidCacheCode = String.valueOf(redisTemplate.opsForValue().get(uuid));
+            String uuidCode = request.getQueryParams().getFirst("code");
+            if (!StringUtils.equals(uuidCacheCode,uuidCode) || StringUtils.isBlank(uuidCode)){
+                redisTemplate.delete(uuid);
+                return Mono.empty();
+            }
+            return Mono.empty();
+        }
         String token = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        log.info("TokenServerSecurityContextRepository load token = {}", token);
+        log.info("TokenServerSecurityContextRepository load userid = {}",  request.getHeaders().getFirst(JWTPayload.AUDIENCE));
+        log.info("TokenServerSecurityContextRepository load username = {}",  request.getHeaders().getFirst(JWTPayload.SUBJECT));
         if (token != null) {
             try {
                 Long userIdFromToken = jwtTokenUtil.getUserIdFromToken(token);
                 String userNameFromToken = jwtTokenUtil.getUserNameFromToken(token);
                 SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
-                Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority("admin"));
-                Authentication authentication = new UsernamePasswordAuthenticationToken(null, null, authorities);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(null, null, null);
                 emptyContext.setAuthentication(authentication);
                 return Mono.just(emptyContext);
             } catch (Exception e) {
                 return Mono.empty();
             }
-        }else if (request.getURI().getPath().equals("/login")){
-            SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
-            // 创建一个AtomicReference来存储请求体内容
-            AtomicReference<String> mono = RequestUtil.getBody(exchange);
-            String s = mono.get();
-            System.out.println(s);
         }
         return Mono.empty();
     }
-    private String decodeDataBufferToString(DataBuffer dataBuffer) {
-        byte[] bytes = new byte[dataBuffer.readableByteCount()];
-        dataBuffer.read(bytes);
-        DataBufferUtils.release(dataBuffer);
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
-    private ServerHttpRequest createNewRequestWithBody(ServerHttpRequest originalRequest, String body) {
-        // 注意：通常情况下，我们不会在全局过滤器中创建新的带有请求体的请求，因为这可能会破坏框架内部的行为。
-        // 这里只是为了演示如何读取和存储请求体而做的模拟操作。
-
-        // 在实际应用中，你可以在不修改原始请求的情况下，在内存中保留请求体的内容以便后续处理
-
-        return originalRequest;
-    }
-
-
 }

@@ -1,6 +1,6 @@
 package cn.com.cgh.auth.handler;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

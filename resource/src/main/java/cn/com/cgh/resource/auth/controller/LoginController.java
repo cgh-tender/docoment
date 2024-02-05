@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.controller;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.resource.auth.service.ITbCfgRoleService;
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
 import cn.com.cgh.romantic.pojo.MsgPojo;

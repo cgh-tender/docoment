@@ -1,6 +1,6 @@
 package cn.com.cgh.auth.handler;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.SendQueue;
 import com.alibaba.fastjson2.JSON;

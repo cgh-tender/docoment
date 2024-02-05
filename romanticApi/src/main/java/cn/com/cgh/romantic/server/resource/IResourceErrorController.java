@@ -1,11 +1,10 @@
 package cn.com.cgh.romantic.server.resource;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import reactor.core.publisher.Mono;
 
 /**
  * @author cgh
@@ -18,7 +17,7 @@ import reactor.core.publisher.Mono;
 public interface IResourceErrorController {
 
     @GetMapping("/cfgError/{code}")
-    public Mono<ResponseImpl<String>> getErrorMessage(@PathVariable Long code);
+    public ResponseImpl<String> getErrorMessage(@PathVariable Long code);
 }
 
 class IResourceErrorControllerConfiguration {
@@ -30,7 +29,7 @@ class IResourceErrorControllerConfiguration {
 
 class IResourceErrorControllerFallback implements IResourceErrorController {
     @Override
-    public Mono<ResponseImpl<String>> getErrorMessage(@PathVariable Long code) {
+    public ResponseImpl<String> getErrorMessage(@PathVariable Long code) {
         return null;
     }
 }

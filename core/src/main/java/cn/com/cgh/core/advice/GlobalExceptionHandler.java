@@ -1,7 +1,6 @@
 package cn.com.cgh.core.advice;
 
 import cn.com.cgh.core.util.RequestUtil;
-import cn.com.cgh.gallery.util.ResponseImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -31,9 +30,9 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(SQLException.class)
-    public Mono<ResponseImpl> sqlException(ServerWebExchange rsp,SQLException ex) {
+    public Mono<CoreResponseImpl> sqlException(ServerWebExchange rsp,SQLException ex) {
         LOGGER.error("!!! request uri:{} from {} server exception:{}", rsp.getRequest().getURI().getPath(), RequestUtil.getIpAddr(rsp), ex == null ? null : ex);
-        return Mono.just(ResponseImpl.builder().code("1002").message(ex == null ? null : ex.getMessage()).build().FULL());
+        return Mono.just(CoreResponseImpl.builder().code("1002").message(ex == null ? null : ex.getMessage()).build().FULL());
     }
 
 
@@ -48,9 +47,9 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public Mono<ResponseImpl> serverError(ServerWebExchange rsp, Exception ex) throws Exception {
+    public Mono<CoreResponseImpl> serverError(ServerWebExchange rsp, Exception ex) throws Exception {
         LOGGER.error("!!! request uri:{} from {} server exception:{}", rsp.getRequest().getURI().getPath(), RequestUtil.getIpAddr(rsp), ex == null ? null : ex);
-        return Mono.just(ResponseImpl.builder().code("1002").message(ex == null ? null : ex.getMessage()).build().FULL());
+        return Mono.just(CoreResponseImpl.builder().code("1002").message(ex == null ? null : ex.getMessage()).build().FULL());
     }
 
 
@@ -64,16 +63,16 @@ public class GlobalExceptionHandler {
 //    @ResponseBody
 //    @ResponseStatus(code = HttpStatus.NOT_FOUND)
 //    @ExceptionHandler(NoHandlerFoundException.class)
-//    public Mono<ResponseImpl> notFound(HttpServletRequest req, ServerWebExchange rsp, Exception ex) throws Exception {
+//    public Mono<CoreResponseImpl> notFound(HttpServletRequest req, ServerWebExchange rsp, Exception ex) throws Exception {
 //        LOGGER.error("!!! request uri:{} from {} not found exception:{}", rsp.getURI().getPath(), RequestUtil.getIpAddr(req), ex);
-//        return Mono.just(ResponseImpl.builder().code("404").message(ex == null ? null : ex.getMessage()).build().FULL());
+//        return Mono.just(CoreResponseImpl.builder().code("404").message(ex == null ? null : ex.getMessage()).build().FULL());
 //    }
 
 //    @ExceptionHandler(MissingServletRequestParameterException.class)
 //    @ResponseBody
-//    public Mono<ResponseImpl> paramException(MissingServletRequestParameterException ex) {
+//    public Mono<CoreResponseImpl> paramException(MissingServletRequestParameterException ex) {
 //        LOGGER.error("缺少请求参数:{}", ex.getMessage());
-//        return Mono.just(ResponseImpl.builder().code("99999").message("缺少参数:" + ex.getParameterName()).build().FULL());
+//        return Mono.just(CoreResponseImpl.builder().code("99999").message("缺少参数:" + ex.getParameterName()).build().FULL());
 //    }
 
     //参数类型不匹配
@@ -81,27 +80,27 @@ public class GlobalExceptionHandler {
     //getRequiredType()实际要求客户端传递的数据类型
     @ExceptionHandler(TypeMismatchException.class)
     @ResponseBody
-    public Mono<ResponseImpl> requestTypeMismatch(TypeMismatchException ex) {
+    public Mono<CoreResponseImpl> requestTypeMismatch(TypeMismatchException ex) {
         LOGGER.error("参数类型有误:{}", ex.getMessage());
-        return Mono.just(ResponseImpl.builder().code("99999").message("参数类型不匹配,参数" + ex.getPropertyName() + "类型应该为" + ex.getRequiredType()).build().FULL());
+        return Mono.just(CoreResponseImpl.builder().code("99999").message("参数类型不匹配,参数" + ex.getPropertyName() + "类型应该为" + ex.getRequiredType()).build().FULL());
     }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseBody
-    public Mono<ResponseImpl> fileSizeLimit(MultipartException ex) {
+    public Mono<CoreResponseImpl> fileSizeLimit(MultipartException ex) {
         LOGGER.error("认证有误:{}", ex.getMessage());
-        return Mono.just(ResponseImpl.builder().code("99999")
+        return Mono.just(CoreResponseImpl.builder().code("99999")
                 .message(ex.getMessage()).build().FULL());
     }
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseBody
-    public Mono<ResponseImpl> AuthenticationMethod(AuthenticationException m) {
+    public Mono<CoreResponseImpl> AuthenticationMethod(AuthenticationException m) {
         LOGGER.error("超过文件上传大小限制");
         if (m.getCause() != null) {
             LOGGER.error("超过文件上传大小限制:" + m.getCause().getMessage());
         }
-        return Mono.just(ResponseImpl.builder().code("99999").message("超过文件大小限制,最大10MB").build().FULL());
+        return Mono.just(CoreResponseImpl.builder().code("99999").message("超过文件大小限制,最大10MB").build().FULL());
     }
 
 }

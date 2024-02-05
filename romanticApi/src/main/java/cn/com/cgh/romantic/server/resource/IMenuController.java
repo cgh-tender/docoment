@@ -1,6 +1,6 @@
 package cn.com.cgh.romantic.server.resource;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;

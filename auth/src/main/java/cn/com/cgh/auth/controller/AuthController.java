@@ -5,13 +5,16 @@ import cn.com.cgh.romantic.server.resource.IResourceErrorController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author cgh
@@ -23,6 +26,9 @@ import java.util.Map;
 public class AuthController {
     @Autowired
     private IResourceErrorController iResourceErrorController;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
 
     @PostMapping("/login")
     public Map doLogin() {
@@ -33,15 +39,14 @@ public class AuthController {
      * 接口权限
      */
     @PostMapping("/controllerCheckAuth")
-    public Boolean controllerCheckAuth(AuthCheckEntity authCheckEntity) {
+    public Mono<Boolean> controllerCheckAuth(AuthCheckEntity authCheckEntity) {
         /**
          * 接口权限
          */
         String url = authCheckEntity.getUrl();
         String httpMethod = authCheckEntity.getHttpMethod();
-        iResourceErrorController.getErrorMessage(0L);
-
-        return Boolean.TRUE;
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> false,threadPoolTaskExecutor))
+                .flatMap(resource -> Mono.just(resource));
     }
 
     @GetMapping("/error")

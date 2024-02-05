@@ -34,6 +34,7 @@ public class JwtTokenUtil {
     public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
     public static final String USER_ID = "jwt-id";
+    public static final String USER_NAME = "sub";
     private static final String EXPIRE_IN = "expire_in";
 
     private final RedisTemplate<String, Object> redisTemplateSO;

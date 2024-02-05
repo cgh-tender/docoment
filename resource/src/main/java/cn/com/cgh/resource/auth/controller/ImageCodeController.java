@@ -10,12 +10,15 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Map;
@@ -49,9 +52,9 @@ public class ImageCodeController {
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeGif(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
+    public Mono<Void> getCodeGif(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         GifCaptcha gifCaptcha = CaptchaUtil.createGifCaptcha(width, height, codeCount);
-        query(response, gifCaptcha);
+        return query(response, gifCaptcha);
     }
 
     /**
@@ -62,45 +65,50 @@ public class ImageCodeController {
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeJpg(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
+    public Mono<Void> getCodeJpg(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         CircleCaptcha circleCaptcha = CaptchaUtil.createCircleCaptcha(width, height, codeCount, 50);
-        query(response, circleCaptcha);
+        return query(response, circleCaptcha);
     }
 
     /**
      * 使用干扰线方式生成的图形验证码
+     *
+     * @return
      */
     @GetMapping("/getCode.line")
 //    @SentinelResource(value = cn.com.cgh.romantic.config.Constants.ONE_RULE
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeJpg1(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
+    public Mono<Void> getCodeJpg1(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         AbstractCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(width, height, codeCount, 50);
-        query(response, lineCaptcha);
+        return query(response, lineCaptcha);
     }
 
-    private void query(ServerHttpResponse response, AbstractCaptcha abstractCaptcha) throws IOException {
+    private Mono<Void> query(ServerHttpResponse response, AbstractCaptcha abstractCaptcha) throws IOException {
         abstractCaptcha.setGenerator(new RandomGenerator(randomMsg, codeCount));
         abstractCaptcha.createCode();
         String id = getId();
         redisTemplateSO.opsForValue().set(id, abstractCaptcha.getCode(), 60, TimeUnit.SECONDS);
         response.getHeaders().add(Constants.UUID, id);
-        ResponseUtil.writeResponse(response, abstractCaptcha.getImageBytes());
+        response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
+        return ResponseUtil.writeResponse(response, abstractCaptcha.getImageBytes());
     }
 
 
     /**
      * 扭曲干扰验证码
+     *
+     * @return
      */
     @GetMapping("/getCode.shear")
 //    @SentinelResource(value = cn.com.cgh.romantic.config.Constants.ONE_RULE
 //            ,blockHandler = "handler",blockHandlerClass = CustomerBlockHandler.class
 //            ,fallback = "getCodeFallback"
 //    )
-    public void getCodeJpg2(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
+    public Mono<Void> getCodeJpg2(ServerHttpRequest request, ServerHttpResponse response) throws IOException {
         ShearCaptcha shearCaptcha = CaptchaUtil.createShearCaptcha(width, height, codeCount, 3);
-        query(response, shearCaptcha);
+        return query(response, shearCaptcha);
     }
 
     @Async

@@ -1,6 +1,7 @@
 //package cn.com.cgh.core.advice;
 //
-//import cn.com.cgh.gallery.util.ResponseImpl;
+//import cn.com.cgh.romantic.util.ResponseImpl;
+//import org.aspectj.lang.annotation.Aspect;
 //import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 //import org.springframework.core.MethodParameter;
 //import org.springframework.core.annotation.Order;
@@ -21,10 +22,10 @@
 // * @version 0.1
 // * @since 0.1
 // */
-//@ConditionalOnClass(ResponseBodyAdvice.class)
+//@Aspect
 //@ControllerAdvice
 //@Order(value = 1000)
-//public class VoidResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+//public class VoidResponseBodyAdvice {
 //
 //    /**
 //     * 只处理返回空的Controller方法.

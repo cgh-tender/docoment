@@ -1,17 +1,18 @@
 package cn.com.cgh.auth.handler;
 
 import cn.com.cgh.auth.filter.SendLogFilter;
-import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.romantic.em.LoginStatus;
 import cn.com.cgh.romantic.pojo.MsgPojo;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.romantic.util.SendQueue;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWTPayload;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -49,21 +50,23 @@ public class TokenSuccessHandler implements ServerAuthenticationSuccessHandler {
         String id = SendLogFilter.THREAD_LOCAL_LOG_ID.get() + "";
         payload.put(JWTPayload.JWT_ID, id);
         Map<String, Object> map = jwtTokenUtil.generateTokenAndRefreshToken(securityUser.getId(), securityUser.getUsername(), payload);
-        TbLoginLog loginLog = TbLoginLog.builder()
-                .username(securityUser.getUsername())
-                .userId(securityUser.getId())
-                .clientIp(request.getHeaders().getFirst(X_REAL_IP))
-                .loginStatus(LoginStatus.SUCCESS)
-                .userAgent(String.valueOf(map.get(JwtTokenUtil.ACCESS_TOKEN)))
-                .build();
-        loginLog.setId(SendLogFilter.THREAD_LOCAL_LOG_ID.get());
-        loginLog.setUpdateTime(new Date());
-        log.info(JSONUtil.toJsonStr(loginLog));
-        log.info(SendLogFilter.THREAD_LOCAL_LOG_ID.get() + "");
-        MsgPojo<Object> build = MsgPojo.builder().id(securityUser.getId()).msg(
-                loginLog
-        ).build();
-        sendQueue.doSendLoginQueue(build);
+        if (StringUtils.isNotEmpty(id)) {
+            TbLoginLog loginLog = TbLoginLog.builder()
+                    .username(securityUser.getUsername())
+                    .userId(securityUser.getId())
+                    .clientIp(request.getHeaders().getFirst(X_REAL_IP))
+                    .loginStatus(LoginStatus.SUCCESS)
+                    .userAgent(String.valueOf(map.get(JwtTokenUtil.ACCESS_TOKEN)))
+                    .build();
+            loginLog.setId(SendLogFilter.THREAD_LOCAL_LOG_ID.get());
+            loginLog.setUpdateTime(new Date());
+            log.info(JSONUtil.toJsonStr(loginLog));
+            log.info(SendLogFilter.THREAD_LOCAL_LOG_ID.get() + "");
+            MsgPojo<Object> build = MsgPojo.builder().id(securityUser.getId()).msg(
+                    loginLog
+            ).build();
+            sendQueue.doSendLoginQueue(build);
+        }
         return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.builder().message("登录成功").data(map).build().SUCCESS()))));
     }
 }

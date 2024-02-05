@@ -6,12 +6,6 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: gallery
-          uri: lb://gallery
-          predicates:
-            - Path=/gallery/**
-          filters:
-            - StripPrefix=1
         - id: resource
           uri: lb://resource
           predicates:

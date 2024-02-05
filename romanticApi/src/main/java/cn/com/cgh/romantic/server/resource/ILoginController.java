@@ -1,6 +1,6 @@
 package cn.com.cgh.romantic.server.resource;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ public interface ILoginController {
     public Mono<ResponseImpl<Map>> login(@RequestBody TbCfgUser user);
 
     @GetMapping("/user/loadByUsername/{username}")
-    Mono<ResponseImpl<TbCfgUser>> loadUserByUsername(@PathVariable String username);
+    ResponseImpl<TbCfgUser> loadUserByUsername(@PathVariable String username);
 }
 
 class ILoginControllerConfiguration {
@@ -43,7 +43,7 @@ class ILoginControllerFallback implements ILoginController {
     }
 
     @Override
-    public Mono<ResponseImpl<TbCfgUser>> loadUserByUsername(String username) {
+    public ResponseImpl<TbCfgUser> loadUserByUsername(String username) {
         return null;
     }
 }

@@ -1,10 +1,12 @@
 package cn.com.cgh.auth.service;
 
 import cn.com.cgh.auth.constant.MessageConstant;
-import cn.com.cgh.gallery.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.server.resource.ILoginController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,19 +17,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * @author cgh
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements ReactiveUserDetailsService {
     @Autowired
     private ILoginController adminService;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {
-        Mono<ResponseImpl<TbCfgUser>> responseMono = adminService.loadUserByUsername(username);
-        return responseMono.map((ResponseImpl<TbCfgUser> resource) -> {
-            TbCfgUser tbCfgUser = resource.getData();
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() ->
+        {
+            ResponseImpl<TbCfgUser> tbCfgUserResponse = adminService.loadUserByUsername(username);
+            TbCfgUser tbCfgUser = tbCfgUserResponse.getData();
             if (tbCfgUser == null) {
                 throw new UsernameNotFoundException(MessageConstant.USERNAME_PASSWORD_ERROR);
             }
@@ -42,6 +50,6 @@ public class UserServiceImpl implements ReactiveUserDetailsService {
                 throw new CredentialsExpiredException(MessageConstant.CREDENTIALS_EXPIRED);
             }
             return tbCfgUser;
-        });
+        }, threadPoolTaskExecutor));
     }
 }

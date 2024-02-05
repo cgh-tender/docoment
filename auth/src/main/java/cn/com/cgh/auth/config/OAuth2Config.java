@@ -1,5 +1,6 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.auth.filter.ManageAuthenticationFilter;
 import cn.com.cgh.auth.filter.SendLogFilter;
 import cn.com.cgh.auth.handler.*;
 import cn.com.cgh.auth.service.UserServiceImpl;
@@ -16,6 +17,9 @@ import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.web.server.WebFilter;
+import reactor.core.publisher.Flux;
 
 /**
  * @author cgh
@@ -40,7 +44,10 @@ public class OAuth2Config {
     private final PasswordEncoder passwordEncoder;
     private final UserServiceImpl reactiveUserDetailsService;
     private final TokenServerSecurityContextRepository tokenServerSecurityContextRepository;
-    private final LoginServerSecurityContextRepository loginServerSecurityContextRepository;
+//    private final LoginServerSecurityContextRepository loginServerSecurityContextRepository;
+    private final SendLogFilter sendLogFilter;
+    private final ManageAuthenticationFilter manageAuthenticationFilter;
+    private final MyServerAuthenticationConverter myServerAuthenticationConverter;
 
 
     @Bean
@@ -54,22 +61,30 @@ public class OAuth2Config {
         http.cors(Customizer.withDefaults());
         http.csrf(csrf -> csrf.disable());
         http.formLogin(form -> form
-                        .loginPage("/login") // 登录页
-                        .authenticationSuccessHandler(tokenSuccessHandler)
-                        .securityContextRepository(loginServerSecurityContextRepository)
-                        .authenticationFailureHandler(tokenFailureHandler)
+                .loginPage("/login") // 登录页
+                .authenticationSuccessHandler(tokenSuccessHandler)
+//                .securityContextRepository(loginServerSecurityContextRepository)
+                .authenticationFailureHandler(tokenFailureHandler)
+                .authenticationManager(loginAuthorizationManager)
         );
-//        setServerAuthenticationConverter
-//        http.passwordManagement()
-        http.authenticationManager(loginAuthorizationManager);
+//        http.authenticationManager(loginAuthorizationManager);
         http.securityContextRepository(tokenServerSecurityContextRepository);
         http.logout(logoutSpec -> logoutSpec.logoutUrl("/logout")
                 .logoutHandler(tokenLogoutHandler)
                 .logoutSuccessHandler(tokenLogoutSuccessHandler));
-        http.addFilterBefore(new SendLogFilter(), SecurityWebFiltersOrder.AUTHORIZATION);
+        http.addFilterBefore(sendLogFilter, SecurityWebFiltersOrder.FORM_LOGIN);
+        http.addFilterBefore(manageAuthenticationFilter, SecurityWebFiltersOrder.FORM_LOGIN);
         http.exceptionHandling(e -> e.accessDeniedHandler(tokenAccessDeniedHandler)
                 .authenticationEntryPoint(tokenAuthenticationEntryPoint));
-        return http.build();
+        SecurityWebFilterChain build = http.build();
+        Flux<WebFilter> webFilterFlux = build.getWebFilters().doOnNext(filter -> {
+            if (filter instanceof AuthenticationWebFilter) {
+                AuthenticationWebFilter authenticationWebFilter = (AuthenticationWebFilter) filter;
+                authenticationWebFilter.setServerAuthenticationConverter(myServerAuthenticationConverter);
+            }
+        });
+        webFilterFlux.subscribe();
+        return build;
     }
 
 //    @Bean

@@ -1,10 +1,11 @@
-package cn.com.cgh.gallery.util;
+package cn.com.cgh.core.advice;
 
 import cn.hutool.json.JSONUtil;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
@@ -12,15 +13,18 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ResponseImpl<T> {
+class CoreResponseImpl<T> {
     private String code;
     private String message;
     @Builder.Default
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime timestamp = LocalDateTime.now();
     private T data;
 
-    public ResponseImpl<T> SUCCESS(){
+    public CoreResponseImpl<T> SUCCESS(){
         if (StringUtils.isBlank(this.code)){
             this.code = "0";
         }
@@ -29,7 +33,7 @@ public class ResponseImpl<T> {
         }
         return this;
     }
-    public ResponseImpl<T> FULL() {
+    public CoreResponseImpl<T> FULL() {
         if (StringUtils.isBlank(this.code)) {
             this.code = "1";
         }

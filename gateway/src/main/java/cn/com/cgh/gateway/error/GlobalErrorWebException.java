@@ -1,12 +1,11 @@
 package cn.com.cgh.gateway.error;
 
-import cn.com.cgh.gallery.util.ResponseImpl;
 import cn.com.cgh.romantic.server.resource.IResourceErrorController;
+import cn.com.cgh.romantic.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseUtil;
 import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.JSONWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.Ordered;
@@ -15,14 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 /**
@@ -35,59 +33,53 @@ import java.util.regex.Pattern;
 public class GlobalErrorWebException implements ErrorWebExceptionHandler {
     @Autowired
     private IResourceErrorController iResourceErrorController;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     private final static Pattern REGEX = Pattern.compile("^[0-9]+$");
     private static final JSONObject ERROR_CONVERTERS = new JSONObject();
+
     static {
         ERROR_CONVERTERS.fluentPut(String.valueOf(HttpStatus.NOT_FOUND.value()), "当前服务不可用请联系管理员");
         ERROR_CONVERTERS.fluentPut(String.valueOf(HttpStatus.SERVICE_UNAVAILABLE.value()), "当前服务不可用请联系管理员");
     }
+
     /**
      * 这个Java函数是一个重写父类方法的函数，
      * 返回一个Mono<Void>类型的对象。它接受两个参数，一个是ServerWebExchange对象，
      * 另一个是Throwable对象。函数的目的是处理服务器网络交换和异常。
      * 返回的Mono<Void>对象为空。
+     *
      * @param exchange
      * @param ex
      * @return
      */
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-        ex.printStackTrace();
         ServerHttpResponse response = exchange.getResponse();
         if (response.isCommitted()) {
             return Mono.error(ex);
         }
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        HttpStatusCode statusCode = HttpStatus.OK;
+        HttpStatusCode statusCode;
         if (ex instanceof ResponseStatusException) {
             response.setStatusCode(HttpStatus.OK);
             statusCode = ((ResponseStatusException) ex).getStatusCode();
+        } else {
+            statusCode = HttpStatus.OK;
         }
-        String message = null;
-        log.info("GlobalErrorWebException {}",ex.getMessage());
-        if (REGEX.matcher(ex.getMessage()).find()){
-            Mono<ResponseImpl<String>> responseMono = iResourceErrorController.getErrorMessage(Long.valueOf(ex.getMessage()));
-            String data = responseMono.map(re -> re.getData()).block();
-            if (StringUtils.isNotBlank(data)){
-                message = data;
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
+            String message = ex.getMessage();
+            if (message != null && REGEX.matcher(message).find()){
+                ResponseImpl<String> errorMessage = iResourceErrorController.getErrorMessage(Long.valueOf(ex.getMessage()));
+                return errorMessage.getData() == null ? message : errorMessage.getData();
+            }else {
+                message = ERROR_CONVERTERS.get(statusCode) == null ? message : String.valueOf(ERROR_CONVERTERS.get(statusCode));
             }
-        }
-        if (Objects.isNull(message)){
-            message = (String) Optional.ofNullable(
-                            ERROR_CONVERTERS.get(String.valueOf(Objects.requireNonNull(statusCode).value()))
-                    )
-                    .orElse(ex.getMessage());
-        }
-        return response.writeWith(Mono.just(response
-                .bufferFactory()
-                .wrap(
-                JSONObject.toJSONString(new JSONObject()
-                        .fluentPut("code", "1")
-                        .fluentPut("statusCode", Objects.requireNonNull(statusCode).value())
-                        .fluentPut("message",
-                                message
-                        ), JSONWriter.Feature.PrettyFormat
-                ).getBytes(StandardCharsets.UTF_8)
-        )));
+            return message;
+        }, threadPoolTaskExecutor)).map((message) ->
+                ResponseUtil.writeResponse(response, ResponseImpl.builder().message(message).build().FULL()).block()
+        ).doOnError((e)->{
+            log.info(e.getMessage());
+        });
     }
 }

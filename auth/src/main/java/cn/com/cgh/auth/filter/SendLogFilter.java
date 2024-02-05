@@ -10,6 +10,7 @@ import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -21,6 +22,7 @@ import java.util.Date;
  * @author cgh
  */
 @Slf4j
+@Component
 public class SendLogFilter implements WebFilter {
     private SendQueue sendQueue;
     private IdWork idWork;
@@ -35,7 +37,6 @@ public class SendLogFilter implements WebFilter {
             idWork = Application.getBean(IdWork.class);
         }
         ServerHttpRequest request = exchange.getRequest();
-        log.info("start {}", request.getURI().getPath());
         if (request.getURI().getPath().contains("/doLogin")){
             long id = idWork.nextId();
             log.info(id + "");

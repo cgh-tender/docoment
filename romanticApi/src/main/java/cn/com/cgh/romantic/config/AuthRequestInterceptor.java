@@ -14,6 +14,7 @@ public class AuthRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
+        // 获取请求对象
         log.info("feign拦截器");
     }
 }
