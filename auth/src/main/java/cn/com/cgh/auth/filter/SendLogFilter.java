@@ -37,7 +37,7 @@ public class SendLogFilter implements WebFilter {
             idWork = Application.getBean(IdWork.class);
         }
         ServerHttpRequest request = exchange.getRequest();
-        if (request.getURI().getPath().contains("/doLogin")){
+        if (request.getURI().getPath().contains("/login")){
             long id = idWork.nextId();
             log.info(id + "");
             THREAD_LOCAL_LOG_ID.set(id);

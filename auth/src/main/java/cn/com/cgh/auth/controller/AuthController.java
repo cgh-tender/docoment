@@ -45,7 +45,9 @@ public class AuthController {
          */
         String url = authCheckEntity.getUrl();
         String httpMethod = authCheckEntity.getHttpMethod();
-        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> false,threadPoolTaskExecutor))
+        log.info(url);
+        log.info(httpMethod);
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> true,threadPoolTaskExecutor))
                 .flatMap(resource -> Mono.just(resource));
     }
 
