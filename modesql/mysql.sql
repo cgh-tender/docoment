@@ -308,5 +308,14 @@ create TABLE IF NOT EXISTS tb_cfg_error(
     PRIMARY KEY (id) USING BTREE,
     KEY idx_code (code),
     KEY idx_target_code (target_code)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='异常的操作码表';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='异常的操作码表
+10000-19999 系统异常
+    11000-11999 登录状态码
+    11000 登录异常
+    12000 验证码异常
+20000-29999 代码异常
+30000-39999 代理异常
+40000-49999 服务认证异常
+50000-59999 服务器异常
+';
 

@@ -1,4 +1,4 @@
-package cn.com.cgh.gateway.error;
+package cn.com.cgh.romantic.exception;
 
 import cn.com.cgh.romantic.server.resource.IResourceErrorController;
 import cn.com.cgh.romantic.util.ResponseImpl;
@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
-@Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GlobalErrorWebException implements ErrorWebExceptionHandler {
     @Autowired

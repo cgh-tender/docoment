@@ -25,6 +25,6 @@ public class MyServerAuthenticationConverter implements ServerAuthenticationConv
             String attribute = c.getAttribute(CACHED_REQUEST_OBJECT_BODY_KEY);
             TbCfgUser bean = JSONUtil.parseObj(attribute).toBean(TbCfgUser.class);
             return Mono.just((Authentication)UsernamePasswordAuthenticationToken.unauthenticated(bean.getUsername(), bean.getPassword()));
-        }).doOnError(e-> log.error(e.getMessage()));
+        }).doOnError(RuntimeException::new);
     }
 }

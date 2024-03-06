@@ -1,7 +1,9 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.RequestUtil;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWTPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -20,8 +22,12 @@ import org.springframework.security.web.server.context.ServerSecurityContextRepo
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
+import java.util.Objects;
 
 import static cn.com.cgh.core.util.Constants.UUID;
+import static cn.com.cgh.romantic.util.RequestUtil.CACHED_REQUEST_OBJECT_BODY_KEY;
 
 /**
  * @author cgh
@@ -32,10 +38,6 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-    @Autowired
     private RedisTemplate<String,Object> redisTemplate;
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
@@ -43,15 +45,20 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
         if ("/login".equals(path)){
-            String uuid = request.getHeaders().getFirst(UUID);
-            String uuidCacheCode = String.valueOf(redisTemplate.opsForValue().get(uuid));
-            String uuidCode = request.getQueryParams().getFirst("code");
-            ServerHttpRequestDecorator requestBody = RequestUtil.getRequestBody(uuidCode, request);
-            if (!StringUtils.equals(uuidCacheCode,uuidCode) || StringUtils.isBlank(uuidCode)){
-                redisTemplate.delete(uuid);
-                throw new RuntimeException("验证码异常");
-            }
-            return Mono.empty();
+            return RequestUtil.getBody(exchange).flatMap(c -> {
+                String uuid = request.getHeaders().getFirst(UUID);
+                assert uuid != null;
+                String uuidCacheCode = String.valueOf(redisTemplate.opsForValue().get(uuid));
+                String attribute = c.getAttribute(CACHED_REQUEST_OBJECT_BODY_KEY);
+                TbCfgUser bean = JSONUtil.parseObj(attribute).toBean(TbCfgUser.class);
+                String code = bean.getCode();
+                log.info("code ===== ");
+                if (!StringUtils.equals(uuidCacheCode,code) || StringUtils.isBlank(code)) {
+                    redisTemplate.delete(uuid);
+                    return Mono.error(new RuntimeException("100"));
+                }
+                return Mono.empty();
+            });
         }
         return Mono.empty();
     }

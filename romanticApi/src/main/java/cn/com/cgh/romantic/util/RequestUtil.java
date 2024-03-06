@@ -84,7 +84,7 @@ public class RequestUtil {
             ServerWebExchange mutatedExchange = exchange.mutate().request(mutatedRequest).build();
             mutatedExchange.getAttributes().put(CACHED_REQUEST_OBJECT_BODY_KEY, s);
             return Mono.just(mutatedExchange);
-        });
+        }).switchIfEmpty(Mono.just(exchange));
     }
 
 
