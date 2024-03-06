@@ -1,6 +1,6 @@
 package cn.com.cgh.auth.config;
 
-import cn.com.cgh.core.util.RequestUtil;
+import cn.com.cgh.romantic.util.RequestUtil;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import static cn.com.cgh.core.util.RequestUtil.CACHED_REQUEST_OBJECT_BODY_KEY;
+import static cn.com.cgh.romantic.util.RequestUtil.CACHED_REQUEST_OBJECT_BODY_KEY;
 
 /**
  * @author cgh

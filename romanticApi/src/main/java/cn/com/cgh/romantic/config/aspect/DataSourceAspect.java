@@ -8,8 +8,9 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 
-import java.util.Objects;
-
+/**
+ * @author cgh
+ */
 @Aspect
 public class DataSourceAspect {
     // 设置Ds注解的切点表达式，所有Ds都会触发当前环绕通知
@@ -35,17 +36,10 @@ public class DataSourceAspect {
 
     /**
      * 先判断方法的注解，后判断类的注解，以方法的注解为准
-     * @param joinPoint
-     * @return
+     * @return Ds
      */
     private Ds getDefineAnnotation(ProceedingJoinPoint joinPoint){
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        Ds dataSourceAnnotation = methodSignature.getMethod().getAnnotation(Ds.class);
-        if (Objects.nonNull(methodSignature)) {
-            return dataSourceAnnotation;
-        } else {
-            Class<?> dsClass = joinPoint.getTarget().getClass();
-            return dsClass.getAnnotation(Ds.class);
-        }
+        return methodSignature.getMethod().getAnnotation(Ds.class);
     }
 }

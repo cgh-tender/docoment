@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 /**
  *
+ * @author cgh
  */
 @EnableWebFluxSecurity
 @Component

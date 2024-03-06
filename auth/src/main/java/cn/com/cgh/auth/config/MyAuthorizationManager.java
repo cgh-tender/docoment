@@ -27,7 +27,7 @@ public class MyAuthorizationManager implements ReactiveAuthorizationManager<Auth
             String userId = context.getExchange().getRequest().getHeaders().getFirst(JWTPayload.AUDIENCE);
             String username = context.getExchange().getRequest().getHeaders().getFirst(JWTPayload.SUBJECT);
             if (StringUtils.isNotEmpty(userId)){
-                log.info("check true");
+                log.info("true");
                 return Mono.just(new AuthorizationDecision(true));
             }
             return Mono.just(new AuthorizationDecision(false));

@@ -7,6 +7,7 @@ cn.com.cgh.romantic.config.LoggerConfig
 cn.com.cgh.romantic.config.ValidationConfig
 cn.com.cgh.romantic.config.LoginProperties
 cn.com.cgh.romantic.config.WebClientConfig
+cn.com.cgh.romantic.config.WebfluxAOPConfig
 
 cn.com.cgh.romantic.util.Application
 cn.com.cgh.romantic.util.SendQueue
@@ -18,6 +19,7 @@ cn.com.cgh.romantic.config.db.DataSourceUtil
 cn.com.cgh.romantic.config.db.CustomIdGenerator
 
 cn.com.cgh.romantic.config.aspect.DataSourceAspect
+cn.com.cgh.romantic.config.aspect.RedisRequestLockAspect
 
 cn.com.cgh.romantic.config.ansy.AsyncConfig
 

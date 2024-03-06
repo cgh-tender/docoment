@@ -15,6 +15,9 @@ import org.springframework.data.redis.listener.Topic;
 
 import java.util.Date;
 
+/**
+ * @author cgh
+ */
 @Configuration
 @Slf4j
 public class LogOutMessage implements RedisMessageAdvice {

@@ -37,7 +37,7 @@ public class LoginServerSecurityContextRepository implements ServerSecurityConte
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
-        if (request.getURI().getPath().equals("/login")){
+        if ("/login".equals(request.getURI().getPath())){
             String uuid = exchange.getResponse().getHeaders().getFirst(UUID);
             String uuidCacheCode = String.valueOf(redisTemplate.opsForValue().get(uuid));
             String uuidCode = request.getQueryParams().getFirst("code");

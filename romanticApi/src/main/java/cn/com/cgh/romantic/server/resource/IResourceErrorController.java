@@ -29,7 +29,7 @@ class IResourceErrorControllerConfiguration {
 
 class IResourceErrorControllerFallback implements IResourceErrorController {
     @Override
-    public ResponseImpl<String> getErrorMessage(@PathVariable Long code) {
+    public ResponseImpl getErrorMessage(@PathVariable Long code) {
         return null;
     }
 }

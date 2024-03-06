@@ -1,5 +1,6 @@
 package cn.com.cgh.romantic.pojo.resource;
 
+import cn.com.cgh.romantic.config.aspect.annotation.RequestKeyParam;
 import cn.com.cgh.romantic.em.GenderStatus;
 import cn.com.cgh.romantic.em.UserStatus;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
@@ -30,6 +31,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 用户名
      */
     @Schema(description = "用户名")
+    @RequestKeyParam
     private String username;
     /**
      * 用户密码

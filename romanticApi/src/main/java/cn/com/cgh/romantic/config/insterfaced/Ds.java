@@ -4,6 +4,9 @@ import java.lang.annotation.*;
 
 import static cn.com.cgh.romantic.constant.RomanticConstant.MASTER;
 
+/**
+ * @author cgh
+ */
 @Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

@@ -1,5 +1,6 @@
 package cn.com.cgh.resource.auth.controller;
 
+import cn.com.cgh.romantic.config.aspect.annotation.RequestLock;
 import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.resource.auth.service.ITbCfgRoleService;
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
@@ -40,6 +41,7 @@ public class LoginController {
      * @return
      */
     @PostMapping("/login")
+    @RequestLock
     public Map login(@RequestBody TbCfgUser user) {
         Map<String, String> map = new HashMap<>();
         map.put("token", user.getUsername());
@@ -61,12 +63,13 @@ public class LoginController {
         return map;
     }
     @GetMapping("/hello")
+    @RequestLock
     public String hello() {
         return "hello";
     }
     @GetMapping("/hello1")
-    public ResponseImpl<String> hello1() {
-        return ResponseImpl.<String>builder().data("hello1").build().SUCCESS();
+    public ResponseImpl hello1() {
+        return ResponseImpl.<String>builder().data("hello1").build().success();
     }
     @GetMapping("/hello2")
     public Mono<String> hello2() {
@@ -74,7 +77,7 @@ public class LoginController {
     }
     @GetMapping("/hello3")
     public Mono<ResponseImpl> hello3() {
-        return Mono.just(ResponseImpl.<String>builder().data("hello3").build().SUCCESS());
+        return Mono.just(ResponseImpl.builder().data("hello3").build().success());
     }
 
     @Autowired

@@ -9,6 +9,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
+/**
+ * @author cgh
+ */
 public class CoreBeanDefinition implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, ApplicationContextAware {
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {

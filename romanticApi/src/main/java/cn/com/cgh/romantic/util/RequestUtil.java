@@ -1,4 +1,4 @@
-package cn.com.cgh.core.util;
+package cn.com.cgh.romantic.util;
 
 import com.alibaba.cloud.nacos.util.InetIPv6Utils;
 import io.netty.buffer.ByteBufAllocator;
@@ -30,7 +30,7 @@ public class RequestUtil {
     public static final String CACHED_REQUEST_OBJECT_BODY_KEY = "cachedRequestObjectBody";
     protected static InetUtils inetUtils;
     protected static InetIPv6Utils inetIPv6Utils;
-    protected static final List<HttpMessageReader<?>> messageReaders = HandlerStrategies.withDefaults().messageReaders();
+    protected static final List<HttpMessageReader<?>> MESSAGE_READERS = HandlerStrategies.withDefaults().messageReaders();
 
     /**
      * exchange.mutate().request(request).build()
@@ -141,14 +141,14 @@ public class RequestUtil {
      */
     public static String getLocalAddress() {
         if (inetUtils == null) {
-            inetUtils = CoreApplication.getBean(InetUtils.class);
+            inetUtils = Application.getBean(InetUtils.class);
         }
         return inetUtils.findFirstNonLoopbackAddress().getHostAddress();
     }
 
     public static String getLocalIpV6Address() {
         if (inetIPv6Utils == null) {
-            inetIPv6Utils = CoreApplication.getBean(InetIPv6Utils.class);
+            inetIPv6Utils = Application.getBean(InetIPv6Utils.class);
         }
         return inetIPv6Utils.findIPv6Address();
     }

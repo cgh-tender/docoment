@@ -6,6 +6,7 @@ package cn.com.cgh.romantic.constant;
  */
 public class RomanticConstant {
     public static final String X_REAL_IP = "X-Real-IP";
+    public static final String THREAD_LOCAL_LOG_ID = "THREAD-LOCAL-LOG-ID";
     public static final String JWT_TOKEN_HEADER = "Authorization";
     public static final String REDIS_CACHE_MANAGER_NAME = "empRedisCacheManager";
 

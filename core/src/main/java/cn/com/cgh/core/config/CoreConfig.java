@@ -5,6 +5,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.retry.annotation.EnableRetry;
 
+/**
+ * @author cgh
+ */
 @PropertySource(value = "classpath:bootstrap.properties")
 @ComponentScan(basePackages = "cn.com.cgh.core.sentinel")
 @EnableRetry

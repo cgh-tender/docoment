@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
@@ -24,6 +23,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.time.Duration;
 import java.util.List;
@@ -39,7 +39,6 @@ import static cn.com.cgh.romantic.constant.RomanticConstant.REDIS_CACHE_MANAGER_
  * @author cgh
  */
 @Slf4j
-@Configuration
 @ConditionalOnProperty(prefix = "spring", name = "data.redis.lettuce.pool.enabled",havingValue = "true")
 @EnableCaching
 @AutoConfigureBefore(value = {RedisAutoConfiguration.class})
@@ -133,9 +132,10 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory, List<RedisMessageAdvice> messageAdvices) {
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory redisConnectionFactory, List<RedisMessageAdvice> messageAdvices, ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
+        container.setTaskExecutor(threadPoolTaskExecutor);
         if (messageAdvices != null) {
             for (RedisMessageAdvice advice : messageAdvices) {
                 container.addMessageListener(advice, advice.getTopic());

@@ -9,6 +9,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
 
+/**
+ * @author cgh
+ */
 @EnableAsync
 @Slf4j
 public class AsyncConfig implements AsyncConfigurer {

@@ -10,21 +10,24 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author cgh
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-class CoreResponseImpl<T> {
+public class CoreResponseImpl {
     private String code;
     private String message;
     @Builder.Default
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime timestamp = LocalDateTime.now();
-    private T data;
+    private Object data;
 
-    public CoreResponseImpl<T> SUCCESS(){
+    public CoreResponseImpl SUCCESS(){
         if (StringUtils.isBlank(this.code)){
             this.code = "0";
         }
@@ -33,7 +36,7 @@ class CoreResponseImpl<T> {
         }
         return this;
     }
-    public CoreResponseImpl<T> FULL() {
+    public CoreResponseImpl FULL() {
         if (StringUtils.isBlank(this.code)) {
             this.code = "1";
         }

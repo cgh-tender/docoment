@@ -11,6 +11,7 @@ import org.springframework.data.redis.listener.Topic;
  * K: PUBLISH __keyspace@0__:mykey del
  * E: PUBLISH __keyevent@0__:del mykey
  * age: __key*__:*
+ * @author cgh
  */
 public interface RedisMessageAdvice extends MessageListener {
     public Topic getTopic();

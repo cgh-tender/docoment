@@ -18,6 +18,9 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author cgh
+ */
 @Slf4j
 @Component
 public class LoggerConfig implements ApplicationRunner {

@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author cgh
+ */
 @ControllerAdvice
 @Order(100)
 public class ValidationExceptionAdvice {
-
     @ExceptionHandler(value = {BindException.class, ValidationException.class})
     @ResponseBody
     public Mono<ResponseImpl> exceptionHandler(Exception e) throws Exception {
@@ -33,7 +35,7 @@ public class ValidationExceptionAdvice {
         if (e instanceof ConstraintViolationException) {
             return this.handleConstraintViolationException(e);
         }
-        return Mono.just(ResponseImpl.builder().build().FULL());
+        return Mono.just(ResponseImpl.builder().build().full());
     }
 
     //Controller方法的参数校验码
@@ -65,13 +67,13 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return Mono.just(ResponseImpl.builder().message(msg).build().FULL());
+        return Mono.just(ResponseImpl.builder().message(msg).build().full());
     }
 
     private Mono<ResponseImpl> handleConstraintViolationException(Exception e) throws Exception {
         ConstraintViolationException exception = (ConstraintViolationException) e;
         Set<ConstraintViolation<?>> violationSet = exception.getConstraintViolations();
         String msg = violationSet.stream().map(s -> s.getConstraintDescriptor().getMessageTemplate()).collect(Collectors.joining(";"));
-        return Mono.just(ResponseImpl.builder().message(msg).build().FULL());
+        return Mono.just(ResponseImpl.builder().message(msg).build().full());
     }
 }

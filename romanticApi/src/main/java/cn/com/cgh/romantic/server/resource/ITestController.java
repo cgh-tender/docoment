@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author cgh
  */
 @FeignClient(name = "resource"
-        , fallbackFactory = IMenuController.TestFallbackFactory.class
-        , contextId = "resource-menu"
+        , fallbackFactory = ITestController.TestFallbackFactory.class
+        , contextId = "resource-test"
 )
-public interface IMenuController {
-    Logger logger = LoggerFactory.getLogger(IMenuController.class);
+public interface ITestController {
+    Logger logger = LoggerFactory.getLogger(ITestController.class);
 
-    @GetMapping("")
-    ResponseImpl queryMenu();
+    @GetMapping("/getTest1")
+    public ResponseImpl getTest();
 
 
     @Component
-    class TestFallbackFactory<T> implements FallbackFactory<IMenuController> {
+    class TestFallbackFactory implements FallbackFactory<ITestController> {
 
         @Override
-        public IMenuController create(Throwable cause) {
+        public ITestController create(Throwable cause) {
             return () -> {
                 logger.info("ssssss");
                 return null;

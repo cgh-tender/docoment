@@ -16,6 +16,9 @@ import reactor.core.publisher.Mono;
 
 import java.sql.SQLException;
 
+/**
+ * @author cgh
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
@@ -23,10 +26,6 @@ public class GlobalExceptionHandler {
     /**
      * sql异常
      *
-     * @param rsp
-     * @param ex
-     * @return
-     * @throws Exception
      */
     @ResponseBody
     @ExceptionHandler(SQLException.class)
@@ -39,10 +38,6 @@ public class GlobalExceptionHandler {
     /**
      * 500错误.
      *
-     * @param rsp
-     * @param ex
-     * @return
-     * @throws Exception
      */
     @ResponseBody
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
@@ -53,13 +48,6 @@ public class GlobalExceptionHandler {
     }
 
 
-    /**
-     * 404的拦截.
-     *
-     * @param ex
-     * @return
-     * @throws Exception
-     */
 //    @ResponseBody
 //    @ResponseStatus(code = HttpStatus.NOT_FOUND)
 //    @ExceptionHandler(NoHandlerFoundException.class)
@@ -95,7 +83,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseBody
-    public Mono<CoreResponseImpl> AuthenticationMethod(AuthenticationException m) {
+    public Mono<CoreResponseImpl> authenticationMethod(AuthenticationException m) {
         LOGGER.error("超过文件上传大小限制");
         if (m.getCause() != null) {
             LOGGER.error("超过文件上传大小限制:" + m.getCause().getMessage());

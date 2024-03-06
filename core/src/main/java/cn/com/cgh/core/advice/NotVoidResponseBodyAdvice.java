@@ -15,6 +15,7 @@ import java.util.Arrays;
 /**
  * 非空返回值的处理.
  *
+ * @author cgh
  * @version 0.1
  * @since 0.1
  */
@@ -23,7 +24,7 @@ import java.util.Arrays;
 @Order(value = 1000)
 public class NotVoidResponseBodyAdvice {
 
-    @Around("execution(* org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler.handleResult(..)) && args(exchange, result)")
+    @Around(value = "execution(* org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler.handleResult(..)) && args(exchange, result)", argNames = "point,exchange,result")
     public Object handleResult(ProceedingJoinPoint point, ServerWebExchange exchange, HandlerResult result) throws Throwable {
         Object body = result.getReturnValue();
         if (body instanceof Mono || body instanceof Flux || body == null){

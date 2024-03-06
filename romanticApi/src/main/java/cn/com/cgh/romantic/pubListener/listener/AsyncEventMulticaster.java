@@ -7,6 +7,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * 发送事件请求
+ * @author cgh
  */
 @Slf4j
 public class AsyncEventMulticaster extends SimpleApplicationEventMulticaster {

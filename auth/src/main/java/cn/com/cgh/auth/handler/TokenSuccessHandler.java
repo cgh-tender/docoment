@@ -1,6 +1,5 @@
 package cn.com.cgh.auth.handler;
 
-import cn.com.cgh.auth.filter.SendLogFilter;
 import cn.com.cgh.romantic.em.LoginStatus;
 import cn.com.cgh.romantic.pojo.MsgPojo;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
@@ -26,6 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cn.com.cgh.romantic.constant.RomanticConstant.THREAD_LOCAL_LOG_ID;
 import static cn.com.cgh.romantic.constant.RomanticConstant.X_REAL_IP;
 
 /**
@@ -47,7 +47,7 @@ public class TokenSuccessHandler implements ServerAuthenticationSuccessHandler {
         ServerHttpResponse response = webFilterExchange.getExchange().getResponse();
         TbCfgUser securityUser = (TbCfgUser) authentication.getPrincipal();
         Map<String, String> payload = new HashMap<>();
-        String id = SendLogFilter.THREAD_LOCAL_LOG_ID.get() + "";
+        String id = request.getHeaders().getFirst(THREAD_LOCAL_LOG_ID);
         payload.put(JWTPayload.JWT_ID, id);
         Map<String, Object> map = jwtTokenUtil.generateTokenAndRefreshToken(securityUser.getId(), securityUser.getUsername(), payload);
         if (StringUtils.isNotEmpty(id)) {
@@ -58,15 +58,15 @@ public class TokenSuccessHandler implements ServerAuthenticationSuccessHandler {
                     .loginStatus(LoginStatus.SUCCESS)
                     .userAgent(String.valueOf(map.get(JwtTokenUtil.ACCESS_TOKEN)))
                     .build();
-            loginLog.setId(SendLogFilter.THREAD_LOCAL_LOG_ID.get());
+            loginLog.setId(Long.valueOf(id));
             loginLog.setUpdateTime(new Date());
             log.info(JSONUtil.toJsonStr(loginLog));
-            log.info(SendLogFilter.THREAD_LOCAL_LOG_ID.get() + "");
+            log.info(id);
             MsgPojo<Object> build = MsgPojo.builder().id(securityUser.getId()).msg(
                     loginLog
             ).build();
             sendQueue.doSendLoginQueue(build);
         }
-        return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.builder().message("登录成功").data(map).build().SUCCESS()))));
+        return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.builder().message("登录成功").data(map).build().success()))));
     }
 }

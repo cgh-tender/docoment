@@ -10,6 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 
+/**
+ * @author cgh
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,7 +27,7 @@ public class ResponseImpl<T> {
     private LocalDateTime timestamp = LocalDateTime.now();
     private T data;
 
-    public ResponseImpl<T> SUCCESS(){
+    public ResponseImpl<T> success(){
         if (StringUtils.isBlank(this.code)){
             this.code = "0";
         }
@@ -33,7 +36,7 @@ public class ResponseImpl<T> {
         }
         return this;
     }
-    public ResponseImpl<T> FULL() {
+    public ResponseImpl<T> full() {
         if (StringUtils.isBlank(this.code)) {
             this.code = "1";
         }

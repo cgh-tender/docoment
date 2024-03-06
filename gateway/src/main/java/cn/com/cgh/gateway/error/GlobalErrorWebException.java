@@ -6,6 +6,7 @@ import cn.com.cgh.romantic.util.ResponseUtil;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.core.Ordered;
@@ -49,12 +50,9 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
      * 另一个是Throwable对象。函数的目的是处理服务器网络交换和异常。
      * 返回的Mono<Void>对象为空。
      *
-     * @param exchange
-     * @param ex
-     * @return
      */
     @Override
-    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+    public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
         if (response.isCommitted()) {
             return Mono.error(ex);
@@ -73,11 +71,11 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
                 ResponseImpl<String> errorMessage = iResourceErrorController.getErrorMessage(Long.valueOf(ex.getMessage()));
                 return errorMessage.getData() == null ? message : errorMessage.getData();
             }else {
-                message = ERROR_CONVERTERS.get(statusCode) == null ? message : String.valueOf(ERROR_CONVERTERS.get(statusCode));
+                message = ERROR_CONVERTERS.get(String.valueOf(statusCode.value())) == null ? message : String.valueOf(ERROR_CONVERTERS.get(String.valueOf(statusCode.value())));
             }
             return message;
         }, threadPoolTaskExecutor)).map((message) ->
-                ResponseUtil.writeResponse(response, ResponseImpl.builder().message(message).build().FULL()).block()
+                ResponseUtil.writeResponse(response, ResponseImpl.builder().message(String.valueOf(message)).build().full()).block()
         ).doOnError((e)->{
             log.info(e.getMessage());
         });

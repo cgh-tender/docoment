@@ -29,6 +29,6 @@ public class TokenFailureHandler implements ServerAuthenticationFailureHandler {
         exception.printStackTrace();
         log.error(exception.getMessage());
         String message = exception.getMessage();
-        return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.builder().message(message).build().FULL()))));
+        return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.builder().message(message).build().full()))));
     }
 }

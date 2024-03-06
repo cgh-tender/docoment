@@ -159,7 +159,7 @@ public class JwtTokenUtil {
 
     //缓存中删除token
     public boolean removeToken(String username, String id) {
-        return redisTemplateSO.expire(MessageFormat.format(JWT_CACHE_KEY, username, id), 1, TimeUnit.MILLISECONDS);
+        return Boolean.TRUE.equals(redisTemplateSO.expire(MessageFormat.format(JWT_CACHE_KEY, username, id), 1, TimeUnit.MILLISECONDS));
     }
 
     /**
@@ -246,7 +246,6 @@ public class JwtTokenUtil {
      * @return 数据声明
      */
     private JSONObject getClaimsFromToken(String token) {
-        JSONObject claimsJson = new JWT(token).getPayload().getClaimsJson();
-        return claimsJson;
+        return new JWT(token).getPayload().getClaimsJson();
     }
 }

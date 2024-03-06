@@ -8,7 +8,7 @@ import cn.com.cgh.romantic.util.IdWork;
 import cn.com.cgh.romantic.util.SendQueue;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -18,6 +18,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Date;
 
+import static cn.com.cgh.romantic.constant.RomanticConstant.THREAD_LOCAL_LOG_ID;
+
 /**
  * @author cgh
  */
@@ -26,10 +28,9 @@ import java.util.Date;
 public class SendLogFilter implements WebFilter {
     private SendQueue sendQueue;
     private IdWork idWork;
-    public static final ThreadLocal<Long> THREAD_LOCAL_LOG_ID = new ThreadLocal<>();
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    public @NotNull Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         if (sendQueue == null) {
             sendQueue = Application.getBean(SendQueue.class);
         }
@@ -37,29 +38,25 @@ public class SendLogFilter implements WebFilter {
             idWork = Application.getBean(IdWork.class);
         }
         ServerHttpRequest request = exchange.getRequest();
-        if (request.getURI().getPath().contains("/doLogin")){
+        if (request.getURI().getPath().contains("/login")){
             long id = idWork.nextId();
-            log.info(id + "");
-            THREAD_LOCAL_LOG_ID.set(id);
-            TbLoginLog loginLog = TbLoginLog.builder()
-                    .username(request.getQueryParams().getFirst("username"))
-                    .userId(0L)
-                    .loginStatus(LoginStatus.IN)
-                    .build();
-            loginLog.setId(id);
-            loginLog.setCreateTime(new Date());
-            MsgPojo<Object> build = MsgPojo.builder().id(id).msg(
-                    loginLog
-            ).build();
-            log.info(JSONUtil.toJsonStr(build));
-            sendQueue.doSendLoginQueue(build);
+            ServerHttpRequest.Builder mutate = request.mutate();
+            mutate.header(THREAD_LOCAL_LOG_ID, id+"");
+            return chain.filter(exchange.mutate().request(mutate.build()).build()).doOnSuccess(s->{
+                TbLoginLog loginLog = TbLoginLog.builder()
+                        .username(request.getQueryParams().getFirst("username"))
+                        .userId(0L)
+                        .loginStatus(LoginStatus.IN)
+                        .build();
+                loginLog.setId(id);
+                loginLog.setCreateTime(new Date());
+                MsgPojo<Object> build = MsgPojo.builder().id(id).msg(
+                        loginLog
+                ).build();
+                log.info(JSONUtil.toJsonStr(build));
+                sendQueue.doSendLoginQueue(build);
+            });
         }
-        try {
-            return chain.filter(exchange);
-        } finally {
-            THREAD_LOCAL_LOG_ID.remove();
-        }
+        return chain.filter(exchange);
     }
-
-    private RedisTemplate<String, Object> redisTemplateSO;
 }
