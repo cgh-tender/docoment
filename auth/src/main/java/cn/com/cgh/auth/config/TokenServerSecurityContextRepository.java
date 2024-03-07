@@ -1,8 +1,10 @@
 package cn.com.cgh.auth.config;
 
+import cn.com.cgh.romantic.exception.ServiceException;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.util.JwtTokenUtil;
 import cn.com.cgh.romantic.util.RequestUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.jwt.JWTPayload;
 import lombok.extern.slf4j.Slf4j;
@@ -43,12 +45,14 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
                 String uuid = request.getHeaders().getFirst(UUID);
                 assert uuid != null;
                 String uuidCacheCode = String.valueOf(redisTemplate.opsForValue().get(uuid));
+                Assert.isNull(uuidCacheCode,"11009");
                 String attribute = c.getAttribute(CACHED_REQUEST_OBJECT_BODY_KEY);
                 TbCfgUser bean = JSONUtil.parseObj(attribute).toBean(TbCfgUser.class);
                 String code = bean.getCode();
                 if (!StringUtils.equals(uuidCacheCode,code) || StringUtils.isBlank(code)) {
                     redisTemplate.delete(uuid);
-                    return Mono.error(new RuntimeException("12000"));
+//                    return Mono.error(new ServiceException(11010));
+                    Assert.isTrue(false,"11008");
                 }
                 return Mono.empty();
             });

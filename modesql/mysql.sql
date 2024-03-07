@@ -351,22 +351,40 @@ create TABLE IF NOT EXISTS tb_cfg_error(
 10000-19999 系统异常
     11000-11999 登录状态码
     11000 登录异常
-    12000 验证码异常
-    19000 退出成功
-    19001 退出异常
-
-
+    11001 用户名或密码错误
+    11002 该账户的登录凭证已过期，请重新登录!
+    11003 该账户的登录凭证已过期，请重新登录!
+    11004 该账户已被禁用，请联系管理员!
+    11005 该账号已被锁定，请联系管理员!
+    11006 该账号已过期，请联系管理员!
+    11007 没有访问权限，请联系管理员!
+    11008 请输入正确的验证码!
+    11009 验证码失效!
+    11100 退出成功
+    11101 退出异常
 
 
 20000-29999 代码异常
 30000-39999 代理异常
 40000-49999 服务认证异常
 50000-59999 服务器异常
+60000-69999 sentinel 异常
+    61000 您的请求过快，请稍后重试。
+    61001 sentinel 融断降级处理；请稍后在试。
 ';
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (161706970393346103, 1, '2024-02-05 17:25:38.088', 1, '2024-02-05 17:25:38.088', 503, 0, '当前服务不可用请联系管理员');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (161707069177593912, 1, '2024-02-05 17:26:01.845', 1, '2024-02-05 17:26:01.845', 404, 0, '当前服务不可用请联系管理员');
-INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173166170772340749, 1, '2024-03-07 14:33:11.971', 1, '2024-03-07 14:33:11.971', 11000, 0, '验证码异常');
-INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173167128550047758, 1, '2024-03-07 14:36:54.064', 1, '2024-03-07 14:36:54.065', 19000, 0, '退出成功');
-INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173167184384622607, 1, '2024-03-07 14:37:07.165', 1, '2024-03-07 14:37:07.166', 19001, 0, '退出异常');
-
-
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173271543499980813, 1, '2024-03-07 21:22:05.973', 1, '2024-03-07 21:22:05.973', 61000, 0, '您的请求过快，请稍后重试。');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173271676643966990, 1, '2024-03-07 21:22:36.894', 1, '2024-03-07 21:22:36.894', 61001, 61000, '您的请求过快，请稍后重试。');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173301831609352294, 1, '2024-03-07 23:19:37.740', 1, '2024-03-07 23:19:37.740', 11000, 0, '登录异常');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173301870264057959, 1, '2024-03-07 23:19:46.785', 1, '2024-03-07 23:19:46.785', 11001, 0, '用户名或密码错误');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173301904623796328, 1, '2024-03-07 23:19:54.303', 1, '2024-03-07 23:19:54.303', 11002, 0, '该账户的登录凭证已过期，请重新登录!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173301938983534697, 1, '2024-03-07 23:20:02.792', 1, '2024-03-07 23:20:02.792', 11003, 0, '该账户的登录凭证已过期，请重新登录!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173301973343273066, 1, '2024-03-07 23:20:10.948', 1, '2024-03-07 23:20:10.948', 11004, 0, '该账户已被禁用，请联系管理员!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302007703011435, 1, '2024-03-07 23:20:18.511', 1, '2024-03-07 23:20:18.511', 11005, 0, '该账号已被锁定，请联系管理员!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302042062749804, 1, '2024-03-07 23:20:26.246', 1, '2024-03-07 23:20:26.246', 11006, 0, '该账号已过期，请联系管理员!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302080717455469, 1, '2024-03-07 23:20:35.829', 1, '2024-03-07 23:20:35.829', 11007, 0, '没有访问权限，请联系管理员!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302115077193838, 1, '2024-03-07 23:20:43.118', 1, '2024-03-07 23:20:43.118', 11008, 0, '请输入正确的验证码!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302149436932207, 1, '2024-03-07 23:20:51.017', 1, '2024-03-07 23:20:51.017', 11009, 0, '验证码失效!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302505919217776, 1, '2024-03-07 23:22:14.670', 1, '2024-03-07 23:22:14.670', 11100, 0, '退出成功');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302531689021553, 1, '2024-03-07 23:22:20.530', 1, '2024-03-07 23:22:20.530', 11101, 0, '退出异常');

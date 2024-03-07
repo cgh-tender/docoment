@@ -32,6 +32,6 @@ public class MySentinelGatewayBlockExceptionHandler extends SentinelGatewayBlock
             return Mono.error(ex);
         }
         // $D
-        throw new ServiceException(Objects.requireNonNull(exchange.getResponse().getStatusCode()).value());
+        throw new ServiceException(61001);
     }
 }

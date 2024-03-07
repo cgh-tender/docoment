@@ -10,6 +10,19 @@ function logout() {
   location.reload()
 }
 
+async function toJson(bolb) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      resolve(e.target?.result);
+    };
+    reader.onerror = e => {
+      reject(e);
+    };
+    reader.readAsText(bolb);
+  });
+}
+
 /** 创建请求实例 */
 function createService() {
   // 创建一个 axios 实例命名为 service
@@ -29,12 +42,20 @@ function createService() {
     (response) => {
       // apiData 是 api 返回的数据
       console.log(response)
-      const apiData = response.data
+      let apiData = response.data
       // 二进制数据则直接返回
       const responseType = response.request?.responseType
       if (responseType === "blob" || responseType === "arraybuffer") {
-        setUuid(response.headers.uuid)
-        return apiData
+        if (apiData.type != "image/jpeg") {
+           return toJson(apiData).then((apiD) => {
+             if (typeof apiD === "string") {
+               return JSON.parse(apiD)
+             }
+          })
+        } else {
+          setUuid(response.headers.uuid)
+          return apiData
+        }
       }
       // 这个 code 是和后端约定的业务 code
       const code = apiData.code || apiData?.status?.code

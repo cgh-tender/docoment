@@ -67,8 +67,12 @@ const createCode = () => {
   loginFormData.code = ""
   // 获取验证码
   getLoginCodeApi(codeBaseUri.value).then((response) => {
-    const blob = new Blob([response], { type: "image/jpg" })
-    src.value = URL.createObjectURL(blob)
+    if (response.type){
+      const blob = new Blob([response], { type: "image/jpg" })
+      src.value = URL.createObjectURL(blob)
+    }else{
+      ElMessage.error(response.message)
+    }
   })
 }
 createCode()

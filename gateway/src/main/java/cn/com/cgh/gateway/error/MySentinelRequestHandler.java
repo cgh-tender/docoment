@@ -21,7 +21,7 @@ public class MySentinelRequestHandler implements WebExceptionHandler {
     @Override
     public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         log.error("sentinel请求异常 {}", ex.getMessage());
-        throw new ServiceException(Objects.requireNonNull(exchange.getResponse().getStatusCode()).value());
+        throw new ServiceException(ex.getMessage());
     }
 
     public MySentinelRequestHandler() {

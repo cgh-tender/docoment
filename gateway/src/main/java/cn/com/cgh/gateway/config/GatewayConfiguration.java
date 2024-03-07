@@ -152,7 +152,7 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
                          * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。
                          */
 //                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_ROUTE_ID)
-                        .setCount(1)
+                        .setCount(3)
                         .setIntervalSec(1)
                         .setGrade(RuleConstant.FLOW_GRADE_QPS)
         );
