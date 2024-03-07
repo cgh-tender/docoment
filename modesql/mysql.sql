@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS tb_cfg_user
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
 INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (1, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'admin', '{bcrypt}$2a$10$erkqLdvTsaccM.aMC1g/fOBixc2WQH/f6iEWximSb06Xh86gM3LyK', '18334774205', 'late_tender@163.com', 0, 0);
 INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (2, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'test', '{bcrypt}$2a$10$CT7jn1Pri2JBcVIaBle8Ie9tViTnKiwjbh5cOa6MX/CrKv2BAiqze', '18334774205', 'late_tender@163.com', 0, 0);
+INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (3, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'test1', '{bcrypt}$2a$10$CT7jn1Pri2JBcVIaBle8Ie9tViTnKiwjbh5cOa6MX/CrKv2BAiqze', '18334774205', 'late_tender@163.com', 0, 0);
 
 CREATE TABLE IF NOT EXISTS tb_cfg_role
 (
@@ -95,8 +96,9 @@ CREATE TABLE IF NOT EXISTS tb_cfg_role
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色表';
-INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (1, 1, '2024-01-25 16:14:37', '2024-01-25 08:14:54', 1, 'admin', '超级管理员', 0);
-INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:14:38', '2024-01-25 08:14:54', 1, 'test', '测试人员', 0);
+INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (1, 1, '2024-01-25 16:14:37', '2024-01-25 08:14:54', 1, '超级管理员', '超级管理员', 0);
+INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:14:38', '2024-01-25 08:14:54', 1, '测试人员', '测试人员', 0);
+INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (3, 1, '2024-01-25 16:14:38', '2024-01-25 08:14:54', 1, '测试人员1', '测试人员1', 0);
 
 CREATE TABLE IF NOT EXISTS tb_user_role
 (
@@ -110,9 +112,9 @@ CREATE TABLE IF NOT EXISTS tb_user_role
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户角色关系表';
-INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (157607312440164375, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 1, 1);
-INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (157607312440164376, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 2);
-
+INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 1, 1);
+INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 2);
+INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 3);
 
 CREATE TABLE IF NOT EXISTS tb_cfg_organization
 (
@@ -123,10 +125,14 @@ CREATE TABLE IF NOT EXISTS tb_cfg_organization
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     name        varchar(255) DEFAULT NULL COMMENT '名称',
     description varchar(255) DEFAULT NULL COMMENT '描述',
-    parent_id   bigint(20)   DEFAULT NULL COMMENT '父ID',
+    parent_id   bigint(20)   DEFAULT 0 COMMENT '父ID',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='组织表';
+INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '总部', '总部', 0 );
+INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '山西省', '山西省', 1 );
+INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '临汾市', '临汾市', 2 );
+INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (4, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '太原市', '太原市', 2 );
 
 CREATE TABLE IF NOT EXISTS tb_user_organization
 (
@@ -138,9 +144,14 @@ CREATE TABLE IF NOT EXISTS tb_user_organization
     name        varchar(255) DEFAULT NULL COMMENT '名称',
     user_id bigint(20)  NOT NULL COMMENT '用户id',
     organization_id   bigint(20)   NOT NULL COMMENT '组织id',
-    PRIMARY KEY (id) USING BTREE
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='用户-组织关系表';
+    PRIMARY KEY (id) USING BTREE,
+    UNIQUE index user_id_unique(user_id)
+    ) ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4 COMMENT ='用户-组织关系表';
+INSERT INTO tb_user_organization (id, create_by, create_time, update_time, update_by, name, user_id, organization_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '总部', 1, 1);
+INSERT INTO tb_user_organization (id, create_by, create_time, update_time, update_by, name, user_id, organization_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '临汾市', 2, 3);
+INSERT INTO tb_user_organization (id, create_by, create_time, update_time, update_by, name, user_id, organization_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '太原市', 3, 4);
+
 
 CREATE TABLE IF NOT EXISTS tb_cfg_position
 (
@@ -151,10 +162,14 @@ CREATE TABLE IF NOT EXISTS tb_cfg_position
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     name        varchar(255) DEFAULT NULL COMMENT '名称',
     description varchar(255) DEFAULT NULL COMMENT '描述',
-    parent_id   bigint(20)   DEFAULT NULL COMMENT '父ID',
+    parent_id   bigint(20)   DEFAULT 0 COMMENT '父ID',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='职位表';
+
+INSERT INTO tb_cfg_position (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '总经理', '总经理', 0);
+INSERT INTO tb_cfg_position (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发经理', '开发经理', 1);
+INSERT INTO tb_cfg_position (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发人员', '开发人员', 2);
 
 CREATE TABLE IF NOT EXISTS tb_user_position
 (
@@ -165,10 +180,14 @@ CREATE TABLE IF NOT EXISTS tb_user_position
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     name        varchar(255) DEFAULT NULL COMMENT '名称',
     user_id bigint(20)  NOT NULL COMMENT '用户id',
-    position_id   bigint(20)   NOT NULL COMMENT '组织id',
+    position_id   bigint(20)   NOT NULL COMMENT '职位id',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户-职位关系表';
+
+INSERT INTO tb_user_position (id, create_by, create_time, update_time, update_by, name, user_id, position_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '总经理', 1, 1);
+INSERT INTO tb_user_position (id, create_by, create_time, update_time, update_by, name, user_id, position_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发经理', 2, 2);
+INSERT INTO tb_user_position (id, create_by, create_time, update_time, update_by, name, user_id, position_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发经理', 3, 3);
 
 CREATE TABLE IF NOT EXISTS tb_cfg_group
 (
@@ -181,6 +200,9 @@ CREATE TABLE IF NOT EXISTS tb_cfg_group
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户组表';
+
+INSERT INTO tb_cfg_group (id, create_by, create_time, update_time, update_by, name) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发组');
+INSERT INTO tb_cfg_group (id, create_by, create_time, update_time, update_by, name) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 2, '人事组');
 
 CREATE TABLE IF NOT EXISTS tb_user_group
 (
@@ -195,6 +217,9 @@ CREATE TABLE IF NOT EXISTS tb_user_group
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户组表';
 
+INSERT INTO tb_user_group (id, create_by, create_time, update_time, update_by, user_id,group_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 1);
+INSERT INTO tb_user_group (id, create_by, create_time, update_time, update_by, user_id,group_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 1);
+
 CREATE TABLE IF NOT EXISTS tb_role_organization
 (
     id          bigint(20) NOT NULL,
@@ -207,6 +232,11 @@ CREATE TABLE IF NOT EXISTS tb_role_organization
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色组织表关系表';
+
+INSERT INTO tb_role_organization (id, create_by, create_time, update_time, update_by, role_id,organization_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 4);
+INSERT INTO tb_role_organization (id, create_by, create_time, update_time, update_by, role_id,organization_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 4);
+INSERT INTO tb_role_organization (id, create_by, create_time, update_time, update_by, role_id,organization_id) VALUES (4, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 3);
+INSERT INTO tb_role_organization (id, create_by, create_time, update_time, update_by, role_id,organization_id) VALUES (5, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 3);
 
 CREATE TABLE IF NOT EXISTS tb_role_position
 (
@@ -221,6 +251,10 @@ CREATE TABLE IF NOT EXISTS tb_role_position
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色职位表关系表';
 
+INSERT INTO tb_role_position (id, create_by, create_time, update_time, update_by, role_id,position_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 2);
+INSERT INTO tb_role_position (id, create_by, create_time, update_time, update_by, role_id,position_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 3);
+INSERT INTO tb_role_position (id, create_by, create_time, update_time, update_by, role_id,position_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 3);
+
 CREATE TABLE IF NOT EXISTS tb_role_group
 (
     id          bigint(20) NOT NULL,
@@ -233,6 +267,9 @@ CREATE TABLE IF NOT EXISTS tb_role_group
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色用户组表关系表';
+
+INSERT INTO tb_role_group (id, create_by, create_time, update_time, update_by, role_id,group_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 1);
+INSERT INTO tb_role_group (id, create_by, create_time, update_time, update_by, role_id,group_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 2);
 
 CREATE TABLE IF NOT EXISTS tb_role_exclusion
 (
@@ -247,6 +284,8 @@ CREATE TABLE IF NOT EXISTS tb_role_exclusion
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色互斥关系表';
+
+INSERT INTO tb_role_exclusion (id, create_by, create_time, update_by, update_time, role_id_one, role_id_two, description) VALUES (1, 1, '2024-02-05 17:25:38.088', 1, '2024-02-05 17:25:38.088', 1, 2, '特殊处理');
 
 CREATE TABLE IF NOT EXISTS tb_role_resource
 (
@@ -313,9 +352,21 @@ create TABLE IF NOT EXISTS tb_cfg_error(
     11000-11999 登录状态码
     11000 登录异常
     12000 验证码异常
+    19000 退出成功
+    19001 退出异常
+
+
+
+
 20000-29999 代码异常
 30000-39999 代理异常
 40000-49999 服务认证异常
 50000-59999 服务器异常
 ';
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (161706970393346103, 1, '2024-02-05 17:25:38.088', 1, '2024-02-05 17:25:38.088', 503, 0, '当前服务不可用请联系管理员');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (161707069177593912, 1, '2024-02-05 17:26:01.845', 1, '2024-02-05 17:26:01.845', 404, 0, '当前服务不可用请联系管理员');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173166170772340749, 1, '2024-03-07 14:33:11.971', 1, '2024-03-07 14:33:11.971', 11000, 0, '验证码异常');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173167128550047758, 1, '2024-03-07 14:36:54.064', 1, '2024-03-07 14:36:54.065', 19000, 0, '退出成功');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173167184384622607, 1, '2024-03-07 14:37:07.165', 1, '2024-03-07 14:37:07.166', 19001, 0, '退出异常');
+
 

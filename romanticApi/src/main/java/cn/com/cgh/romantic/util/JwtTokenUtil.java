@@ -29,12 +29,10 @@ import static cn.com.cgh.romantic.util.KeyConstant.CONTENT_INSTANCE;
 @AllArgsConstructor
 @Slf4j
 public class JwtTokenUtil {
-
-    public static final String JWT_CACHE_KEY = "jwt:{0}:{1}";// jwt:userId:username:id
+    // jwt:userId:username:id
+    public static final String JWT_CACHE_KEY = "jwt:{0}:{1}";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
-    public static final String USER_ID = "jwt-id";
-    public static final String USER_NAME = "sub";
     private static final String EXPIRE_IN = "expire_in";
 
     private final RedisTemplate<String, Object> redisTemplateSO;
@@ -42,7 +40,7 @@ public class JwtTokenUtil {
 
     public static final RSA RSA_RSA = new RSA(CONTENT_INSTANCE, KeyConstant.PRIVATE_KEY, KeyConstant.PUBLIC_KEY);
 
-    public String getToken(ServerHttpRequest request){
+    public String getToken(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
         // 从请求头获取token
         String token = headers.getFirst(JWT_TOKEN_HEADER);
@@ -66,9 +64,9 @@ public class JwtTokenUtil {
      * @param userId 用户Id或用户名
      * @return 令token牌
      */
-    public Map<String, Object> generateTokenAndRefreshToken(Long userId, String username,Map<String, String> payload) {
+    public Map<String, Object> generateTokenAndRefreshToken(Long userId, String username, Map<String, String> payload) {
         //生成令牌及刷新令牌
-        Map<String, Object> tokenMap = buildToken(userId, username,payload);
+        Map<String, Object> tokenMap = buildToken(userId, username, payload);
         //redis缓存结果
         cacheToken(username, tokenMap);
         return tokenMap;
@@ -84,6 +82,11 @@ public class JwtTokenUtil {
     }
 
     public void flushTimeout(String key) {
+        if (key.startsWith("Bearer ")) {
+            String token = token(key);
+            JWTPayload payload = new JWT(token(token)).getPayload();
+            key = MessageFormat.format(JWT_CACHE_KEY, payload.getClaim(JWTPayload.SUBJECT), payload.getClaim(JWTPayload.JWT_ID));
+        }
         redisTemplateSO.expire(key, 10, TimeUnit.MINUTES);
     }
 
@@ -151,7 +154,7 @@ public class JwtTokenUtil {
      * 并将新结果缓存进redis
      */
     public Map<String, Object> refreshTokenAndGenerateToken(Long userId, String username) {
-        Map<String, Object> tokenMap = buildToken(userId, username,new HashMap<>());
+        Map<String, Object> tokenMap = buildToken(userId, username, new HashMap<>());
 //        redisTemplateSO.delete(JWT_CACHE_KEY + tokenMap.get(JWTPayload.JWT_ID));
 //        cacheToken(username, tokenMap);
         return tokenMap;

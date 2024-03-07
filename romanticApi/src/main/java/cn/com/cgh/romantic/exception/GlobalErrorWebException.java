@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -73,8 +72,8 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
                 message = ERROR_CONVERTERS.get(String.valueOf(statusCode.value())) == null ? message : String.valueOf(ERROR_CONVERTERS.get(String.valueOf(statusCode.value())));
             }
             return message;
-        }, threadPoolTaskExecutor)).map((message) ->
-                ResponseUtil.writeResponse(response, ResponseImpl.builder().message(String.valueOf(message)).build().full()).block()
+        }, threadPoolTaskExecutor)).flatMap((message) ->
+                ResponseUtil.writeResponse(response, ResponseImpl.builder().message(String.valueOf(message)).build().full())
         ).doOnError((e)->{
             log.info(e.getMessage());
         });

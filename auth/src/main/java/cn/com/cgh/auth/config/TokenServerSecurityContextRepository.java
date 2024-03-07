@@ -11,20 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
-
-import java.util.Objects;
 
 import static cn.com.cgh.core.util.Constants.UUID;
 import static cn.com.cgh.romantic.util.RequestUtil.CACHED_REQUEST_OBJECT_BODY_KEY;
@@ -52,10 +46,9 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
                 String attribute = c.getAttribute(CACHED_REQUEST_OBJECT_BODY_KEY);
                 TbCfgUser bean = JSONUtil.parseObj(attribute).toBean(TbCfgUser.class);
                 String code = bean.getCode();
-                log.info("code ===== ");
                 if (!StringUtils.equals(uuidCacheCode,code) || StringUtils.isBlank(code)) {
                     redisTemplate.delete(uuid);
-                    return Mono.error(new RuntimeException("100"));
+                    return Mono.error(new RuntimeException("12000"));
                 }
                 return Mono.empty();
             });
@@ -75,8 +68,9 @@ public class TokenServerSecurityContextRepository implements ServerSecurityConte
                 Long userIdFromToken = jwtTokenUtil.getUserIdFromToken(token);
                 String userNameFromToken = jwtTokenUtil.getUserNameFromToken(token);
                 SecurityContext emptyContext = SecurityContextHolder.createEmptyContext();
-                Authentication authentication = new UsernamePasswordAuthenticationToken(null, null, null);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userNameFromToken, null, null);
                 emptyContext.setAuthentication(authentication);
+                jwtTokenUtil.flushTimeout(token);
                 return Mono.just(emptyContext);
             } catch (Exception e) {
                 return Mono.empty();

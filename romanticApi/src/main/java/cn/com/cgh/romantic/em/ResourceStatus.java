@@ -1,8 +1,11 @@
 package cn.com.cgh.romantic.em;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+/**
+ * @author cgh
+ */
 
 @AllArgsConstructor
 @Getter

@@ -1,5 +1,6 @@
 package cn.com.cgh.gateway.config;
 
+import cn.com.cgh.gateway.error.MySentinelGatewayBlockExceptionHandler;
 import cn.com.cgh.gateway.error.MySentinelRequestHandler;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
@@ -8,6 +9,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBloc
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.github.xiaoymin.knife4j.spring.gateway.Knife4jGatewayProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.ApplicationArguments;
@@ -16,10 +18,10 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.codec.ServerCodecConfigurer;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.result.view.ViewResolver;
 
 import java.util.Collections;
@@ -27,14 +29,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Configuration
+/**
+ * @author cgh
+ */
+@Component
 @Slf4j
 public class GatewayConfiguration implements ApplicationRunner , ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
@@ -50,7 +55,7 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
         // Register the block exception handler for Spring Cloud Gateway.
-        return new SentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
+        return new MySentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
     }
 
     @Bean
@@ -147,7 +152,7 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
                          * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。
                          */
 //                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_ROUTE_ID)
-                        .setCount(2)
+                        .setCount(1)
                         .setIntervalSec(1)
                         .setGrade(RuleConstant.FLOW_GRADE_QPS)
         );
