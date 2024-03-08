@@ -43,7 +43,6 @@ router.beforeEach(async (to, _from, next) => {
   // 否则要重新获取权限角色
   try {
     if (routeSettings.async) {
-      console.log("query userInfo and menuRouter")
       // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
       await userStore.getInfo()
       await useUserStore()

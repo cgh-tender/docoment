@@ -1,4 +1,4 @@
-package cn.com.cgh.romantic.exception;
+package cn.com.cgh.romantic.advice;
 
 import cn.com.cgh.romantic.server.resource.IResourceErrorController;
 import cn.com.cgh.romantic.util.ResponseImpl;

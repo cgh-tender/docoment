@@ -1,11 +1,12 @@
 package cn.com.cgh.ayth;
 
-import java.util.regex.Pattern;
+import reactor.core.publisher.Mono;
 
 public class TestMain {
     public static void main(String[] args) {
-        Pattern REGEX = Pattern.compile("^[0-9]*$");
-        boolean b = REGEX.matcher("123445").find();
-        System.out.println(b);
+        Mono<String> mono = Mono.just("Hello, World!")
+                .doOnSuccess(value -> System.out.println("Successfully emitted: " + value));
+
+        mono.subscribe();
     }
 }

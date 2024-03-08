@@ -39,6 +39,9 @@ public class DeadLoginQueueConsumer extends DefaultConsumer {
             }
             log.info(jsonString);
             TbLoginLog loginLog = JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
+            if (loginLog.getUserId() == null){
+                loginLog.setUserId(0L);
+            }
             ibLoginLogService.saveOrUpdate(loginLog);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();

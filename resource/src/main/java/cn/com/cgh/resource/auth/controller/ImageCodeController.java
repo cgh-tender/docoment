@@ -1,6 +1,6 @@
 package cn.com.cgh.resource.auth.controller;
 
-import cn.com.cgh.core.util.Constants;
+import cn.com.cgh.romantic.constant.RomanticConstant;
 import cn.com.cgh.romantic.server.auth.IAuthCheckController;
 import cn.com.cgh.romantic.util.IdWork;
 import cn.com.cgh.romantic.util.ResponseUtil;
@@ -90,7 +90,7 @@ public class ImageCodeController {
         abstractCaptcha.createCode();
         String id = getId();
         redisTemplateSO.opsForValue().set(id, abstractCaptcha.getCode(), 60, TimeUnit.SECONDS);
-        response.getHeaders().add(Constants.UUID, id);
+        response.getHeaders().add(RomanticConstant.UUID, id);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE);
         return ResponseUtil.writeResponse(response, abstractCaptcha.getImageBytes());
     }

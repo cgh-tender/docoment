@@ -15,5 +15,5 @@ import java.util.Set;
  */
 public interface ITbCfgRoleService extends IService<TbCfgRole> {
 
-    Set<String> queryUserRoles(Long userId);
+    Set<Long> queryUserRoles(Long userId);
 }

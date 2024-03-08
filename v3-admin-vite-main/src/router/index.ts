@@ -1,8 +1,9 @@
-import { type RouteRecordRaw, createRouter, RouteRecordName } from "vue-router"
+import { type RouteRecordRaw, createRouter } from "vue-router"
 import { history, flatMultiLevelRoutes } from "./helper"
 import routeSettings from "@/config/route"
 import { usePermissionStoreHook } from "@/store/modules/permission"
 
+// @ts-ignore
 export const Layouts = () => import("@/layouts/index.vue")
 
 /**
@@ -19,12 +20,14 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "/redirect/:path(.*)",
+        // @ts-ignore
         component: () => import("@/views/redirect/index.vue")
       }
     ]
   },
   {
     path: "/403",
+    // @ts-ignore
     component: () => import("../views/error-page/403.vue"),
     meta: {
       hidden: true
@@ -32,6 +35,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/404",
+    // @ts-ignore
     component: () => import("@/views/error-page/404.vue"),
     meta: {
       hidden: true
@@ -40,6 +44,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   },
   {
     path: "/login",
+    // @ts-ignore
     component: () => import("@/views/login/index.vue"),
     meta: {
       hidden: true
@@ -52,6 +57,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "dashboard",
+        // @ts-ignore
         component: () => import("@/views/dashboard/index.vue"),
         name: "Dashboard",
         meta: {
@@ -61,7 +67,16 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       }
     ]
-  },
+  }
+]
+
+// @ts-ignore
+/**
+ * 动态路由
+ * 用来放置有权限 (Roles 属性) 的路由
+ * 必须带有 Name 属性
+ */
+export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: "/table",
     component: Layouts,
@@ -74,6 +89,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "element-plus",
+        // @ts-ignore
         component: () => import("@/views/table/element-plus/index.vue"),
         name: "ElementPlus",
         meta: {
@@ -83,6 +99,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "vxe-table",
+        // @ts-ignore
         component: () => import("@/views/table/vxe-table/index.vue"),
         name: "VxeTable",
         meta: {
@@ -104,6 +121,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     children: [
       {
         path: "menu1",
+        // @ts-ignore
         component: () => import("@/views/menu/menu1/index.vue"),
         redirect: "/menu/menu1/menu1-1",
         name: "Menu1",
@@ -113,6 +131,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         children: [
           {
             path: "menu1-1",
+            // @ts-ignore
             component: () => import("@/views/menu/menu1/menu1-1/index.vue"),
             name: "Menu1-1",
             meta: {
@@ -122,6 +141,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           },
           {
             path: "menu1-2",
+            // @ts-ignore
             component: () => import("@/views/menu/menu1/menu1-2/index.vue"),
             redirect: "/menu/menu1/menu1-2/menu1-2-1",
             name: "Menu1-2",
@@ -131,6 +151,7 @@ export const constantRoutes: RouteRecordRaw[] = [
             children: [
               {
                 path: "menu1-2-1",
+                // @ts-ignore
                 component: () => import("@/views/menu/menu1/menu1-2/menu1-2-1/index.vue"),
                 name: "Menu1-2-1",
                 meta: {
@@ -140,6 +161,7 @@ export const constantRoutes: RouteRecordRaw[] = [
               },
               {
                 path: "menu1-2-2",
+                // @ts-ignore
                 component: () => import("@/views/menu/menu1/menu1-2/menu1-2-2/index.vue"),
                 name: "Menu1-2-2",
                 meta: {
@@ -151,6 +173,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           },
           {
             path: "menu1-3",
+            // @ts-ignore
             component: () => import("@/views/menu/menu1/menu1-3/index.vue"),
             name: "Menu1-3",
             meta: {
@@ -162,50 +185,12 @@ export const constantRoutes: RouteRecordRaw[] = [
       },
       {
         path: "menu2",
+        // @ts-ignore
         component: () => import("@/views/menu/menu2/index.vue"),
         name: "Menu2",
         meta: {
           title: "menu2",
           keepAlive: true
-        }
-      }
-    ]
-  }
-]
-
-/**
- * 动态路由
- * 用来放置有权限 (Roles 属性) 的路由
- * 必须带有 Name 属性
- */
-export const asyncRoutes: RouteRecordRaw[] = [
-  {
-    path: "/permission",
-    component: Layouts,
-    redirect: "/permission/page",
-    name: "Permission",
-    meta: {
-      title: "权限管理",
-      svgIcon: "lock",
-      roles: ["admin", "editor"], // 可以在根路由中设置角色
-      alwaysShow: true // 将始终显示根菜单
-    },
-    children: [
-      {
-        path: "page",
-        component: () => import("@/views/permission/page.vue"),
-        name: "PagePermission",
-        meta: {
-          title: "页面权限",
-          roles: ["admin"] // 或者在子导航中设置角色
-        }
-      },
-      {
-        path: "directive",
-        component: () => import("@/views/permission/directive.vue"),
-        name: "DirectivePermission",
-        meta: {
-          title: "指令权限" // 如果未设置角色，则表示：该页面不需要权限，但会继承根路由的角色
         }
       }
     ]
@@ -230,18 +215,15 @@ const router = createRouter({
 export function cleanRouter() {
   // 注意：所有动态路由路由必须带有 Name 属性，否则可能会不能完全重置干净
   try {
+    router.getRoutes().forEach((route) => {
+      const { name } = route
+      if (name) {
+        router.removeRoute(name)
+      }
+    })
     const permissionStore = usePermissionStoreHook()
-    permissionStore.endRoutes.forEach((route: RouteRecordRaw) => {
-      const { name } = route
-      router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
-    })
-    permissionStore.QueryLocalRoute.forEach((route: RouteRecordRaw) => {
-      const { name } = route
-      router.hasRoute(<RouteRecordName>name) && router.removeRoute(<RouteRecordName>name)
-    })
-    // console.log("cleanRouter", router.getRoutes())
-    permissionStore.QueryLocalRoute = []
-    permissionStore.resetRouter([])
+    permissionStore.routes = []
+    permissionStore.queryLocalRoute = []
   } catch {
     console.error("cleanRouter 异常")
   }

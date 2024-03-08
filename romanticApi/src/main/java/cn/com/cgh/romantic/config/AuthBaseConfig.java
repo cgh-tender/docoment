@@ -1,5 +1,7 @@
 package cn.com.cgh.romantic.config;
 
+import cn.com.cgh.romantic.advice.GlobalExceptionHandler;
+import cn.com.cgh.romantic.advice.NotVoidResponseBodyAdvice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
@@ -46,5 +48,16 @@ public class AuthBaseConfig {
         objectMapper.setDateFormat(new StdDateFormat());
         converter.setObjectMapper(objectMapper);
         return converter;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(NotVoidResponseBodyAdvice.class)
+    public NotVoidResponseBodyAdvice notVoidResponseBodyAdvice() {
+        return new NotVoidResponseBodyAdvice();
+    }
+    @Bean
+    @ConditionalOnMissingBean(GlobalExceptionHandler.class)
+    public GlobalExceptionHandler globalExceptionHandler() {
+        return new GlobalExceptionHandler();
     }
 }

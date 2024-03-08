@@ -1,9 +1,9 @@
 import { request } from "@/utils/service"
 import type * as Login from "./types/login"
-import {getToken, getUuid} from "@/utils/cache/cookies";
+import { getUuid } from "@/utils/cache/cookies"
 
 /** 获取登录验证码 */
-export function getLoginCodeApi(url: string) {
+export function getLoginCodeApi(url: string): Promise<Login.LoginCodeResponseData> {
   return request<Login.LoginCodeResponseData>({
     url: url + "?crt_=" + new Date().getTime(),
     method: "get",
@@ -18,8 +18,6 @@ export function loginApi(data: Login.LoginRequestData) {
     method: "post",
     headers: {
       uuid: getUuid()
-      // ,
-      // "Content-Type": "application/x-www-form-urlencoded"
     },
     data
   })
@@ -30,7 +28,6 @@ export function logOutApi() {
     url: "auth/logout",
     method: "post",
     headers: {
-      uuid: getToken(),
       "Content-Type": "application/x-www-form-urlencoded"
     }
   })

@@ -38,6 +38,9 @@ public class DelayLoginQueueConsumer extends DefaultConsumer {
             String jsonString = new String(body, StandardCharsets.UTF_8);
             log.info(jsonString);
             TbLoginLog loginLog = JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
+            if (loginLog.getUserId() == null){
+                loginLog.setUserId(0L);
+            }
             iLogService.saveOrUpdate(loginLog);
         } catch (Exception e) {
             e.printStackTrace();

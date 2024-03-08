@@ -8,7 +8,7 @@ cn.com.cgh.romantic.config.ValidationConfig
 cn.com.cgh.romantic.config.LoginProperties
 cn.com.cgh.romantic.config.WebClientConfig
 cn.com.cgh.romantic.config.WebfluxAOPConfig
-cn.com.cgh.romantic.exception.GlobalErrorWebException
+cn.com.cgh.romantic.advice.GlobalErrorWebException
 
 cn.com.cgh.romantic.util.Application
 cn.com.cgh.romantic.util.SendQueue

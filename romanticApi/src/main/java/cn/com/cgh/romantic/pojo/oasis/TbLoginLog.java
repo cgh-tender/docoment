@@ -39,12 +39,12 @@ public class TbLoginLog extends TbBaseEntity {
     private LoginStatus loginStatus;
     @Schema(description = "请求的用户代理信息")
     private String userAgent;
-
-    public String getUserAgent() {
-        return userAgent != null ?
-                userAgent.split("\\.").length == 3 ?
-                        userAgent.split("\\.")[1]
-                        : userAgent
-                : null;
-    }
+    @Schema(description = "是否移动端")
+    private Boolean mobile;
+    @Schema(description = "操作系统")
+    private String osSys;
+    @Schema(description = "操作平台")
+    private String browser;
+    @Schema(description = "操作内核")
+    private String engine;
 }

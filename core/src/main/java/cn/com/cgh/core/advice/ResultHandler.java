@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author cgh
+ */
 public class ResultHandler extends ResponseBodyResultHandler {
     /**
      * 忽略特殊处理的数据类型

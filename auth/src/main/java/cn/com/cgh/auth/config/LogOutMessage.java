@@ -36,10 +36,8 @@ public class LogOutMessage implements RedisMessageAdvice {
         String key = new String(message.getBody());
         if (key.startsWith("jwt:")) {
             String[] users = key.split(":");
-            String username = users[1];
             Long tokenId = Long.valueOf(users[2]);
             TbLoginLog logOut = TbLoginLog.builder()
-                    .username(username)
                     .loginStatus(LoginStatus.LOGOUT)
                     .logoutTime(new Date())
                     .build();

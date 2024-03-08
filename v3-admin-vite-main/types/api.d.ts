@@ -4,4 +4,5 @@ interface ApiResponseData<T> {
   data: T
   message: string
   rememberMe: boolean
+  type: string
 }

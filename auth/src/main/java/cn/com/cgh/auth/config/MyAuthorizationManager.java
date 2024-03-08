@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 public class MyAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
-        log.info("check Manager");
+        log.info("check Manager {}", context.getExchange().getRequest().getURI().getPath());
         if ("/controllerCheckAuth".equals(context.getExchange().getRequest().getURI().getPath())){
             MultiValueMap<String, String> queryParams = context.getExchange().getRequest().getQueryParams();
             String userId = context.getExchange().getRequest().getHeaders().getFirst(JWTPayload.AUDIENCE);

@@ -26,6 +26,9 @@ import static cn.com.cgh.romantic.constant.AuthConstant.JWT_TOKEN_PREFIX;
 import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_TOKEN_HEADER;
 import static cn.com.cgh.romantic.util.KeyConstant.CONTENT_INSTANCE;
 
+/**
+ * @author cgh
+ */
 @AllArgsConstructor
 @Slf4j
 public class JwtTokenUtil {
@@ -162,7 +165,10 @@ public class JwtTokenUtil {
 
     //缓存中删除token
     public boolean removeToken(String username, String id) {
-        return Boolean.TRUE.equals(redisTemplateSO.expire(MessageFormat.format(JWT_CACHE_KEY, username, id), 1, TimeUnit.MILLISECONDS));
+        return removeToken(username, id,1);
+    }
+    public boolean removeToken(String username, String id,long timeout) {
+        return Boolean.TRUE.equals(redisTemplateSO.expire(MessageFormat.format(JWT_CACHE_KEY, username, id), timeout, TimeUnit.MILLISECONDS));
     }
 
     /**

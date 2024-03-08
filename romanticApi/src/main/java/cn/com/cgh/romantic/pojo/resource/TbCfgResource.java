@@ -2,12 +2,13 @@ package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.em.DeleteStatus;
 import cn.com.cgh.romantic.em.ResourceStatus;
-import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import cn.com.cgh.romantic.pojo.resource.child.RouteMeta;
+import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import cn.com.cgh.romantic.typeHandler.MyArrayTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -27,6 +28,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TbCfgResource extends TbBaseEntity {
     @Schema(description = "父菜单code")
     private Long parentId;

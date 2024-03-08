@@ -1,4 +1,4 @@
-//package cn.com.cgh.core.advice;
+package cn.com.cgh.romantic.advice;//package cn.com.cgh.core.advice;
 //
 //import cn.com.cgh.romantic.util.ResponseImpl;
 //import org.aspectj.lang.annotation.Aspect;

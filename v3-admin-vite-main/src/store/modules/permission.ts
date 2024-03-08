@@ -2,31 +2,46 @@ import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
 import { type RouteRecordRaw } from "vue-router"
-import router, { constantRoutes, endRoutes as endRoute } from "@/router"
+import router, { constantRoutes, endRoutes as endRoute, asyncRoutes as asyncRoute } from "@/router"
 
 export const usePermissionStore = defineStore("permission", () => {
-  const routes = ref<RouteRecordRaw[]>(constantRoutes)
+  // 汇总
+  const routes = ref<RouteRecordRaw[]>([])
+  // 开头
+  const constantRoute = ref<RouteRecordRaw[]>(constantRoutes)
+  // 结束
   const endRoutes = ref<RouteRecordRaw[]>(endRoute)
+  // 异步
+  const asyncRoutes = ref<RouteRecordRaw[]>(asyncRoute)
+  // 本地查询
+  const queryLocalRoute = ref<RouteRecordRaw[]>([])
 
-  const QueryLocalRoute = ref<RouteRecordRaw[]>([])
-
-  const resetRouter = (route: RouteRecordRaw[]) => {
+  const resetRouter = () => {
+    if (constantRoute.value.length > 0) {
+      routes.value = routes.value.concat(constantRoute.value)
+      constantRoute.value.forEach((rout) => {
+        router.addRoute(rout)
+      })
+    }
     try {
-      if (route.length > 0) {
-        routes.value = routes.value.concat(route)
-        route.forEach((rout) => {
+      if (queryLocalRoute.value.length > 0) {
+        routes.value = routes.value.concat(queryLocalRoute.value)
+        queryLocalRoute.value.forEach((rout) => {
           router.addRoute(rout)
         })
-      } else {
-        routes.value = constantRoutes
       }
     } catch (e) {
       console.log(e)
-      window.location.reload()
+      // window.location.reload()
+    }
+    if (endRoutes.value.length > 0) {
+      routes.value = routes.value.concat(endRoutes.value)
+      endRoutes.value.forEach((rout) => {
+        router.addRoute(rout)
+      })
     }
   }
-
-  return { endRoutes, resetRouter, QueryLocalRoute, routes }
+  return { endRoutes, resetRouter, queryLocalRoute, routes, asyncRoutes, constantRoute }
 })
 
 /** 在 setup 外使用 */

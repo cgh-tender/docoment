@@ -20,7 +20,7 @@ CREATE TABLE t_ware_sale_statistics
     KEY idx_business_ware (business_id,ware_inside_code) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='商品销售统计';
 
-
+DROP TABLE IF EXISTS tb_cfg_datasource;
 create table IF NOT EXISTS tb_cfg_datasource
 (
     id          bigint(20) NOT NULL COMMENT '主键',
@@ -34,6 +34,7 @@ create table IF NOT EXISTS tb_cfg_datasource
     PRIMARY KEY (id) USING BTREE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='数据库连接表';
 
+DROP TABLE IF EXISTS tb_cfg_resource;
 create table IF NOT EXISTS tb_cfg_resource
 (
     id          bigint(20) NOT NULL COMMENT '主键',
@@ -63,6 +64,7 @@ INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, u
 INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, update_time, name, path, description, deleted, status, redirect, alias, before_enter, before_route_leave, component, keep_alive, meta, sort) VALUES (157587010129756174, 157586258510479372, 1, '2024-01-25 14:58:05', 1, '2024-01-25 14:58:05', 'DirectivePermission', 'directive', null, 0, 0, null, null, null, null, 'permission/directive', 1, '{"activeMenu":"","affix":null,"alwaysShow":null,"breadcrumb":null,"elIcon":"","hidden":null,"keepAlive":null,"roles":[],"svgIcon":"","title":"指令权限"}', 0);
 INSERT INTO tb_cfg_resource (id, parent_id, create_by, create_time, update_by, update_time, name, path, description, deleted, status, redirect, alias, before_enter, before_route_leave, component, keep_alive, meta, sort) VALUES (157587010129756175, 157586258510479372, 1, '2024-01-25 14:58:05', 1, '2024-01-25 14:58:05', 'umsUser', 'directive', null, 0, 0, null, null, null, null, 'permission/directive', 1, '{"activeMenu":"","affix":null,"alwaysShow":null,"breadcrumb":null,"elIcon":"","hidden":null,"keepAlive":null,"roles":[],"svgIcon":"","title":"指令权限1"}', 0);
 
+DROP TABLE IF EXISTS tb_cfg_user;
 CREATE TABLE IF NOT EXISTS tb_cfg_user
 (
     id          bigint(20) NOT NULL,
@@ -83,6 +85,7 @@ INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, use
 INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (2, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'test', '{bcrypt}$2a$10$CT7jn1Pri2JBcVIaBle8Ie9tViTnKiwjbh5cOa6MX/CrKv2BAiqze', '18334774205', 'late_tender@163.com', 0, 0);
 INSERT INTO tb_cfg_user (id, create_by, create_time, update_time, update_by, username, password, phone, email, gender, status) VALUES (3, 1, '2024-01-25 16:10:52', '2024-01-25 08:11:07', 1, 'test1', '{bcrypt}$2a$10$CT7jn1Pri2JBcVIaBle8Ie9tViTnKiwjbh5cOa6MX/CrKv2BAiqze', '18334774205', 'late_tender@163.com', 0, 0);
 
+DROP TABLE IF EXISTS tb_cfg_role;
 CREATE TABLE IF NOT EXISTS tb_cfg_role
 (
     id          bigint(20) NOT NULL,
@@ -100,6 +103,7 @@ INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, nam
 INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:14:38', '2024-01-25 08:14:54', 1, '测试人员', '测试人员', 0);
 INSERT INTO tb_cfg_role (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (3, 1, '2024-01-25 16:14:38', '2024-01-25 08:14:54', 1, '测试人员1', '测试人员1', 0);
 
+DROP TABLE IF EXISTS tb_user_role;
 CREATE TABLE IF NOT EXISTS tb_user_role
 (
     id          bigint(20) NOT NULL,
@@ -116,6 +120,7 @@ INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, us
 INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 2);
 INSERT INTO tb_user_role (id, create_by, create_time, update_time, update_by, user_id, role_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 3);
 
+DROP TABLE IF EXISTS tb_cfg_organization;
 CREATE TABLE IF NOT EXISTS tb_cfg_organization
 (
     id          bigint(20) NOT NULL,
@@ -134,6 +139,7 @@ INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update
 INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '临汾市', '临汾市', 2 );
 INSERT INTO tb_cfg_organization (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (4, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '太原市', '太原市', 2 );
 
+DROP TABLE IF EXISTS tb_user_organization;
 CREATE TABLE IF NOT EXISTS tb_user_organization
 (
     id          bigint(20) NOT NULL,
@@ -152,7 +158,7 @@ INSERT INTO tb_user_organization (id, create_by, create_time, update_time, updat
 INSERT INTO tb_user_organization (id, create_by, create_time, update_time, update_by, name, user_id, organization_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '临汾市', 2, 3);
 INSERT INTO tb_user_organization (id, create_by, create_time, update_time, update_by, name, user_id, organization_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '太原市', 3, 4);
 
-
+DROP TABLE IF EXISTS tb_cfg_position;
 CREATE TABLE IF NOT EXISTS tb_cfg_position
 (
     id          bigint(20) NOT NULL,
@@ -171,6 +177,7 @@ INSERT INTO tb_cfg_position (id, create_by, create_time, update_time, update_by,
 INSERT INTO tb_cfg_position (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发经理', '开发经理', 1);
 INSERT INTO tb_cfg_position (id, create_by, create_time, update_time, update_by, name, description, parent_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发人员', '开发人员', 2);
 
+DROP TABLE IF EXISTS tb_user_position;
 CREATE TABLE IF NOT EXISTS tb_user_position
 (
     id          bigint(20) NOT NULL,
@@ -189,6 +196,7 @@ INSERT INTO tb_user_position (id, create_by, create_time, update_time, update_by
 INSERT INTO tb_user_position (id, create_by, create_time, update_time, update_by, name, user_id, position_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发经理', 2, 2);
 INSERT INTO tb_user_position (id, create_by, create_time, update_time, update_by, name, user_id, position_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发经理', 3, 3);
 
+DROP TABLE IF EXISTS tb_cfg_group;
 CREATE TABLE IF NOT EXISTS tb_cfg_group
 (
     id          bigint(20) NOT NULL,
@@ -204,6 +212,7 @@ CREATE TABLE IF NOT EXISTS tb_cfg_group
 INSERT INTO tb_cfg_group (id, create_by, create_time, update_time, update_by, name) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, '开发组');
 INSERT INTO tb_cfg_group (id, create_by, create_time, update_time, update_by, name) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 2, '人事组');
 
+DROP TABLE IF EXISTS tb_user_group;
 CREATE TABLE IF NOT EXISTS tb_user_group
 (
     id          bigint(20) NOT NULL,
@@ -220,6 +229,7 @@ CREATE TABLE IF NOT EXISTS tb_user_group
 INSERT INTO tb_user_group (id, create_by, create_time, update_time, update_by, user_id,group_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 1);
 INSERT INTO tb_user_group (id, create_by, create_time, update_time, update_by, user_id,group_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 1);
 
+DROP TABLE IF EXISTS tb_role_organization;
 CREATE TABLE IF NOT EXISTS tb_role_organization
 (
     id          bigint(20) NOT NULL,
@@ -238,6 +248,7 @@ INSERT INTO tb_role_organization (id, create_by, create_time, update_time, updat
 INSERT INTO tb_role_organization (id, create_by, create_time, update_time, update_by, role_id,organization_id) VALUES (4, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 3);
 INSERT INTO tb_role_organization (id, create_by, create_time, update_time, update_by, role_id,organization_id) VALUES (5, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 3);
 
+DROP TABLE IF EXISTS tb_role_position;
 CREATE TABLE IF NOT EXISTS tb_role_position
 (
     id          bigint(20) NOT NULL,
@@ -255,6 +266,7 @@ INSERT INTO tb_role_position (id, create_by, create_time, update_time, update_by
 INSERT INTO tb_role_position (id, create_by, create_time, update_time, update_by, role_id,position_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 3);
 INSERT INTO tb_role_position (id, create_by, create_time, update_time, update_by, role_id,position_id) VALUES (3, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 3);
 
+DROP TABLE IF EXISTS tb_role_group;
 CREATE TABLE IF NOT EXISTS tb_role_group
 (
     id          bigint(20) NOT NULL,
@@ -271,6 +283,7 @@ CREATE TABLE IF NOT EXISTS tb_role_group
 INSERT INTO tb_role_group (id, create_by, create_time, update_time, update_by, role_id,group_id) VALUES (1, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 2, 1);
 INSERT INTO tb_role_group (id, create_by, create_time, update_time, update_by, role_id,group_id) VALUES (2, 1, '2024-01-25 16:16:52', '2024-01-25 16:16:52', 1, 3, 2);
 
+DROP TABLE IF EXISTS tb_role_exclusion;
 CREATE TABLE IF NOT EXISTS tb_role_exclusion
 (
     id          bigint(20) NOT NULL,
@@ -287,6 +300,7 @@ CREATE TABLE IF NOT EXISTS tb_role_exclusion
 
 INSERT INTO tb_role_exclusion (id, create_by, create_time, update_by, update_time, role_id_one, role_id_two, description) VALUES (1, 1, '2024-02-05 17:25:38.088', 1, '2024-02-05 17:25:38.088', 1, 2, '特殊处理');
 
+DROP TABLE IF EXISTS tb_role_resource;
 CREATE TABLE IF NOT EXISTS tb_role_resource
 (
     id          bigint(20) NOT NULL,
@@ -301,6 +315,7 @@ CREATE TABLE IF NOT EXISTS tb_role_resource
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='角色资源关系表';
 
+DROP TABLE IF EXISTS tb_controller_log;
 CREATE TABLE IF NOT EXISTS tb_controller_log
 (
     id                   bigint(20) NOT NULL COMMENT '主键',
@@ -318,6 +333,7 @@ CREATE TABLE IF NOT EXISTS tb_controller_log
     PRIMARY KEY (id) USING BTREE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='接口日志表';
 
+DROP TABLE IF EXISTS tb_login_log;
 CREATE TABLE IF NOT EXISTS tb_login_log
 (
     id                   bigint(20) NOT NULL COMMENT '主键',
@@ -331,10 +347,15 @@ CREATE TABLE IF NOT EXISTS tb_login_log
     logout_time          datetime(3) COMMENT '登出时间',
     login_status         tinyint(2) DEFAULT 1 COMMENT '登录状态',
     user_agent           varchar(255) COMMENT '请求的用户代理信息',
+    mobile               tinyint(2) DEFAULT 0 COMMENT '是否移动端',
+    os_sys                varchar(32) COMMENT '操作系统',
+    browser              varchar(32) COMMENT '操作平台',
+    engine               varchar(32) COMMENT '操作内核',
     PRIMARY KEY (id) USING BTREE,
     KEY idx_userid (user_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='登录日志表';
 
+DROP TABLE IF EXISTS tb_cfg_error;
 create TABLE IF NOT EXISTS tb_cfg_error(
     id                   bigint(20) NOT NULL COMMENT '主键',
     create_by            bigint(20) NOT NULL COMMENT '创建人',

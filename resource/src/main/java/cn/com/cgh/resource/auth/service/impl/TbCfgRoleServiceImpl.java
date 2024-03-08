@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class TbCfgRoleServiceImpl extends ServiceImpl<TbCfgRoleMapper, TbCfgRole> implements ITbCfgRoleService {
     @Override
-    public Set<String> queryUserRoles(Long userId) {
-        return baseMapper.queryAllByUserId(userId).stream().map(TbCfgRole::getName).collect(Collectors.toSet());
+    public Set<Long> queryUserRoles(Long userId) {
+        return baseMapper.queryAllByUserId(userId).stream().map(TbCfgRole::getId).collect(Collectors.toSet());
     }
 }

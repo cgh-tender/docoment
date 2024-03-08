@@ -41,7 +41,7 @@ export const useUserStore = defineStore("user", () => {
     if (!routes || routes.length == 0) return res
     routes.forEach((route) => {
       const tmp = { ...route } as any
-      if (tmp.component == "Layouts") {
+      if (!tmp.component) {
         tmp.component = Layouts
       } else {
         const component = modules[`/src/views/${tmp.component}.vue`]
@@ -75,12 +75,11 @@ export const useUserStore = defineStore("user", () => {
     try {
       cleanRouter()
       const { data } = await getRouterApi()
-      const rest: RouteRecordRaw[] = routeSettings.thirdLevelRouteCache
+      const rest: RouteRecordRaw[] = (permissionStore.queryLocalRoute = routeSettings.thirdLevelRouteCache
         ? flatMultiLevelRoutes(_flushRouter(data))
-        : _flushRouter(data)
-      permissionStore.QueryLocalRoute = rest
-      permissionStore.resetRouter(rest)
-      permissionStore.endRoutes.forEach((r) => router.addRoute(r))
+        : _flushRouter(data))
+      permissionStore.queryLocalRoute = rest
+      permissionStore.resetRouter()
       console.log("flushRoute", router.getRoutes())
     } finally {
       isFlushRouter.value = false
@@ -97,9 +96,7 @@ export const useUserStore = defineStore("user", () => {
 
   /** 切换角色 */
   const changeRoles = async (role: string) => {
-    const newToken = "token-" + role
-    token.value = newToken
-    setToken(newToken)
+    console.log("changeRoles", role)
     await getInfo()
     await useUserStore()
       .flushRoute()

@@ -28,19 +28,19 @@ import java.util.stream.Collectors;
 public class ValidationExceptionAdvice {
     @ExceptionHandler(value = {BindException.class, ValidationException.class})
     @ResponseBody
-    public Mono<ResponseImpl> exceptionHandler(Exception e) throws Exception {
+    public Mono<ResponseImpl<String>> exceptionHandler(Exception e) throws Exception {
         if (e instanceof BindException) {
             return this.handleBindException((BindException) e);
         }
         if (e instanceof ConstraintViolationException) {
             return this.handleConstraintViolationException(e);
         }
-        return Mono.just(ResponseImpl.builder().build().full());
+        return Mono.just(ResponseImpl.<String>builder().message(e.getMessage()).build().full());
     }
 
     //Controller方法的参数校验码
     //Controller方法>Controller类>DTO入参属性>DTO入参类>配置文件默认参数码>默认错误码
-    private Mono<ResponseImpl> handleBindException(BindException e) throws Exception {
+    private Mono<ResponseImpl<String>> handleBindException(BindException e) throws Exception {
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
         String msg = allErrors.stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(";"));
 
@@ -67,13 +67,13 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return Mono.just(ResponseImpl.builder().message(msg).build().full());
+        return Mono.just(ResponseImpl.<String>builder().message(msg).build().full());
     }
 
-    private Mono<ResponseImpl> handleConstraintViolationException(Exception e) throws Exception {
+    private Mono<ResponseImpl<String>> handleConstraintViolationException(Exception e) throws Exception {
         ConstraintViolationException exception = (ConstraintViolationException) e;
         Set<ConstraintViolation<?>> violationSet = exception.getConstraintViolations();
         String msg = violationSet.stream().map(s -> s.getConstraintDescriptor().getMessageTemplate()).collect(Collectors.joining(";"));
-        return Mono.just(ResponseImpl.builder().message(msg).build().full());
+        return Mono.just(ResponseImpl.<String>builder().message(msg).build().full());
     }
 }

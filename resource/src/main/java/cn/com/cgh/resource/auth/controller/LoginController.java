@@ -57,7 +57,7 @@ public class LoginController {
     public Map info(ServerHttpRequest request) {
         String authorization = request.getHeaders().getFirst(JWT_TOKEN_HEADER);
         Long userId = jwtTokenUtil.getUserIdFromToken(authorization);
-        Set<String> data = iTbCfgRoleService.queryUserRoles(userId);
+        Set<Long> data = iTbCfgRoleService.queryUserRoles(userId);
         Map<String, Object> map = new HashMap<>();
         map.put("roles", data);
         return map;

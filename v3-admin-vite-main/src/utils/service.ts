@@ -10,17 +10,17 @@ function logout() {
   location.reload()
 }
 
-async function toJson(bolb) {
+async function toJson(bob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      resolve(e.target?.result);
-    };
-    reader.onerror = e => {
-      reject(e);
-    };
-    reader.readAsText(bolb);
-  });
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      resolve(<string>e.target?.result)
+    }
+    reader.onerror = (e) => {
+      reject(e)
+    }
+    reader.readAsText(bob)
+  })
 }
 
 /** 创建请求实例 */
@@ -41,16 +41,13 @@ function createService() {
   service.interceptors.response.use(
     (response) => {
       // apiData 是 api 返回的数据
-      console.log(response)
-      let apiData = response.data
+      const apiData = response.data
       // 二进制数据则直接返回
       const responseType = response.request?.responseType
       if (responseType === "blob" || responseType === "arraybuffer") {
         if (apiData.type != "image/jpeg") {
-           return toJson(apiData).then((apiD) => {
-             if (typeof apiD === "string") {
-               return JSON.parse(apiD)
-             }
+          return toJson(apiData).then((apiD) => {
+            return JSON.parse(apiD)
           })
         } else {
           setUuid(response.headers.uuid)

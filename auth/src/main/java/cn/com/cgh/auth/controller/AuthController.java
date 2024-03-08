@@ -31,6 +31,7 @@ public class AuthController {
      */
     @PostMapping("/controllerCheckAuth")
     public Mono<Boolean> controllerCheckAuth(AuthCheckEntity authCheckEntity) {
+        log.info("AuthController controllerCheckAuth");
         /**
          * 接口权限
          */

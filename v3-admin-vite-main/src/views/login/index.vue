@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from "vue"
+import { reactive, ref, watchEffect } from "vue"
 import { useRouter } from "vue-router"
 import { useUserStore } from "@/store/modules/user"
 import { ElMessage, type FormInstance, type FormRules } from "element-plus"
@@ -46,8 +46,9 @@ const handleLogin = () => {
           router.push({ path: "/" })
         })
         .catch(() => {
-          createCode()
-          loginFormData.password = ""
+          codeBaseUri.value = import.meta.env.VITE_BASE_CODE_API + "?crt_=" + new Date().getTime()
+          // loginFormData.password = ""
+          // loginFormData.username = ""
         })
         .finally(() => {
           loading.value = false
@@ -59,22 +60,22 @@ const handleLogin = () => {
   })
 }
 
-codeBaseUri.value = import.meta.env.VITE_BASE_CODE_API
-
-/** 创建验证码 */
-const createCode = () => {
-  // 先清空验证码的输入
+watchEffect(() => {
   loginFormData.code = ""
   // 获取验证码
   getLoginCodeApi(codeBaseUri.value).then((response) => {
-    if (response.type){
+    if (response.type) {
       const blob = new Blob([response], { type: "image/jpg" })
       src.value = URL.createObjectURL(blob)
-    }else{
+    } else {
       ElMessage.error(response.message)
     }
   })
+})
+function createCode() {
+  codeBaseUri.value = import.meta.env.VITE_BASE_CODE_API + "?crt_=" + new Date().getTime()
 }
+
 createCode()
 </script>
 

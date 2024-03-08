@@ -37,14 +37,14 @@ public class OAuth2Config {
     private final TokenLogoutHandler tokenLogoutHandler;
     private final TokenAuthenticationEntryPoint tokenAuthenticationEntryPoint;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
-    private final TokenFailureHandler tokenFailureHandler;
-    private final TokenSuccessHandler tokenSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
+    private final LoginSuccessHandler loginSuccessHandler;
     private final ILoginController initController;
     private final SecurityConfig securityConfig;
     private final PasswordEncoder passwordEncoder;
     private final UserServiceImpl reactiveUserDetailsService;
     private final TokenServerSecurityContextRepository tokenServerSecurityContextRepository;
-//    private final LoginServerSecurityContextRepository loginServerSecurityContextRepository;
+    private final LoginServerSecurityContextRepository loginServerSecurityContextRepository;
     private final SendLogFilter sendLogFilter;
     private final ManageAuthenticationFilter manageAuthenticationFilter;
     private final MyServerAuthenticationConverter myServerAuthenticationConverter;
@@ -62,12 +62,11 @@ public class OAuth2Config {
         http.csrf(csrf -> csrf.disable());
         http.formLogin(form -> form
                 .loginPage("/login") // 登录页
-                .authenticationSuccessHandler(tokenSuccessHandler)
-//                .securityContextRepository(loginServerSecurityContextRepository)
-                .authenticationFailureHandler(tokenFailureHandler)
+                .authenticationSuccessHandler(loginSuccessHandler)
+                .securityContextRepository(loginServerSecurityContextRepository)
+                .authenticationFailureHandler(loginFailureHandler)
                 .authenticationManager(loginAuthorizationManager)
         );
-//        http.authenticationManager(loginAuthorizationManager);
         http.securityContextRepository(tokenServerSecurityContextRepository);
         http.logout(logoutSpec -> logoutSpec.logoutUrl("/logout")
                 .logoutHandler(tokenLogoutHandler)

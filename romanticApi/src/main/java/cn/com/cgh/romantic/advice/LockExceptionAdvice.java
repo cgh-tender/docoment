@@ -22,8 +22,8 @@ public class LockExceptionAdvice {
      */
     @ExceptionHandler(value = {RequestLockException.class})
     @ResponseBody
-    public Mono<ResponseImpl> exceptionHandler(RequestLockException e) {
+    public Mono<ResponseImpl<String>> exceptionHandler(RequestLockException e) {
         // 构建并返回一个包含异常消息的响应体
-        return Mono.just(ResponseImpl.builder().message(e.getMessage()).build().full());
+        return Mono.just(ResponseImpl.<String>builder().message(e.getMessage()).build().full());
     }
 }

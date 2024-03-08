@@ -36,7 +36,7 @@ public class DelayControllerQueueConsumer extends DefaultConsumer {
                 this.ibControllerLogService = Application.getBean(ITbControllerLogService.class);
             }
             String jsonString = new String(body, StandardCharsets.UTF_8);
-            log.info("", jsonString);
+            log.info(jsonString);
             TbControllerLog controllerLog = JSONUtil.parse(jsonString).toBean(TbControllerLog.class);
             ibControllerLogService.saveOrUpdate(controllerLog);
         } catch (Exception e) {

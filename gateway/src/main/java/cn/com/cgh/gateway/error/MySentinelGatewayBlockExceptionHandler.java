@@ -10,7 +10,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author cgh
@@ -23,7 +22,7 @@ public class MySentinelGatewayBlockExceptionHandler extends SentinelGatewayBlock
 
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-        log.error(ex.getMessage());
+        ex.printStackTrace();
         if (exchange.getResponse().isCommitted()) {
             return Mono.error(ex);
         }

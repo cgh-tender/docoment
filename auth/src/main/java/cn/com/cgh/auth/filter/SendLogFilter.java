@@ -3,9 +3,13 @@ package cn.com.cgh.auth.filter;
 import cn.com.cgh.romantic.em.LoginStatus;
 import cn.com.cgh.romantic.pojo.MsgPojo;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.util.Application;
 import cn.com.cgh.romantic.util.IdWork;
+import cn.com.cgh.romantic.util.RequestUtil;
 import cn.com.cgh.romantic.util.SendQueue;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +22,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Date;
 
-import static cn.com.cgh.romantic.constant.RomanticConstant.THREAD_LOCAL_LOG_ID;
+import static cn.com.cgh.romantic.constant.RomanticConstant.*;
+import static cn.com.cgh.romantic.util.RequestUtil.CACHED_REQUEST_OBJECT_BODY_KEY;
 
 /**
  * @author cgh
@@ -38,14 +43,24 @@ public class SendLogFilter implements WebFilter {
             idWork = Application.getBean(IdWork.class);
         }
         ServerHttpRequest request = exchange.getRequest();
-        if (request.getURI().getPath().contains("/login")){
-            long id = idWork.nextId();
-            ServerHttpRequest.Builder mutate = request.mutate();
-            mutate.header(THREAD_LOCAL_LOG_ID, id+"");
-            return chain.filter(exchange.mutate().request(mutate.build()).build()).doOnSuccess(s->{
+        if (request.getURI().getPath().contains("/login")) {
+            return RequestUtil.getBody(exchange).flatMap(c -> {
+                String attribute = c.getAttribute(CACHED_REQUEST_OBJECT_BODY_KEY);
+                TbCfgUser tbCfgUser = JSONUtil.parseObj(attribute).toBean(TbCfgUser.class);
+                long id = idWork.nextId();
+                ServerHttpRequest.Builder mutate = request.mutate();
+                mutate.header(THREAD_LOCAL_LOG_ID, id + "");
+                String userAgent = request.getHeaders().getFirst(USER_AGENT);
+                UserAgent parse = UserAgentUtil.parse(request.getHeaders().getFirst(USER_AGENT));
                 TbLoginLog loginLog = TbLoginLog.builder()
-                        .username(request.getQueryParams().getFirst("username"))
-                        .userId(0L)
+                        .username(tbCfgUser.getUsername())
+                        .userId(tbCfgUser.getId() == null ? 0 : tbCfgUser.getId())
+                        .clientIp(request.getHeaders().getFirst(X_REAL_IP))
+                        .userAgent(userAgent)
+                        .browser(parse.getBrowser().getName() + "/" + parse.getVersion())
+                        .mobile(parse.isMobile())
+                        .engine(parse.getEngine().getName() + "/" + parse.getEngineVersion())
+                        .osSys(parse.getPlatform().getName() + "/" + parse.getOs().getName() + "/" + parse.getOsVersion())
                         .loginStatus(LoginStatus.IN)
                         .build();
                 loginLog.setId(id);
@@ -55,6 +70,7 @@ public class SendLogFilter implements WebFilter {
                 ).build();
                 log.info(JSONUtil.toJsonStr(build));
                 sendQueue.doSendLoginQueue(build);
+                return chain.filter(exchange.mutate().request(mutate.build()).build());
             });
         }
         return chain.filter(exchange);
