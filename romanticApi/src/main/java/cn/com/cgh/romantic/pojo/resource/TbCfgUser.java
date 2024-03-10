@@ -5,6 +5,7 @@ import cn.com.cgh.romantic.em.GenderStatus;
 import cn.com.cgh.romantic.em.UserStatus;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
+import com.baomidou.mybatisplus.annotation.SqlCondition;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,11 +29,17 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TbCfgUser extends TbBaseEntity implements UserDetails {
     /**
-     * 用户名
+     * 用户账号
      */
-    @Schema(description = "用户名")
+    @Schema(description = "用户账号")
+    @TableField(condition = SqlCondition.LIKE)
     @RequestKeyParam
     private String username;
+    /**
+     * 用户姓名
+     */
+    @Schema(description = "用户姓名")
+    private String realname;
     /**
      * 用户密码
      */
@@ -48,6 +55,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 手机号
      */
     @Schema(description = "手机号")
+    @TableField(condition = SqlCondition.LIKE)
     private String phone;
     /**
      * 邮箱

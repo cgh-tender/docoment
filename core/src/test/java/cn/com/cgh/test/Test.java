@@ -5,22 +5,25 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+
 public class Test {
     public static void main(String[] args) {
+        ArrayList<Object> list = new ArrayList<>();
+
         Pojo pojo = new Pojo();
-        pojo.setId(null);
-        String json = JSONObject.toJSONString(pojo);
-        Pojo bean = JSONUtil.parseObj(json).toBean(Pojo.class);
-        System.out.println(bean);
+        pojo.setId(1);
+        list.add(pojo);
+        pojo = new Pojo();
+        pojo.setId(2);
+        list.add(pojo);
+        System.out.println(JSONUtil.toJsonStr(list));
     }
 }
 @Getter
 @Setter
 class Pojo{
-    private String id = "0";
+    private int id = 0;
     private String userId = "0";
 
-    public int setIntId(String id) {
-        return Integer.parseInt(id);
-    }
 }

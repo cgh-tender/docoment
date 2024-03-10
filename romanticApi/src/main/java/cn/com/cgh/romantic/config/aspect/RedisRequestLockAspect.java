@@ -1,7 +1,6 @@
 package cn.com.cgh.romantic.config.aspect;
 
 import cn.com.cgh.romantic.config.WebfluxAOPConfig;
-import cn.com.cgh.romantic.config.aspect.annotation.RequestKeyGenerator;
 import cn.com.cgh.romantic.config.aspect.annotation.RequestLock;
 import cn.com.cgh.romantic.constant.RomanticConstant;
 import cn.com.cgh.romantic.exception.RequestLockException;

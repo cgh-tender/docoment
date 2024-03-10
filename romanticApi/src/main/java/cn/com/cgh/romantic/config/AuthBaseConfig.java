@@ -2,6 +2,7 @@ package cn.com.cgh.romantic.config;
 
 import cn.com.cgh.romantic.advice.GlobalExceptionHandler;
 import cn.com.cgh.romantic.advice.NotVoidResponseBodyAdvice;
+import cn.com.cgh.romantic.config.aspect.JsonParamArgumentResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
@@ -15,6 +16,9 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
+import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
 
 import java.util.stream.Collectors;
 
@@ -23,7 +27,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @EnableWebFlux
-public class AuthBaseConfig {
+public class AuthBaseConfig implements WebFluxConfigurer {
+    @Override
+    public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
+        configurer.addCustomResolver(new JsonParamArgumentResolver());
+    }
+
     static {
         log.info("AuthBaseConfig:已启动");
     }

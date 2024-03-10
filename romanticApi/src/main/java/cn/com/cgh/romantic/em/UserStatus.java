@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum UserStatus implements IEnum<Integer> {
+public enum UserStatus implements DisplayedEnum {
     /**
      * 正常
      */

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.MybatisXMLLanguageDriver;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import lombok.Getter;
@@ -114,9 +115,14 @@ public class MybatisConfig {
     }
 
     @Bean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+    public PaginationInnerInterceptor pageInnerInterceptor() {
+        return new PaginationInnerInterceptor(DbType.MYSQL);
+    }
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor(PaginationInnerInterceptor pageInnerInterceptor) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
+        interceptor.addInnerInterceptor(pageInnerInterceptor);
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return interceptor;
     }
 

@@ -3,6 +3,8 @@ package cn.com.cgh.romantic.pojo.resource;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.builder.ToStringSummary;
 
 /**
  * 职位表

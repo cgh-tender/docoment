@@ -14,6 +14,7 @@ import java.util.Date;
  * @author cgh
  */
 @Data
+@ToString
 public class TbBaseEntity implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     @Schema(description = "主键")

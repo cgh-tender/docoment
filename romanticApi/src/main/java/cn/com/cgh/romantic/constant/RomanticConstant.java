@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * @author cgh
  */
-public class RomanticConstant {
+public interface RomanticConstant {
     public static final String ONE_RULE = "ONE";
     public static final String X_REAL_IP = "X-Real-IP";
     public static final String THREAD_LOCAL_LOG_ID = "THREAD-LOCAL-LOG-ID";

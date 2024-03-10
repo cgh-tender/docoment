@@ -2,6 +2,8 @@ package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +30,12 @@ public class TbCfgUserController {
     public String add(TbCfgUser user){
         boolean save = tbCfgUserService.save(user);
         return save?"添加成功":"添加失败";
+    }
+
+    @GetMapping
+    public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int size){
+        QueryWrapper<TbCfgUser> wrap = new QueryWrapper<>(user);
+        return tbCfgUserService.page(new Page<>(currentPage, size),wrap);
     }
 
     @GetMapping("/loadByUsername/{username}")
