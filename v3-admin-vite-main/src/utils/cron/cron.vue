@@ -37,12 +37,12 @@
 </template>
 
 <script setup lang="ts">
-import SecondAndMinute from "@/cron/secondAndMinute"
-import hour from "@/cron/hour"
-import day from "@/cron/day"
-import month from "@/cron/month"
-import week from "@/cron/week"
-import year from "@/cron/year"
+import SecondAndMinute from "@/utils/cron/secondAndMinute"
+import hour from "@/utils/cron/hour"
+import day from "@/utils/cron/day"
+import month from "@/utils/cron/month"
+import week from "@/utils/cron/week"
+import year from "@/utils/cron/year"
 import { computed, ref, watchEffect } from "vue"
 
 const prop = defineProps({
