@@ -28,6 +28,9 @@ const defaultPaginationData: DefaultPaginationData = {
 export function usePagination(initialPaginationData: PaginationData = {}) {
   /** 合并分页参数 */
   const paginationData = reactive({ ...defaultPaginationData, ...initialPaginationData })
+  if (initialPaginationData && initialPaginationData.pageSize && !initialPaginationData.pageSizes && initialPaginationData.pageSize < 10) {
+    paginationData.pageSizes.unshift(initialPaginationData.pageSize)
+  }
   /** 改变当前页码 */
   const handleCurrentChange = (value: number) => {
     paginationData.currentPage = value
@@ -35,6 +38,7 @@ export function usePagination(initialPaginationData: PaginationData = {}) {
   /** 改变页面大小 */
   const handleSizeChange = (value: number) => {
     paginationData.pageSize = value
+
   }
 
   return { paginationData, handleCurrentChange, handleSizeChange }

@@ -626,7 +626,7 @@ export default defineComponent({
     const rest = (data) => {
       for (const i in data) {
         if (data[i] instanceof Object) {
-          this.rest(data[i])
+          rest(data[i])
         } else {
           switch (typeof data[i]) {
             case "object":

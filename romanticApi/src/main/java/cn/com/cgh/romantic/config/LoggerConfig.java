@@ -38,6 +38,7 @@ public class LoggerConfig implements ApplicationRunner {
         Logger logger = loggerContext.getLogger(loggerName);
         if (logger != null) {
             logger.setLevel(Level.toLevel(level, Level.INFO));
+            loggerContext.start();
         }
     }
 

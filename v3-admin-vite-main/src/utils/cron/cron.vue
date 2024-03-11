@@ -45,11 +45,12 @@ import week from "@/cron/week"
 import year from "@/cron/year"
 import { computed, ref, watchEffect } from "vue"
 
-defineProps({
+const prop = defineProps({
   value: {
     type: String
   }
 })
+const emit = defineEmits(['input'])
 const activeName = ref("s")
 const sVal = ref("")
 const mVal = ref("")
@@ -62,45 +63,45 @@ const yearVal = ref("")
 const tableData = computed(() => {
   return [
     {
-      sVal: this.sVal,
-      mVal: this.mVal,
-      hVal: this.hVal,
-      dVal: this.dVal,
-      monthVal: this.monthVal,
-      weekVal: this.weekVal,
-      yearVal: this.yearVal
+      sVal: sVal,
+      mVal: mVal,
+      hVal: hVal,
+      dVal: dVal,
+      monthVal: monthVal,
+      weekVal: weekVal,
+      yearVal: yearVal
     }
   ]
 })
 const value_ = computed(() => {
-  if (!this.dVal && !this.weekVal) {
+  if (!dVal && !weekVal) {
     return ""
   }
-  if (this.dVal === "?" && this.weekVal === "?") {
-    this.$message.error("日期与星期不可以同时为“不指定”")
+  if (dVal.value === "?" && weekVal.value === "?") {
+    Promise.reject(new Error("日期与星期不可以同时为“不指定”"))
   }
-  if (this.dVal !== "?" && this.weekVal !== "?") {
-    this.$message.error("日期与星期必须有一个为“不指定”")
+  if (dVal.value !== "?" && weekVal.value !== "?") {
+    Promise.reject(new Error("日期与星期必须有一个为“不指定”"))
   }
-  const v = `${this.sVal} ${this.mVal} ${this.hVal} ${this.dVal} ${this.monthVal} ${this.weekVal} ${this.yearVal}`
-  if (v !== this.value) {
-    this.$emit("input", v)
+  const v = `${sVal} ${mVal} ${hVal} ${dVal} ${monthVal} ${weekVal} ${yearVal}`
+  if (v !== prop.value) {
+    emit("input",v)
   }
   return v
 })
 
 const updateVal = () => {
-  if (!this.value) {
+  if (!prop.value) {
     return
   }
-  const arrays = this.value.split(" ")
-  this.sVal = arrays[0]
-  this.mVal = arrays[1]
-  this.hVal = arrays[2]
-  this.dVal = arrays[3]
-  this.monthVal = arrays[4]
-  this.weekVal = arrays[5]
-  this.yearVal = arrays[6]
+  const arrays = prop.value.split(" ")
+  sVal.value = arrays[0]
+  mVal.value = arrays[1]
+  hVal.value = arrays[2]
+  dVal.value = arrays[3]
+  monthVal.value = arrays[4]
+  weekVal.value = arrays[5]
+  yearVal.value = arrays[6]
 }
 watchEffect(() => {
   updateVal()

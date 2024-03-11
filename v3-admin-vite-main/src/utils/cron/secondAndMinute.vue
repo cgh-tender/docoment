@@ -41,7 +41,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from "vue"
 
-defineProps({
+const prop = defineProps({
   value: {
     type: String,
     default: "*"
@@ -50,7 +50,7 @@ defineProps({
     type: String
   }
 })
-
+const emit = defineEmits(['input'])
 const type = ref("1")
 const cycle = ref({
   // 周期
@@ -62,75 +62,82 @@ const loop = ref({
   start: 0,
   end: 0
 })
-const appoint = ref([])
+const work = ref(0)
+const week = ref({
+  // 指定周
+  start: 0,
+  end: 0
+})
+const last = ref(0)
+const appoint = ref<string []>([])
 const value_ = computed(() => {
   const result = []
-  switch (this.type) {
+  switch (type.value) {
     case "1": // 每秒
       result.push("*")
       break
     case "2": // 年期
-      result.push(`${this.cycle.start}-${this.cycle.end}`)
+      result.push(`${cycle.value.start}-${cycle.value.end}`)
       break
     case "3": // 循环
-      result.push(`${this.loop.start}/${this.loop.end}`)
+      result.push(`${loop.value.start}/${loop.value.end}`)
       break
     case "4": // 指定
-      result.push(this.appoint.join(","))
+      result.push(appoint.value.join(","))
       break
     case "6": // 最后
-      result.push(`${this.last === 0 ? "" : this.last}L`)
+      result.push(`${last.value === 0 ? "" : last.value}L`)
       break
     default: // 不指定
       result.push("?")
       break
   }
-  this.$emit("input", result.join(""))
+  emit("input", result.join(""))
   return result.join("")
 })
 
 const updateVal = () => {
-  if (!this.value) {
+  if (!prop.value) {
     return
   }
-  if (this.value === "?") {
-    this.type = "5"
-  } else if (this.value.indexOf("-") !== -1) {
+  if (prop.value === "?") {
+    type.value = "5"
+  } else if (prop.value.indexOf("-") !== -1) {
     // 2周期
-    if (this.value.split("-").length === 2) {
-      this.type = "2"
-      this.cycle.start = this.value.split("-")[0]
-      this.cycle.end = this.value.split("-")[1]
+    if (prop.value.split("-").length === 2) {
+      type.value = "2"
+      cycle.value.start = Number(prop.value.split("-")[0])
+      cycle.value.end = Number(prop.value.split("-")[1])
     }
-  } else if (this.value.indexOf("/") !== -1) {
+  } else if (prop.value.indexOf("/") !== -1) {
     // 3循环
-    if (this.value.split("/").length === 2) {
-      this.type = "3"
-      this.loop.start = this.value.split("/")[0]
-      this.loop.end = this.value.split("/")[1]
+    if (prop.value.split("/").length === 2) {
+      type.value = "3"
+      loop.value.start = Number(prop.value.split("/")[0])
+      loop.value.end = Number(prop.value.split("/")[1])
     }
-  } else if (this.value.indexOf("*") !== -1) {
+  } else if (prop.value.indexOf("*") !== -1) {
     // 1每
-    this.type = "1"
-  } else if (this.value.indexOf("L") !== -1) {
+    type.value = "1"
+  } else if (prop.value.indexOf("L") !== -1) {
     // 6最后
-    this.type = "6"
-    this.last = this.value.replace("L", "")
-  } else if (this.value.indexOf("#") !== -1) {
+    type.value = "6"
+    last.value = Number(prop.value.replace("L", ""))
+  } else if (prop.value.indexOf("#") !== -1) {
     // 7指定周
-    if (this.value.split("#").length === 2) {
-      this.type = "7"
-      this.week.start = this.value.split("#")[0]
-      this.week.end = this.value.split("#")[1]
+    if (prop.value.split("#").length === 2) {
+      type.value = "7"
+      week.value.start = Number(prop.value.split("#")[0])
+      week.value.end = Number(prop.value.split("#")[1])
     }
-  } else if (this.value.indexOf("W") !== -1) {
+  } else if (prop.value.indexOf("W") !== -1) {
     // 8工作日
-    this.type = "8"
-    this.work = this.value.replace("W", "")
+    type.value = "8"
+    work.value = Number(prop.value.replace("W", ""))
   } else {
     // *
-    this.type = "4"
-    this.appoint = this.value.split(",")
+    type.value = "4"
+    appoint.value = prop.value.split(",")
   }
 }
 

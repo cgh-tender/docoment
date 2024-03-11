@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -41,6 +42,7 @@ import static cn.com.cgh.romantic.constant.RomanticConstant.SLAVE1;
 @Setter
 @Slf4j
 @AutoConfigureBefore(value = {MybatisPlusAutoConfiguration.class})
+@EnableTransactionManagement
 public class MybatisConfig {
     private static final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver();
     static {
@@ -100,21 +102,6 @@ public class MybatisConfig {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource masterDataSource, GlobalConfig globalConfig) throws Exception {
-        MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
-        factoryBean.setDataSource(masterDataSource);
-        MybatisConfiguration configuration = new MybatisConfiguration();
-        configuration.setDefaultScriptingLanguage(MybatisXMLLanguageDriver.class);
-        configuration.setJdbcTypeForNull(JdbcType.NULL);
-        factoryBean.setConfiguration(configuration);
-        factoryBean.setMapperLocations(resourceResolver.getResources("classpath*:mapper/**/*.xml"));
-        factoryBean.setGlobalConfig(globalConfig);
-        factoryBean.setTypeHandlersPackage("cn.com.cgh.**.typeHandler");
-        factoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
-        return factoryBean.getObject();
-    }
-
-    @Bean
     public PaginationInnerInterceptor pageInnerInterceptor() {
         return new PaginationInnerInterceptor(DbType.MYSQL);
     }
@@ -125,6 +112,24 @@ public class MybatisConfig {
         interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return interceptor;
     }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory(DataSource masterDataSource, GlobalConfig globalConfig,MybatisPlusInterceptor mybatisPlusInterceptor) throws Exception {
+        MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
+        factoryBean.setDataSource(masterDataSource);
+        MybatisConfiguration configuration = new MybatisConfiguration();
+        configuration.setDefaultScriptingLanguage(MybatisXMLLanguageDriver.class);
+        configuration.setJdbcTypeForNull(JdbcType.NULL);
+        factoryBean.setConfiguration(configuration);
+        factoryBean.setPlugins(mybatisPlusInterceptor);
+        factoryBean.setMapperLocations(resourceResolver.getResources("classpath*:mapper/**/*.xml"));
+        factoryBean.setGlobalConfig(globalConfig);
+        factoryBean.setTypeHandlersPackage("cn.com.cgh.**.typeHandler");
+        factoryBean.setTransactionFactory(new SpringManagedTransactionFactory());
+        return factoryBean.getObject();
+    }
+
+
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource master){
