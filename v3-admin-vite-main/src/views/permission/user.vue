@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { reactive, ref, watchEffect } from "vue"
 import { BaseUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
-import { getUserTable } from "@/api/permission/user";
-import { usePagination } from "@/hooks/usePagination";
-import { type FormInstance, FormRules } from "element-plus";
-import { Refresh, Search } from "@element-plus/icons-vue";
+import { getUserTable } from "@/api/permission/user"
+import { usePagination } from "@/hooks/usePagination"
+import { type FormInstance, FormRules } from "element-plus"
+import { Refresh, Search } from "@element-plus/icons-vue"
 
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
+const { paginationData } = usePagination()
 
 const currentUpdateId = ref<undefined | bigint | string>(undefined)
 
