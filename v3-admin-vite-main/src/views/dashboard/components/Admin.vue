@@ -1,25 +1,25 @@
 <template>
   <div>
-    <el-input @focus="togglePopover(true)" v-model="state.cron" placeholder="state.cron" />
-    <el-dialog v-model="state.cronPopover" @close="togglePopover(false)" width="40%">
-      <vue3Cron @change="changeCron" @close="togglePopover(false)" max-height="400px" i18n="cn" />
+    <el-input @focus="togglePopover(true)" v-model="cron" placeholder="cron" />
+    <el-dialog v-model="cronPopover" @close="togglePopover(false)" width="40%">
+      <vue3Cron @changeCron="changeCron" @close="togglePopover(false)" max-height="400px" i18n="cn" sys-radio="1" />
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue"
-import Vue3Cron from "@/utils/cron/vue3-cron/index.vue";
+import Vue3Cron from "@/utils/cron/index.vue"
 
-const state = ref({
-  cronPopover: false,
-  cron: "* * * * * ? *"
-})
+const cron = ref("")
+const cronPopover = ref(false)
+
 const changeCron = (val: string) => {
-  state.value.cron = val
+  cron.value = val
 }
+
 const togglePopover = (bol: boolean) => {
-  state.value.cronPopover = bol
+  cronPopover.value = bol
 }
 </script>
 <style lang="scss" scoped>

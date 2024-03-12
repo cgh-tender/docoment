@@ -186,3 +186,5 @@ password: guest
 [rabitMq](http://127.0.0.1:15672/#/)  
 
 docker run -it --name redis-master -d -p 6300:6300 redis redis-server --requirepass redispassword --port 6300
+
+cliod/jrebel-server
