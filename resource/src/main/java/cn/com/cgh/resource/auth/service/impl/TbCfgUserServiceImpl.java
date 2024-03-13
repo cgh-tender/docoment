@@ -22,14 +22,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Service
 public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser> implements ITbCfgUserService {
     @Override
+    public String checkPassword(String password) {
+        return null;
+    }
+
+    @Override
     public TbCfgUser queryOneByUsername(String username) {
         return baseMapper.queryOneByUsername(username);
     }
 
 
     @Override
-    public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int size) {
-        return baseMapper.selectPage(new Page(currentPage,size),new QueryWrapper<>(user));
+    public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int pageSize) {
+        return baseMapper.selectPage(new Page(currentPage,pageSize),new QueryWrapper<>(user));
     }
 
     @Override

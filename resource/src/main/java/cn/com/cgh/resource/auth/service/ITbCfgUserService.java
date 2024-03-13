@@ -21,8 +21,11 @@ public interface ITbCfgUserService extends IService<TbCfgUser> {
     @GetMapping("/loadByUsername/{username}")
     public TbCfgUser queryOneByUsername(@PathVariable String username);
 
+    @GetMapping("/checkPassword/{password}")
+    public String checkPassword(@PathVariable String password);
+
     @GetMapping
-    public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int size);
+    public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int pageSize);
 
     @PostMapping
     public String add(TbCfgUser user);

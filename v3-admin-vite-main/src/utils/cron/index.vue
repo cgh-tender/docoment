@@ -288,7 +288,7 @@
         <template #label>
           <span><i class="el-icon-date" /> {{ state.text?.Month.name }}</span>
         </template>
-        <div class="tabBody myScroller" :style="{ 'max-height': maxHeight }">
+        <div class="tabBody myScroller" :style="{ 'max-height': props.maxHeight }">
           <el-row>
             <el-radio v-model="state.month.cronEvery" label="1">{{ state.text?.Month.every }}</el-radio>
           </el-row>
@@ -364,7 +364,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import Language from "./language"
+import Language from "@/utils/cron/language"
 import { computed, reactive, ref, watchEffect } from "vue"
 
 defineOptions({
@@ -374,7 +374,7 @@ defineOptions({
 const props = defineProps({
   cronValue: {},
   i18n: {},
-  maxHeight: {},
+  maxHeight: String,
   language: {},
   sysRadio: String
 })
@@ -475,7 +475,7 @@ const state = reactive({
         seconds = state.second.incrementStart + "/" + state.second.incrementIncrement
         break
       case "3":
-        state.second.specificSpecific.map((val) => {
+        state.second.specificSpecific.map((val: string) => {
           seconds += val + ","
         })
         seconds = seconds.slice(0, -1)
@@ -497,7 +497,7 @@ const state = reactive({
         minutes = state.minute.incrementStart + "/" + state.minute.incrementIncrement
         break
       case "3":
-        state.minute.specificSpecific.map((val) => {
+        state.minute.specificSpecific.map((val: string) => {
           minutes += val + ","
         })
         minutes = minutes.slice(0, -1)
@@ -519,7 +519,7 @@ const state = reactive({
         hours = state.hour.incrementStart + "/" + state.hour.incrementIncrement
         break
       case "3":
-        state.hour.specificSpecific.map((val) => {
+        state.hour.specificSpecific.map((val: string) => {
           hours += val + ","
         })
         hours = hours.slice(0, -1)
@@ -545,7 +545,7 @@ const state = reactive({
         days = state.day.incrementStart + "/" + state.day.incrementIncrement
         break
       case "5":
-        state.day.specificSpecific.map((val) => {
+        state.day.specificSpecific.map((val: string) => {
           days += val + ","
         })
         days = days.slice(0, -1)
@@ -581,7 +581,7 @@ const state = reactive({
         weeks = state.week.incrementStart + "/" + state.week.incrementIncrement
         break
       case "4":
-        state.week.specificSpecific.map((val) => {
+        state.week.specificSpecific.map((val: string) => {
           weeks += val + ","
         })
         weeks = weeks.slice(0, -1)
@@ -610,7 +610,7 @@ const state = reactive({
         months = state.month.incrementStart + "/" + state.month.incrementIncrement
         break
       case "3":
-        state.month.specificSpecific.map((val) => {
+        state.month.specificSpecific.map((val: string) => {
           months += val + ","
         })
         months = months.slice(0, -1)
@@ -632,7 +632,7 @@ const state = reactive({
         years = state.year.incrementStart + "/" + state.year.incrementIncrement
         break
       case "3":
-        state.year.specificSpecific.map((val) => {
+        state.year.specificSpecific.map((val: string) => {
           years += val + ","
         })
         years = years.slice(0, -1)
@@ -663,20 +663,20 @@ const handleChange = () => {
   emit("changeCron", state.cron)
   close()
 }
-const _rest = (data) => {
-  for (const i in data) {
-    if (data[i] instanceof Object) {
-      _rest(data[i])
-    } else {
-      switch (typeof data[i]) {
-        case "object":
-          data[i] = []
-          break
-        case "string":
-          data[i] = ""
-          break
-      }
-    }
-  }
-}
+// const _rest = (data) => {
+//   for (const i in data) {
+//     if (data[i] instanceof Object) {
+//       _rest(data[i])
+//     } else {
+//       switch (typeof data[i]) {
+//         case "object":
+//           data[i] = []
+//           break
+//         case "string":
+//           data[i] = ""
+//           break
+//       }
+//     }
+//   }
+// }
 </script>

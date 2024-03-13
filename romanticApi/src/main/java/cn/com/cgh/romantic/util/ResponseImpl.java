@@ -9,6 +9,7 @@ import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author cgh
@@ -27,12 +28,15 @@ public class ResponseImpl<T> {
     private LocalDateTime timestamp = LocalDateTime.now();
     private T data;
 
+    private List<T> records;
+    private Long total;
+
     public ResponseImpl<T> success(){
         if (StringUtils.isBlank(this.code)){
             this.code = "0";
         }
         if (StringUtils.isBlank(this.message)){
-            this.message = "成功";
+            this.message = "true";
         }
         return this;
     }
@@ -41,7 +45,7 @@ public class ResponseImpl<T> {
             this.code = "1";
         }
         if (StringUtils.isBlank(this.message)) {
-            this.message = "失败";
+            this.message = "false";
         }
         return this;
     }

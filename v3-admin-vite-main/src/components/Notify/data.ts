@@ -57,7 +57,7 @@ export const todoData: ListItem[] = [
     title: "任务名称",
     description: "这家伙很懒，什么都没留下",
     extra: "进行中",
-    status: ""
+    status: "info"
   },
   {
     title: "任务名称",

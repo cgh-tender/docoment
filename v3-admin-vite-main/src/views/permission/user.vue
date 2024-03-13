@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, watchEffect } from "vue"
-import { BaseUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
+import { computed, reactive, ref, watchEffect } from "vue"
+import {
+  DefaultUserTableData,
+  GetBaseUserTableData
+} from "@/api/permission/user/types/base"
 import { getUserTable } from "@/api/permission/user"
 import { usePagination } from "@/hooks/usePagination"
 import { type FormInstance, FormRules } from "element-plus"
 import { Refresh, Search } from "@element-plus/icons-vue"
-import { InternalRuleItem, Value, Values } from "async-validator/dist-types/interface";
+import UpdatePassword from "@/views/permission/components/UpdatePassword.vue";
 
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
-const enableUpdatePassword = ref<boolean>(true)
-const updatePasswordRuleRef = ref<FormInstance>()
+const openUpdatePassword = ref<boolean>(false)
 
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
   currentPage: 1,
@@ -20,7 +22,7 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 const currentUpdateId = ref<bigint | undefined>(BigInt(-1))
 
 const formRef = ref<FormInstance | null>(null)
-const formData = ref<BaseUserTableData>({
+const formData = ref<DefaultUserTableData>({
   password: "",
   createTime: "",
   email: "",
@@ -34,10 +36,14 @@ const formRules: FormRules = reactive({
   username: [{ required: true, trigger: "blur", message: "请输入用户名" }],
   password: [{ required: true, trigger: "blur", message: "请输入密码" }]
 })
-const handleUpdate = (row: BaseUserTableData) => {
-  currentUpdateId.value = row.id
+
+const setFormData = (row: DefaultUserTableData) => {
   formData.value.username = row.username
   formData.value.password = row.password
+}
+const handleUpdate = (row: DefaultUserTableData) => {
+  currentUpdateId.value = row.id
+  setFormData(row)
   dialogVisible.value = true
 }
 
@@ -47,20 +53,20 @@ const resetForm = () => {
   formData.value.password = ""
 }
 
-const tableData = ref<BaseUserTableData[]>([])
+const tableData = ref<DefaultUserTableData[]>([])
 
 const searchData = computed<GetBaseUserTableData>(() => {
-  return  <GetBaseUserTableData> {
+  return {
     currentPage: paginationData.currentPage,
-    size: paginationData.pageSize
+    pageSize: paginationData.pageSize
   }
 })
 
 const getTableData = () => {
   loading.value = true
   getUserTable(searchData.value).then((res => {
-    paginationData.total = res.data.total
-    tableData.value = res.data.records
+    paginationData.total = res.total
+    tableData.value = res.records
   })).catch(() => {
     tableData.value = []
   }).finally(() => {
@@ -73,18 +79,14 @@ const resetSearch = () => {
   getTableData()
 }
 
-const showUserDetail = (row: BaseUserTableData) => {
+const showUserDetail = (row: DefaultUserTableData) => {
   console.log(row)
 }
-
-const updatePassword = (row: BaseUserTableData) => {
-  handleUpdatePassword()
-  console.log(row)
+const openUpdatePassword1 = (row: DefaultUserTableData) => {
+  openUpdatePassword.value = true
+  setFormData(row)
 }
 
-const handleUpdatePassword = () => {
-  enableUpdatePassword.value = !enableUpdatePassword.value
-}
 const handleCreate = () => {
   formRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
@@ -117,47 +119,6 @@ const handleCreate = () => {
   })
 }
 
-export interface updatePasswordData {
-  password: string
-  onePassword: string
-  twoPassword: string
-}
-const updateFormData = ref<updatePasswordData>({
-  onePassword: "", password: "", twoPassword: ""
-})
-
-function checkPasswordApi(rule: InternalRuleItem, value: Value, callback: any) {
-  if (value === '' || value == undefined) {
-    callback(new Error('请输入新密码'))
-  } else {
-    return new Promise<string>((resolve, reject) => {
-      setTimeout(() => {
-      // 模拟接口调用成功
-      if (Math.random() < 0.8) {
-        resolve("认证成功")
-      } else {
-        // 模拟接口调用出错
-        reject(new Error("密码认证异常请重新输入"))
-      }
-    }, 1000)
-    }).catch((data) => {
-      if (data instanceof Error){
-        callback(data)
-      }
-      callback(new Error('请输入新密码33'))
-    })
-  }
-}
-
-const updatePasswordRoles = reactive<FormRules<updatePasswordData>>({
-  password: [{required: true, trigger: 'blur', message: "请输入密码"}
-  ],
-  onePassword: [{required: true, trigger: 'blur', validator: checkPasswordApi}
-  ],
-  twoPassword: [{required: true, trigger: 'blur', message: "请输再次入新密码"},
-    {min: 8, max: 16, message: "请输入密码长度为8-16", trigger: 'blur'}
-  ]
-})
 
 watchEffect(() => {
   paginationData
@@ -206,7 +167,7 @@ watchEffect(() => {
               <template #dropdown>
                 <el-dropdown-menu>
                   <el-dropdown-item @click="showUserDetail(scope.row)">详情</el-dropdown-item>
-                  <el-dropdown-item @click="updatePassword(scope.row)">密码</el-dropdown-item>
+                  <el-dropdown-item @click="openUpdatePassword1(scope.row)">密码</el-dropdown-item>
                   <el-dropdown-item>删除</el-dropdown-item>
                   <el-dropdown-item>冻结</el-dropdown-item>
                 </el-dropdown-menu>
@@ -252,34 +213,7 @@ watchEffect(() => {
       </div>
     </transition>
     <transition>
-      <div>
-        <el-drawer
-          :ref="updatePasswordRuleRef"
-          v-model="enableUpdatePassword"
-          title="修改密码"
-          :before-close="handleUpdatePassword">
-          <el-form
-            :rules="updatePasswordRoles"
-            :model="updateFormData"
-            label-width="auto"
-            status-icon
-          >
-            <el-form-item required label="请输入旧密码" prop="password">
-              <el-input v-model="updateFormData.password" >请输入旧密码：</el-input>
-            </el-form-item>
-            <el-form-item required label="请输入新密码" prop="onePassword">
-              <el-input v-model="updateFormData.onePassword" >请输入新密码：</el-input>
-            </el-form-item>
-            <el-form-item required label="请输再次入新密码" prop="twoPassword">
-              <el-input v-model="updateFormData.twoPassword" >请输再次入新密码：</el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary">Submit</el-button>
-              <el-button>Reset</el-button>
-            </el-form-item>
-          </el-form>
-        </el-drawer>
-      </div>
+      <UpdatePassword v-model:openUpdatePassword="openUpdatePassword" v-model:user="formData"/>
     </transition>
   </div>
 </template>

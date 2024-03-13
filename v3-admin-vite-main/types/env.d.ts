@@ -7,6 +7,7 @@ declare interface ImportMetaEnv {
   readonly VITE_BASE_TIMEOUT: bigint
   readonly VITE_ROUTER_HISTORY: "hash" | "html5"
   readonly VITE_PUBLIC_PATH: string
+  readonly ERROR_MESSAGE_ONE: string
 }
 
 interface ImportMeta {
