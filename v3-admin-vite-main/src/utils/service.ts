@@ -22,7 +22,7 @@ async function toJson(bob: Blob): Promise<string> {
   })
 }
 
-const regex_reLogin = /^11[01]\d{2}$/
+const regex_reLogin = /^11[01][0-9][0-7|9]$/
 
 /** 创建请求实例 */
 function createService() {

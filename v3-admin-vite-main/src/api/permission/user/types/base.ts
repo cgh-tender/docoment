@@ -11,7 +11,7 @@ export interface DefaultUserTableData {
   roles: string
   status: string
   username: string
-  password: string
+  realname: string
 }
 
 /**

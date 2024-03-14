@@ -2,10 +2,8 @@
 import { reactive, ref } from "vue"
 import { DefaultUserTableData, updatePasswordData } from "@/api/permission/user/types/base"
 import { checkPassword } from "@/api/permission/user"
-import { type FormInstance, FormRules } from "element-plus"
-import { Refresh } from "@element-plus/icons-vue"
-
-const updatePasswordRuleRef = ref<FormInstance>()
+import { FormRules } from "element-plus"
+import { Pointer, Refresh } from "@element-plus/icons-vue"
 
 interface Props {
   user: DefaultUserTableData
@@ -13,8 +11,8 @@ interface Props {
 }
 
 const prop = defineProps<Props>()
-
 const LocalOpenUpdatePassword = ref(prop.openUpdatePassword)
+console.log(LocalOpenUpdatePassword.value)
 
 const emit = defineEmits(["update:openUpdatePassword"])
 
@@ -63,13 +61,8 @@ const updatePasswordRoles = reactive<FormRules<updatePasswordData>>({
 </script>
 
 <template>
-  <el-drawer
-    :ref="updatePasswordRuleRef"
-    v-model="LocalOpenUpdatePassword"
-    title="修改密码"
-    :before-close="handleUpdatePassword"
-  >
-    <el-form :rules="updatePasswordRoles" :model="updateFormData" label-width="auto" status-icon>
+  <el-drawer v-model="LocalOpenUpdatePassword" title="修改密码" :before-close="handleUpdatePassword" size="50%">
+    <el-form :rules="updatePasswordRoles" :model="updateFormData" label-width="auto">
       <el-form-item required label="请输入旧密码" prop="password">
         <el-input type="password" show-password clearable v-model="updateFormData.password">请输入旧密码：</el-input>
       </el-form-item>
@@ -82,7 +75,7 @@ const updatePasswordRoles = reactive<FormRules<updatePasswordData>>({
         </el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">提交</el-button>
+        <el-button type="primary" :icon="Pointer">提交</el-button>
         <el-button type="primary" :icon="Refresh">重置</el-button>
       </el-form-item>
     </el-form>

@@ -350,7 +350,7 @@ CREATE TABLE IF NOT EXISTS tb_login_log
     login_status         tinyint(2) DEFAULT 1 COMMENT '登录状态',
     user_agent           varchar(255) COMMENT '请求的用户代理信息',
     mobile               tinyint(2) DEFAULT 0 COMMENT '是否移动端',
-    os_sys                varchar(32) COMMENT '操作系统',
+    os_sys                varchar(128) COMMENT '操作系统',
     browser              varchar(32) COMMENT '操作平台',
     engine               varchar(32) COMMENT '操作内核',
     PRIMARY KEY (id) USING BTREE,

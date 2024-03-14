@@ -1,56 +1,19 @@
 <script lang="ts" setup>
-import { computed, reactive, ref, watchEffect } from "vue"
+import { computed, ref, watchEffect } from "vue"
 import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
 import { getUserTable } from "@/api/permission/user"
 import { usePagination } from "@/hooks/usePagination"
-import { type FormInstance, FormRules } from "element-plus"
-import { Refresh, Search } from "@element-plus/icons-vue"
-import UpdatePassword from "@/views/permission/components/UpdatePassword.vue"
+import { type FormInstance } from "element-plus"
+import { Compass, Delete, Edit, Lock, More, Refresh, Search, Unlock, View, ZoomIn } from "@element-plus/icons-vue"
+import updatePassword from "@/views/permission/components/user/updatePassword.vue"
+import AddOrUpdate from "@/views/permission/components/user/addOrUpdate.vue"
 
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
-const openUpdatePassword = ref<boolean>(false)
-
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
-  currentPage: 1,
-  pageSize: 2
-})
-
-const currentUpdateId = ref<bigint | undefined>(BigInt(-1))
-
-const formRef = ref<FormInstance | null>(null)
-const formData = ref<DefaultUserTableData>({
-  password: "",
-  createTime: "",
-  email: "",
-  id: undefined,
-  phone: "",
-  roles: "",
-  status: "",
-  username: ""
-})
-const formRules: FormRules = reactive({
-  username: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  password: [{ required: true, trigger: "blur", message: "请输入密码" }]
-})
-
-const setFormData = (row: DefaultUserTableData) => {
-  formData.value.username = row.username
-  formData.value.password = row.password
-}
-const handleUpdate = (row: DefaultUserTableData) => {
-  currentUpdateId.value = row.id
-  setFormData(row)
-  dialogVisible.value = true
-}
-
-const resetForm = () => {
-  currentUpdateId.value = undefined
-  formData.value.username = ""
-  formData.value.password = ""
-}
-
+const handleUpdatePassword = ref<boolean>(false)
+const titleName = ref<string>("")
 const tableData = ref<DefaultUserTableData[]>([])
+const lock = ref<boolean>(false)
 
 const searchData = computed<GetBaseUserTableData>(() => {
   return {
@@ -58,7 +21,48 @@ const searchData = computed<GetBaseUserTableData>(() => {
     pageSize: paginationData.pageSize
   }
 })
+const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
+  currentPage: 1,
+  pageSize: 2
+})
 
+const formRef = ref<FormInstance | null>(null)
+const initFormData = {
+  createTime: "",
+  email: "",
+  id: undefined,
+  password: "",
+  phone: "",
+  roles: "",
+  status: "",
+  username: ""
+}
+const formData = ref<DefaultUserTableData>(initFormData)
+
+/**
+ * 该函数用于更新用户信息，通过设置相关变量的值，打开对话框以供用户修改用户信息。
+ * @param row
+ */
+const handleUpdate = (row: DefaultUserTableData) => {
+  titleName.value = "修改用户"
+  formData.value = row
+  dialogVisible.value = true
+}
+
+/**
+ * 重置表单状态为初始值。
+ */
+const resetForm = () => {
+  titleName.value = ""
+  formData.value = initFormData
+}
+
+/**
+ * 该Vue template函数getTableData用于加载表格数据，
+ * 通过调用getUserTable接口获取数据并更新分页和表格显示内容，
+ * 同时处理loading状态，加载中为true，
+ * 加载完毕后根据请求结果设置为false。
+ */
 const getTableData = () => {
   loading.value = true
   getUserTable(searchData.value)
@@ -74,17 +78,36 @@ const getTableData = () => {
     })
 }
 
+/**
+ * 该函数用于重置搜索条件，并重新获取表格数据。
+ * resetForm()函数用于重置表单数据。
+ * getTableData()函数用于获取表格数据。
+ */
 const resetSearch = () => {
   resetForm()
   getTableData()
 }
 
 const showUserDetail = (row: DefaultUserTableData) => {
-  console.log(row)
+  formData.value = row
+  titleName.value = "用户详情"
+  dialogVisible.value = true
 }
-const openUpdatePassword1 = (row: DefaultUserTableData) => {
-  openUpdatePassword.value = true
-  setFormData(row)
+
+const handleOpen = (row: DefaultUserTableData) => {
+  console.log(handleUpdatePassword.value)
+  lock.value = "正常" === row.status
+}
+
+/**
+ * 该函数接收一个用户数据对象作为参数，
+ * 其功能是打开密码更新界面并把传入的用户数据赋值给formData。
+ * @param row
+ */
+const update_password = (row: DefaultUserTableData) => {
+  formData.value = row
+  handleUpdatePassword.value = true
+  console.log(handleUpdatePassword.value)
 }
 
 const handleCreate = () => {
@@ -119,6 +142,13 @@ const handleCreate = () => {
   })
 }
 
+const handleDialogVisibleClose = () => {
+  console.log(111)
+  resetForm()
+  getTableData()
+  dialogVisible.value = false
+}
+
 watchEffect(() => {
   paginationData
   getTableData()
@@ -137,6 +167,7 @@ watchEffect(() => {
         <el-form-item>
           <el-button type="primary" :icon="Search" @click="getTableData">查询</el-button>
           <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
+          <el-button :icon="ZoomIn" @click="resetSearch">新增</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -156,20 +187,22 @@ watchEffect(() => {
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="scope">
-            <el-button type="primary" text plain size="small" @click="handleUpdate(scope.row)">编辑</el-button>
-            <el-dropdown>
-              <el-button type="primary" text plain size="small"
-                >更多
+            <el-button type="primary" text plain :icon="Edit" size="small" @click="handleUpdate(scope.row)"
+              >编辑
+            </el-button>
+            <el-dropdown @visible-change="handleOpen(scope.row)">
+              <el-button type="primary" :icon="More" text plain size="small">
                 <el-icon class="el-icon--right">
                   <arrow-down />
                 </el-icon>
               </el-button>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="showUserDetail(scope.row)">详情</el-dropdown-item>
-                  <el-dropdown-item @click="openUpdatePassword1(scope.row)">密码</el-dropdown-item>
-                  <el-dropdown-item>删除</el-dropdown-item>
-                  <el-dropdown-item>冻结</el-dropdown-item>
+                  <el-dropdown-item :icon="View" @click="showUserDetail(scope.row)">详情</el-dropdown-item>
+                  <el-dropdown-item :icon="Compass" @click="update_password(scope.row)">密码</el-dropdown-item>
+                  <el-dropdown-item :icon="Delete">删除</el-dropdown-item>
+                  <el-dropdown-item v-if="lock" :icon="Lock">冻结</el-dropdown-item>
+                  <el-dropdown-item v-if="!lock" :icon="Unlock">解冻</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -191,30 +224,17 @@ watchEffect(() => {
     <!-- 新增/修改 -->
     <transition name="el-zoom-in-center">
       <div v-if="dialogVisible">
-        <el-dialog
-          v-model="dialogVisible"
-          :title="currentUpdateId === undefined ? '新增用户' : '修改用户'"
-          @closed="resetForm"
-          width="30%"
-        >
-          <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
-            <el-form-item prop="username" label="用户名">
-              <el-input v-model="formData.username" placeholder="请输入" />
-            </el-form-item>
-            <el-form-item prop="password" label="密码" v-show="currentUpdateId === undefined">
-              <el-input v-model="formData.password" placeholder="请输入" />
-            </el-form-item>
-          </el-form>
-          <template #footer>
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleCreate">确认</el-button>
-          </template>
-        </el-dialog>
+        <add-or-update
+          v-model:dialog-visible="dialogVisible"
+          v-model:form-data="formData"
+          v-model:title-name="titleName"
+          @dialogVisibleClose="handleDialogVisibleClose"
+        />
       </div>
     </transition>
     <transition>
-      <div v-if="openUpdatePassword">
-        <UpdatePassword v-model:openUpdatePassword="openUpdatePassword" v-model:user="formData" />
+      <div v-if="handleUpdatePassword">
+        <updatePassword v-model:openUpdatePassword="handleUpdatePassword" v-model:user="formData" />
       </div>
     </transition>
   </div>
