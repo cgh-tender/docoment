@@ -24,7 +24,7 @@ public interface ITbCfgUserService extends IService<TbCfgUser> {
     public String resetquest();
 
     @GetMapping("/checkPassword/{password}")
-    public String checkPassword(@PathVariable String password);
+    public Boolean checkPassword(@PathVariable String password);
 
     @GetMapping
     public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int pageSize);

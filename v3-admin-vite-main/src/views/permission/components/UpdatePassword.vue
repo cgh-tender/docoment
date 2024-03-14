@@ -71,13 +71,15 @@ const updatePasswordRoles = reactive<FormRules<updatePasswordData>>({
   >
     <el-form :rules="updatePasswordRoles" :model="updateFormData" label-width="auto" status-icon>
       <el-form-item required label="请输入旧密码" prop="password">
-        <el-input v-model="updateFormData.password">请输入旧密码：</el-input>
+        <el-input type="password" show-password clearable v-model="updateFormData.password">请输入旧密码：</el-input>
       </el-form-item>
       <el-form-item required label="请输入新密码" prop="onePassword">
-        <el-input v-model="updateFormData.onePassword">请输入新密码：</el-input>
+        <el-input type="password" show-password clearable v-model="updateFormData.onePassword">请输入新密码：</el-input>
       </el-form-item>
       <el-form-item required label="请输再次入新密码" prop="twoPassword">
-        <el-input v-model="updateFormData.twoPassword">请输再次入新密码：</el-input>
+        <el-input type="password" show-password clearable v-model="updateFormData.twoPassword"
+          >请输再次入新密码：
+        </el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary">提交</el-button>

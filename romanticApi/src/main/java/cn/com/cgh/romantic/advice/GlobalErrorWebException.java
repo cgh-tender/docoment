@@ -52,7 +52,7 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
     public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
         return parser(ex.getMessage(),response,ex).flatMap((builder) ->
-                ResponseUtil.writeResponse(response, builder)
+                ResponseUtil.writeResponseAsApplicationJson(response, builder)
         ).doOnError((e)-> log.info(e.getMessage()));
     }
 

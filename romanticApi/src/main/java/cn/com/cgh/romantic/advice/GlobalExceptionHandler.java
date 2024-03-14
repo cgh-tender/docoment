@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
         ServerHttpResponse response = rsp.getResponse();
         assert ex != null;
         return globalErrorWebException.parser(ex.getMessage(),response,ex).flatMap((builder) ->
-                ResponseUtil.writeResponse(response, builder)
+                ResponseUtil.writeResponseAsApplicationJson(response, builder)
         ).doOnError((e)-> LOGGER.info(e.getMessage()));
     }
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
         ServerHttpResponse response = rsp.getResponse();
         assert ex != null;
         return globalErrorWebException.parser(ex.getMessage(),response,ex).flatMap((builder) ->
-                ResponseUtil.writeResponse(response, builder)
+                ResponseUtil.writeResponseAsApplicationJson(response, builder)
         ).doOnError((e)-> LOGGER.info(e.getMessage()));
     }
 

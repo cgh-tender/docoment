@@ -11,13 +11,16 @@ import reactor.core.publisher.Mono;
  */
 public class ResponseUtil {
     public static Mono<Void> writeResponse(ServerHttpResponse response, Object data){
-        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        response.setStatusCode(HttpStatus.OK);
         return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(data))));
     }
-    public static Mono<Void> writeResponse(ServerHttpResponse response,  byte[] data){
+
+    public static Mono<Void> writeResponseAsApplicationJson(ServerHttpResponse response, Object data){
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         response.setStatusCode(HttpStatus.OK);
+        return writeResponse(response,data);
+    }
+
+    public static Mono<Void> writeResponse(ServerHttpResponse response,  byte[] data){
         return response.writeWith(Mono.just(response.bufferFactory().wrap(data)));
     }
 }

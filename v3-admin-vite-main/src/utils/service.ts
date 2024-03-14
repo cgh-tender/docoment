@@ -1,14 +1,12 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
-import { useUserStoreHook } from "@/store/modules/user"
+import { useUserStore } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
 import { getToken, setUuid } from "./cache/cookies"
-import { checkPassword, resetquest } from "@/api/permission/user"
 
 /** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {
-  useUserStoreHook().logout()
-  location.reload()
+  return useUserStore().logout()
 }
 
 async function toJson(bob: Blob): Promise<string> {
@@ -23,6 +21,8 @@ async function toJson(bob: Blob): Promise<string> {
     reader.readAsText(bob)
   })
 }
+
+const regex_reLogin = /^11[01]\d{2}$/
 
 /** 创建请求实例 */
 function createService() {
@@ -62,16 +62,19 @@ function createService() {
         ElMessage.error("非本系统的接口")
         return Promise.reject(new Error("非本系统的接口"))
       }
+      if (regex_reLogin.test(code + "")) {
+        return logout()
+          .then(() => {
+            location.reload()
+          })
+          .catch(() => {
+            console.log("退出异常")
+          })
+      }
       switch (code) {
         case 0:
           // 本系统采用 code === 0 来表示没有业务错误
           return apiData
-        case 401:
-          // Token 过期时
-          return logout()
-        case 11003:
-          const data = response.config.data
-          return resetquest(JSON.parse(data))
         default:
           // 不是正确的 code
           ElMessage.error(apiData.message || "Error")

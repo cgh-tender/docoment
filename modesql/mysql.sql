@@ -390,6 +390,7 @@ create TABLE IF NOT EXISTS tb_cfg_error(
 
 20000-29999 代码异常
 30000-39999 代理异常
+    30503 服务不可用
 40000-49999 服务认证异常
 50000-59999 服务器异常
 60000-69999 sentinel 异常
@@ -413,3 +414,4 @@ INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, co
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302149436932208, 1, '2024-03-07 23:20:51.017', 1, '2024-03-07 23:20:51.017', 11010, 0, '非授权访问!');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302505919217776, 1, '2024-03-07 23:22:14.670', 1, '2024-03-07 23:22:14.670', 11100, 0, '退出成功');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302531689021553, 1, '2024-03-07 23:22:20.530', 1, '2024-03-07 23:22:20.530', 11101, 0, '退出异常');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302531689021554, 1, '2024-03-07 23:22:20.530', 1, '2024-03-07 23:22:20.530', 30503, 0, '服务不可用');

@@ -6,8 +6,9 @@ import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,12 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Service
+@Slf4j
 public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser> implements ITbCfgUserService {
+    @SneakyThrows
     @Override
-    public String checkPassword(String password) {
-        System.out.println("checkPassword");
-        Assert.isTrue(false,"11003");
-        return null;
+    public Boolean checkPassword(String password) {
+        log.info("checkPassword ... ");
+        Thread.sleep(1000);
+        return Boolean.TRUE;
     }
 
     @Override
