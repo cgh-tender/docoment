@@ -13,11 +13,17 @@ V3 Admin Vite is a free and open source middle and background management system 
 
 China repository: [Gitee](https://gitee.com/un-pany/v3-admin-vite)
 
-## 更新版本
+## pnpm 安装更新
 ```shell
 pnpm add -g pnpm
-
+```
+## 更新版本
+```shell
 pnpm update --latest
+```
+## 清缓存
+```shell
+npm cache clean --force
 ```
 ## 📚 Document
 

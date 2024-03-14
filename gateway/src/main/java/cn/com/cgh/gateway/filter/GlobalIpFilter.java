@@ -83,20 +83,20 @@ public class GlobalIpFilter implements GlobalFilter {
         }
 
         String token = jwtTokenUtil.getToken(request);
-        Assert.notNull(token, "请求异常未携带token。");
+        Assert.notNull(token, "11010");
         if ("admin".equals(token)){
             return chain.filter(exchange.mutate().build());
         }
         Long userId = jwtTokenUtil.getUserIdFromToken(token);
         String id = jwtTokenUtil.getIdFromToken(token);
         String username = jwtTokenUtil.getUserNameFromToken(token);
-        Assert.notNull(userId, "无权访问。");
+        Assert.notNull(userId, "11007");
 
         String key = MessageFormat.format(JWT_CACHE_KEY, username, id);
-        Assert.isTrue(jwtTokenUtil.exists(key), "登录超时。");
+        Assert.isTrue(jwtTokenUtil.exists(key), "11002");
 
         if (!JWTUtil.verify(token, JWTSignerUtil.createSigner(KeyConstant.CONTENT_INSTANCE, JwtTokenUtil.RSA_RSA.getPublicKey()))) {
-            throw new RuntimeException("token验证失败");
+            throw new RuntimeException("11003");
         }
         builder.header(JWTPayload.AUDIENCE, String.valueOf(userId));
         builder.header(JWTPayload.SUBJECT, username);

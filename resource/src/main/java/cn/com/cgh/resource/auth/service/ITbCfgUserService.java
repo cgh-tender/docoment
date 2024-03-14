@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface ITbCfgUserService extends IService<TbCfgUser> {
     @GetMapping("/loadByUsername/{username}")
     public TbCfgUser queryOneByUsername(@PathVariable String username);
+    @GetMapping("/resetquest")
+    public String resetquest();
 
     @GetMapping("/checkPassword/{password}")
     public String checkPassword(@PathVariable String password);

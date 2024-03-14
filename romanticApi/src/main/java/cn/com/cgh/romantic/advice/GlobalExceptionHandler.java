@@ -2,10 +2,13 @@ package cn.com.cgh.romantic.advice;
 
 import cn.com.cgh.romantic.util.RequestUtil;
 import cn.com.cgh.romantic.util.ResponseImpl;
+import cn.com.cgh.romantic.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +25,8 @@ import java.sql.SQLException;
  */
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @Autowired
+    private GlobalErrorWebException globalErrorWebException;
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
@@ -30,9 +35,14 @@ public class GlobalExceptionHandler {
      */
     @ResponseBody
     @ExceptionHandler(SQLException.class)
-    public Mono<ResponseImpl<String>> sqlException(ServerWebExchange rsp, SQLException ex) {
+    public Mono<Void> sqlException(ServerWebExchange rsp, SQLException ex) {
         LOGGER.error("!!! request uri:{} from {} server exception:{}", rsp.getRequest().getURI().getPath(), RequestUtil.getIpAddr(rsp), ex == null ? null : ex);
-        return Mono.just(ResponseImpl.<String>builder().code("1002").message(ex == null ? null : ex.getMessage()).build().full());
+        LOGGER.error("code {}", rsp.getResponse().getStatusCode().value());
+        ServerHttpResponse response = rsp.getResponse();
+        assert ex != null;
+        return globalErrorWebException.parser(ex.getMessage(),response,ex).flatMap((builder) ->
+                ResponseUtil.writeResponse(response, builder)
+        ).doOnError((e)-> LOGGER.info(e.getMessage()));
     }
 
 
@@ -43,9 +53,14 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public Mono<ResponseImpl<String>> serverError(ServerWebExchange rsp, Exception ex) throws Exception {
+    public Mono<Void> serverError(ServerWebExchange rsp, Exception ex) {
         LOGGER.error("!!! request uri:{} from {} server exception:{}", rsp.getRequest().getURI().getPath(), RequestUtil.getIpAddr(rsp), ex == null ? null : ex);
-        return Mono.just(ResponseImpl.<String>builder().code("1002").message(ex == null ? null : ex.getMessage()).build().full());
+        LOGGER.error("code {}", rsp.getResponse().getStatusCode().value());
+        ServerHttpResponse response = rsp.getResponse();
+        assert ex != null;
+        return globalErrorWebException.parser(ex.getMessage(),response,ex).flatMap((builder) ->
+                ResponseUtil.writeResponse(response, builder)
+        ).doOnError((e)-> LOGGER.info(e.getMessage()));
     }
 
 

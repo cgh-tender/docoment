@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 
-export interface DefaultPaginationData extends PaginationData{
+export interface DefaultPaginationData extends PaginationData {
   total: number
   currentPage: number
   pageSizes: number[]
@@ -8,7 +8,7 @@ export interface DefaultPaginationData extends PaginationData{
   layout: string
 }
 
-export interface PaginationData{
+export interface PaginationData {
   total?: number
   currentPage?: number
   pageSizes?: number[]
@@ -28,16 +28,12 @@ const defaultPaginationData: DefaultPaginationData = {
 export function usePagination(initialPaginationData: PaginationData = {}) {
   /** 合并分页参数 */
   const paginationData = reactive({ ...defaultPaginationData, ...initialPaginationData })
-<<<<<<< Updated upstream
-  if (initialPaginationData && initialPaginationData.pageSize && !initialPaginationData.pageSizes && initialPaginationData.pageSize < defaultPaginationData.pageSizes[0]) {
-=======
   if (
     initialPaginationData &&
     initialPaginationData.pageSize &&
     !initialPaginationData.pageSizes &&
-    initialPaginationData.pageSize < 10
+    initialPaginationData.pageSize < defaultPaginationData.pageSizes[0]
   ) {
->>>>>>> Stashed changes
     paginationData.pageSizes.unshift(initialPaginationData.pageSize)
   }
   /** 改变当前页码 */

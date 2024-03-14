@@ -1,14 +1,11 @@
 <script lang="ts" setup>
 import { computed, reactive, ref, watchEffect } from "vue"
-import {
-  DefaultUserTableData,
-  GetBaseUserTableData
-} from "@/api/permission/user/types/base"
+import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
 import { getUserTable } from "@/api/permission/user"
 import { usePagination } from "@/hooks/usePagination"
 import { type FormInstance, FormRules } from "element-plus"
 import { Refresh, Search } from "@element-plus/icons-vue"
-import UpdatePassword from "@/views/permission/components/UpdatePassword.vue";
+import UpdatePassword from "@/views/permission/components/UpdatePassword.vue"
 
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -64,14 +61,17 @@ const searchData = computed<GetBaseUserTableData>(() => {
 
 const getTableData = () => {
   loading.value = true
-  getUserTable(searchData.value).then((res => {
-    paginationData.total = res.total
-    tableData.value = res.records
-  })).catch(() => {
-    tableData.value = []
-  }).finally(() => {
-    loading.value = false
-  })
+  getUserTable(searchData.value)
+    .then((res) => {
+      paginationData.total = res.total
+      tableData.value = res.records
+    })
+    .catch(() => {
+      tableData.value = []
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 
 const resetSearch = () => {
@@ -90,7 +90,7 @@ const openUpdatePassword1 = (row: DefaultUserTableData) => {
 const handleCreate = () => {
   formRef.value?.validate((valid: boolean, fields) => {
     if (valid) {
-      console.log(formData);
+      console.log(formData)
       // if (currentUpdateId.value === undefined) {
       //   createTableDataApi(formData)
       //     .then(() => {
@@ -118,7 +118,6 @@ const handleCreate = () => {
     }
   })
 }
-
 
 watchEffect(() => {
   paginationData
@@ -159,7 +158,8 @@ watchEffect(() => {
           <template #default="scope">
             <el-button type="primary" text plain size="small" @click="handleUpdate(scope.row)">编辑</el-button>
             <el-dropdown>
-              <el-button type="primary" text plain size="small">更多
+              <el-button type="primary" text plain size="small"
+                >更多
                 <el-icon class="el-icon--right">
                   <arrow-down />
                 </el-icon>
@@ -190,7 +190,7 @@ watchEffect(() => {
     </el-card>
     <!-- 新增/修改 -->
     <transition name="el-zoom-in-center">
-      <div>
+      <div v-if="dialogVisible">
         <el-dialog
           v-model="dialogVisible"
           :title="currentUpdateId === undefined ? '新增用户' : '修改用户'"
@@ -213,7 +213,9 @@ watchEffect(() => {
       </div>
     </transition>
     <transition>
-      <UpdatePassword v-model:openUpdatePassword="openUpdatePassword" v-model:user="formData"/>
+      <div v-if="openUpdatePassword">
+        <UpdatePassword v-model:openUpdatePassword="openUpdatePassword" v-model:user="formData" />
+      </div>
     </transition>
   </div>
 </template>
@@ -236,10 +238,12 @@ watchEffect(() => {
   display: flex;
   justify-content: flex-end;
 }
+
 .list-enter-active,
 .list-leave-active {
   transition: all 0.5s ease;
 }
+
 .list-enter-from,
 .list-leave-to {
   opacity: 0;

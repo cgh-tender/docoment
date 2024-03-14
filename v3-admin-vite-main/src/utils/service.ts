@@ -3,6 +3,7 @@ import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
 import { getToken, setUuid } from "./cache/cookies"
+import { checkPassword, resetquest } from "@/api/permission/user"
 
 /** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {
@@ -68,6 +69,9 @@ function createService() {
         case 401:
           // Token 过期时
           return logout()
+        case 11003:
+          const data = response.config.data
+          return resetquest(JSON.parse(data))
         default:
           // 不是正确的 code
           ElMessage.error(apiData.message || "Error")

@@ -153,6 +153,12 @@ docker run -it -d --restart always --net host --cap-add NET_ADMIN --name desktop
 
 ```
 
+## run redis error
+```bash
+brew update
+sudo brew services start docker-connector
+```
+
 
 ## docker安装mysql
 ```bash

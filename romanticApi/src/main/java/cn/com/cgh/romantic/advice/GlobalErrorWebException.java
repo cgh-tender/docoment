@@ -13,7 +13,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.server.ResponseStatusException;
@@ -52,30 +51,38 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
     @Override
     public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         ServerHttpResponse response = exchange.getResponse();
+        return parser(ex.getMessage(),response,ex).flatMap((builder) ->
+                ResponseUtil.writeResponse(response, builder)
+        ).doOnError((e)-> log.info(e.getMessage()));
+    }
+
+    public <T> Mono<ResponseImpl<T>> parser(String messageStr,ServerHttpResponse response,Throwable ex) {
         if (response.isCommitted()) {
             return Mono.error(ex);
         }
-        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
+            String message = messageStr;
+            ResponseImpl.ResponseImplBuilder<T> builder = ResponseImpl.builder();
+            if (message != null && REGEX.matcher(message).find()){
+                ResponseImpl<String> errorMessage = iResourceErrorController.getErrorMessage(Long.valueOf(message));
+                builder.code(message);
+                message = errorMessage.getData() == null ? message : errorMessage.getData();
+            }else {
+                HttpStatusCode statusCode = parserStatusCode(response, ex);
+                message = ERROR_CONVERTERS.get(String.valueOf(statusCode)) == null ? message : String.valueOf(ERROR_CONVERTERS.get(String.valueOf(statusCode)));
+            }
+            builder.message(message);
+            return builder.build().full();
+        }, threadPoolTaskExecutor));
+
+    }
+    private HttpStatusCode parserStatusCode(ServerHttpResponse response, Throwable ex) {
         HttpStatusCode statusCode;
         if (ex instanceof ResponseStatusException) {
-            response.setStatusCode(HttpStatus.OK);
             statusCode = ((ResponseStatusException) ex).getStatusCode();
         } else {
             statusCode = HttpStatus.OK;
         }
-        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
-            String message = ex.getMessage();
-            if (message != null && REGEX.matcher(message).find()){
-                ResponseImpl<String> errorMessage = iResourceErrorController.getErrorMessage(Long.valueOf(ex.getMessage()));
-                return errorMessage.getData() == null ? message : errorMessage.getData();
-            }else {
-                message = ERROR_CONVERTERS.get(String.valueOf(statusCode.value())) == null ? message : String.valueOf(ERROR_CONVERTERS.get(String.valueOf(statusCode.value())));
-            }
-            return message;
-        }, threadPoolTaskExecutor)).flatMap((message) ->
-                ResponseUtil.writeResponse(response, ResponseImpl.builder().message(String.valueOf(message)).build().full())
-        ).doOnError((e)->{
-            log.info(e.getMessage());
-        });
+        return statusCode;
     }
 }

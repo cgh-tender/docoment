@@ -1,13 +1,13 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.resource.auth.mapper.TbCfgUserMapper;
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
+import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -23,7 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser> implements ITbCfgUserService {
     @Override
     public String checkPassword(String password) {
+        System.out.println("checkPassword");
+        Assert.isTrue(false,"11003");
         return null;
+    }
+
+    @Override
+    public String resetquest() {
+        return "true";
     }
 
     @Override

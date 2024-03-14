@@ -383,6 +383,7 @@ create TABLE IF NOT EXISTS tb_cfg_error(
     11007 没有访问权限，请联系管理员!
     11008 请输入正确的验证码!
     11009 验证码失效!
+    11010 非授权访问!
     11100 退出成功
     11101 退出异常
 
@@ -409,5 +410,6 @@ INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, co
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302080717455469, 1, '2024-03-07 23:20:35.829', 1, '2024-03-07 23:20:35.829', 11007, 0, '没有访问权限，请联系管理员!');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302115077193838, 1, '2024-03-07 23:20:43.118', 1, '2024-03-07 23:20:43.118', 11008, 0, '请输入正确的验证码!');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302149436932207, 1, '2024-03-07 23:20:51.017', 1, '2024-03-07 23:20:51.017', 11009, 0, '验证码失效!');
+INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302149436932208, 1, '2024-03-07 23:20:51.017', 1, '2024-03-07 23:20:51.017', 11010, 0, '非授权访问!');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302505919217776, 1, '2024-03-07 23:22:14.670', 1, '2024-03-07 23:22:14.670', 11100, 0, '退出成功');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302531689021553, 1, '2024-03-07 23:22:20.530', 1, '2024-03-07 23:22:20.530', 11101, 0, '退出异常');
