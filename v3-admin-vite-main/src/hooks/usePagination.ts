@@ -28,7 +28,16 @@ const defaultPaginationData: DefaultPaginationData = {
 export function usePagination(initialPaginationData: PaginationData = {}) {
   /** 合并分页参数 */
   const paginationData = reactive({ ...defaultPaginationData, ...initialPaginationData })
+<<<<<<< Updated upstream
   if (initialPaginationData && initialPaginationData.pageSize && !initialPaginationData.pageSizes && initialPaginationData.pageSize < defaultPaginationData.pageSizes[0]) {
+=======
+  if (
+    initialPaginationData &&
+    initialPaginationData.pageSize &&
+    !initialPaginationData.pageSizes &&
+    initialPaginationData.pageSize < 10
+  ) {
+>>>>>>> Stashed changes
     paginationData.pageSizes.unshift(initialPaginationData.pageSize)
   }
   /** 改变当前页码 */

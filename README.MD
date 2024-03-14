@@ -188,3 +188,10 @@ password: guest
 docker run -it --name redis-master -d -p 6300:6300 redis redis-server --requirepass redispassword --port 6300
 
 cliod/jrebel-server
+
+## g4f
+[toLocalG4f](http://localhost:8888/)
+```shell
+docker pull hlohaus789/g4f
+docker run -p 8888:8080 -p 1337:1337 -p 7900:7900 --shm-size="2g" hlohaus789/g4f:latest
+```
