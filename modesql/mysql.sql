@@ -328,6 +328,7 @@ CREATE TABLE IF NOT EXISTS tb_controller_log
     http_method          varchar(10) COMMENT '方法名称',
     request_url          varchar(255) COMMENT '请求的 URL',
     client_ip            varchar(15) COMMENT '录请求的客户端 IP 地址',
+    ip_detail            varchar(255) COMMENT '客户端IP解析',
     request_body         text COMMENT '记录请求体内容，使用 TEXT 类型',
     response_status_code varchar(255) COMMENT '响应状态码',
     response_body        text COMMENT '响应体',
@@ -346,6 +347,7 @@ CREATE TABLE IF NOT EXISTS tb_login_log
     username             varchar(255) NOT NULL COMMENT '用户名',
     user_id              bigint(20) NOT NULL COMMENT '用户id',
     client_ip            varchar(255) COMMENT '客户端IP地址',
+    ip_detail            varchar(255) COMMENT '客户端IP解析',
     logout_time          datetime(3) COMMENT '登出时间',
     login_status         tinyint(2) DEFAULT 1 COMMENT '登录状态',
     user_agent           varchar(255) COMMENT '请求的用户代理信息',
@@ -415,3 +417,29 @@ INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, co
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302505919217776, 1, '2024-03-07 23:22:14.670', 1, '2024-03-07 23:22:14.670', 11100, 0, '退出成功');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302531689021553, 1, '2024-03-07 23:22:20.530', 1, '2024-03-07 23:22:20.530', 11101, 0, '退出异常');
 INSERT INTO tb_cfg_error (id, create_by, create_time, update_by, update_time, code, target_code, message) VALUES (173302531689021554, 1, '2024-03-07 23:22:20.530', 1, '2024-03-07 23:22:20.530', 30503, 0, '服务不可用');
+
+DROP TABLE IF EXISTS tb_cfg_table_resource;
+CREATE TABLE IF NOT EXISTS tb_cfg_table_resource
+(
+    id                   bigint(20) NOT NULL COMMENT '主键',
+    create_by            bigint(20) NOT NULL COMMENT '创建人',
+    create_time          datetime(3) NOT NULL COMMENT '创建时间',
+    update_by            bigint(20) NOT NULL COMMENT '最终修改人',
+    update_time          datetime(3) NOT NULL COMMENT '修改时间',
+    table_en           varchar(64) NOT NULL COMMENT '表名',
+    table_cn           varchar(128) NOT NULL COMMENT '表名',
+    filed_en             varchar(64) NOT NULL COMMENT '字段英文名',
+    filed_cn             varchar(128) COMMENT '字段中文名',
+    filed_type           varchar(64) COMMENT '字段类型',
+    filed_length         tinyint(2) DEFAULT 0 COMMENT '字段长度',
+    filed_desc           varchar(512) COMMENT '字段描述',
+    filed_required       tinyint(2) DEFAULT 0 COMMENT '字段是否必填',
+    filed_unique         tinyint(2) DEFAULT 0 COMMENT '字段是否唯一',
+    filed_nullable        tinyint(2) DEFAULT 0 COMMENT '字段是否可为空',
+    filed_pk              tinyint(2) DEFAULT 0 COMMENT '字段是否为主键',
+    filed_autoincrement   tinyint(2) DEFAULT 0 COMMENT '字段是否为自增',
+    filed_index           tinyint(2) DEFAULT 0 COMMENT '字段是否为索引',
+    filed_foreignkey      tinyint(2) DEFAULT 0 COMMENT '字段是否为外键',
+    PRIMARY KEY (id) USING BTREE,
+    KEY idx_table_en (table_en) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  ROW_FORMAT=DYNAMIC COMMENT='表资源';

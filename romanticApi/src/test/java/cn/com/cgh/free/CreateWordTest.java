@@ -63,8 +63,8 @@ public class CreateWordTest {
     }
 
     public static void main(String[] args) throws IOException, TemplateException {
-//        exportWord();
-        createPieChart();
+        exportWord();
+//        createPieChart();
     }
 
     private static void exportWord() throws IOException, TemplateException {
@@ -72,27 +72,27 @@ public class CreateWordTest {
         Map<String, Object> data = new HashMap<>();
         data.put("title", "虚假业绩风险-湖南省邵阳市大祥区域公共点-2022年4账期");
         Map one = new HashMap();
-        one.put("numberType", "numberType");
-        one.put("number", "number");
-        one.put("type", "type");
-        data.put("year", 2022);
-        data.put("month", 4);
-        data.put("img1", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img2", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img3", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img4", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img5", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img6", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img7", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img8", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img9", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img10", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
-        data.put("img11", convertImageToBase64String("/Users/cgh/Desktop/1710307774662.jpg"));
+        one.put("numberType", "${numberType}");
+        one.put("number", "${number}");
+        one.put("type", "${type}");
+        data.put("year", "${year}");
+        data.put("month", "${month}");
+        data.put("img1", "${img1}");
+        data.put("img2", "${img2}");
+        data.put("img3", "${img3}");
+        data.put("img4", "${img4}");
+        data.put("img5", "${img5}");
+        data.put("img6", "${img6}");
+        data.put("img7", "${img7}");
+        data.put("img8", "${img8}");
+        data.put("img9", "${img9}");
+        data.put("img10", "${img10}");
+        data.put("img11", "${img11}");
         data.put("one", one);
         Map two = new HashMap();
-        two.put("type", "type");
-        two.put("number1", "number1");
-        two.put("number2", "number2");
+        two.put("type", "${type}");
+        two.put("number1", "${number1}");
+        two.put("number2", "${number2}");
         data.put("two", two);
 
         Template template = getTemplate("/template.ftl");

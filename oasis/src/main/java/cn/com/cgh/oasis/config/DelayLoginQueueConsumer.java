@@ -1,6 +1,7 @@
 package cn.com.cgh.oasis.config;
 
 import cn.com.cgh.oasis.log.service.ITbLoginLogService;
+import cn.com.cgh.oasis.util.IpSearcher;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
 import cn.com.cgh.romantic.util.Application;
 import cn.hutool.json.JSONUtil;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DelayLoginQueueConsumer extends DefaultConsumer {
     private ITbLoginLogService iLogService;
+    private IpSearcher ipSearcher;
 
     /**
      * Constructs a new instance and records its association to the passed-in channel.
@@ -35,11 +37,17 @@ public class DelayLoginQueueConsumer extends DefaultConsumer {
             if (iLogService == null){
                 this.iLogService = Application.getBean(ITbLoginLogService.class);
             }
+            if (ipSearcher == null) {
+                this.ipSearcher = Application.getBean(IpSearcher.class);
+            }
             String jsonString = new String(body, StandardCharsets.UTF_8);
             log.info(jsonString);
             TbLoginLog loginLog = JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
             if (loginLog.getUserId() == null){
                 loginLog.setUserId(0L);
+            }
+            if (loginLog.getClientIp() != null) {
+                loginLog.setIpDetail(ipSearcher.search(loginLog.getClientIp()));
             }
             iLogService.saveOrUpdate(loginLog);
         } catch (Exception e) {

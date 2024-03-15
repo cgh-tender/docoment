@@ -2,6 +2,7 @@ package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -9,10 +10,12 @@ import java.util.List;
 
 /**
  * 角色表
+ * @author cgh
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "角色表")
+@TableName("tb_cfg_role")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

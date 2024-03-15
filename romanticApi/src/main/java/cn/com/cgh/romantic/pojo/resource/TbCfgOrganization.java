@@ -1,15 +1,18 @@
 package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 /**
  * 组织表
+ * @author cgh
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "组织表")
+@TableName("tb_cfg_organization")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,6 +1,7 @@
 package cn.com.cgh.oasis.config;
 
 import cn.com.cgh.oasis.log.service.ITbLoginLogService;
+import cn.com.cgh.oasis.util.IpSearcher;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
 import cn.com.cgh.romantic.util.Application;
 import cn.hutool.json.JSONUtil;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DeadLoginQueueConsumer extends DefaultConsumer {
     private ITbLoginLogService ibLoginLogService;
+    private IpSearcher ipSearcher;
 
     /**
      * Constructs a new instance and records its association to the passed-in channel.
@@ -34,13 +36,19 @@ public class DeadLoginQueueConsumer extends DefaultConsumer {
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
         String jsonString = new String(body, StandardCharsets.UTF_8);
         try {
-            if (ibLoginLogService == null){
+            if (ibLoginLogService == null) {
                 this.ibLoginLogService = Application.getBean(ITbLoginLogService.class);
+            }
+            if (ipSearcher == null) {
+                this.ipSearcher = Application.getBean(IpSearcher.class);
             }
             log.info(jsonString);
             TbLoginLog loginLog = JSONUtil.parse(jsonString).toBean(TbLoginLog.class);
-            if (loginLog.getUserId() == null){
+            if (loginLog.getUserId() == null) {
                 loginLog.setUserId(0L);
+            }
+            if (loginLog.getClientIp() != null) {
+                loginLog.setIpDetail(ipSearcher.search(loginLog.getClientIp()));
             }
             ibLoginLogService.saveOrUpdate(loginLog);
         } catch (DataIntegrityViolationException e) {

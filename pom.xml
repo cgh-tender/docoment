@@ -57,6 +57,7 @@
         <security.oauth2.version>2.5.2.RELEASE</security.oauth2.version>
         <nacos.version>2022.0.0.0</nacos.version>
         <jjwt.version>0.12.3</jjwt.version>
+        <ip2region.version>2.7.0</ip2region.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -120,6 +121,11 @@
                 <groupId>user-agent-utils</groupId>
                 <artifactId>user-agent-utils</artifactId>
                 <version>${user.agent.utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${ip2region.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>

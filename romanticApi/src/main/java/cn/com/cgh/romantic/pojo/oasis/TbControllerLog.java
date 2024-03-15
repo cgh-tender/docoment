@@ -23,9 +23,11 @@ public class TbControllerLog extends TbBaseEntity {
     private HttpMethod httpMethod;
     @Schema(description = "请求的 URL")
     private String requestUrl;
-    @Schema(description = "录请求的客户端 IP 地址")
+    @Schema(description = "客户端IP")
     private String clientIp;
-    @Schema(description = "记录请求体内容，使用 TEXT 类型")
+    @Schema(description = "IP地址")
+    private String ipDetail;
+    @Schema(description = "记录请求体内容")
     private String requestBody;
     @Schema(description = "响应状态码")
     private String responseStatusCode;

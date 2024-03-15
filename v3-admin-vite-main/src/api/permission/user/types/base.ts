@@ -5,6 +5,7 @@ import { PaginationData } from "@/hooks/usePagination"
  */
 export interface DefaultUserTableData {
   id: bigint | undefined
+  gender: string
   createTime: string
   email: string
   phone: string

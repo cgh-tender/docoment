@@ -7,6 +7,7 @@ import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import com.baomidou.mybatisplus.annotation.SqlCondition;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "用户表")
+@TableName("tb_cfg_user")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

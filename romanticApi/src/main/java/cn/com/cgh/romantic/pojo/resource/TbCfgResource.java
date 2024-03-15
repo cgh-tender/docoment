@@ -7,6 +7,7 @@ import cn.com.cgh.romantic.pojo.resource.child.RouteMeta;
 import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import cn.com.cgh.romantic.typeHandler.MyArrayTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,6 +26,7 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 @Schema(description = "菜单表")
+@TableName("tb_cfg_resource")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

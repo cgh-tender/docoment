@@ -2,12 +2,17 @@ package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.em.ResourceStatus;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+/**
+ * @author cgh
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "角色资源关系表")
+@TableName("tb_role_resource")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

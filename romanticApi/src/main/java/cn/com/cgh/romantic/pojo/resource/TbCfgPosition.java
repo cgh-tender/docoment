@@ -1,17 +1,18 @@
 package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.builder.ToStringSummary;
 
 /**
  * 职位表
+ * @author cgh
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "职位表")
+@TableName("tb_cfg_position")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

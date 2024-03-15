@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.task.TaskExecutionProperties;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,6 +34,10 @@ public class LoggerConfig implements ApplicationRunner {
 
     @Autowired
     private LoginProperties logProperties;
+    @Autowired
+    private TaskExecutionProperties taskExecutionProperties;
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
 
     public void changeLogLevel(String loggerName, String level) {
         LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -52,15 +58,24 @@ public class LoggerConfig implements ApplicationRunner {
             @Override
             public void receiveConfigInfo(String s) {
                 DelayQueue<BaseCoreDelay> queue = new DelayQueue<BaseCoreDelay>();
-                queue.put(new BaseCoreDelay("test", 3, TimeUnit.NANOSECONDS){
+                queue.put(new BaseCoreDelay("更新日志级别...", 3, TimeUnit.NANOSECONDS){
                     @Override
                     public void run() {
                         runFlyway();
                     }
                 });
+                queue.put(new BaseCoreDelay("更新线程池大小...", 3, TimeUnit.NANOSECONDS){
+                    @Override
+                    public void run() {
+                        flushThread();
+                    }
+                });
                 try {
-                    BaseCoreDelay take = queue.take();
-                    take.run();
+                    while (!queue.isEmpty()) {
+                        BaseCoreDelay task = queue.take();
+                        log.info(task.getOrderId());
+                        task.run();
+                    }
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -74,5 +89,13 @@ public class LoggerConfig implements ApplicationRunner {
         if (level != null){
             level.forEach(m-> changeLogLevel(m.getName(),m.getLevel()));
         }
+    }
+    private void flushThread() {
+        TaskExecutionProperties.Pool pool = taskExecutionProperties.getPool();
+            taskExecutor.setMaxPoolSize(pool.getMaxSize());
+        taskExecutor.setCorePoolSize(pool.getCoreSize());
+        taskExecutor.setQueueCapacity(pool.getQueueCapacity());
+        taskExecutor.setKeepAliveSeconds(Math.toIntExact(pool.getKeepAlive().getSeconds()));
+        log.info("threadPoolTaskExecutor maxPoolSize{} CorePoolSize {} QueueCapacity {} keepAliveSeconds {} ",taskExecutor.getMaxPoolSize(),taskExecutor.getCorePoolSize(),taskExecutor.getQueueCapacity(),taskExecutor.getKeepAliveSeconds());
     }
 }

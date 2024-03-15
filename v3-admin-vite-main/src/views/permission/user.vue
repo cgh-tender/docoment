@@ -27,16 +27,19 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 })
 
 const formRef = ref<FormInstance | null>(null)
-const initFormData = {
+
+const initFormData: DefaultUserTableData = {
   createTime: "",
+  gender: "",
   email: "",
   id: undefined,
-  password: "",
   phone: "",
+  realname: "",
   roles: "",
   status: "",
   username: ""
 }
+
 const formData = ref<DefaultUserTableData>(initFormData)
 
 /**
@@ -143,7 +146,6 @@ const handleCreate = () => {
 }
 
 const handleDialogVisibleClose = () => {
-  console.log(111)
   resetForm()
   getTableData()
   dialogVisible.value = false

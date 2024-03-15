@@ -27,8 +27,10 @@ public class TbLoginLog extends TbBaseEntity {
     private String username;
     @Schema(description = "记录登录的用户Id")
     private Long userId;
-    @Schema(description = "录请求的客户端 IP 地址")
+    @Schema(description = "客户端IP")
     private String clientIp;
+    @Schema(description = "IP地址")
+    private String ipDetail;
     @Schema(description = "登出时间")
     private Date logoutTime;
     /**

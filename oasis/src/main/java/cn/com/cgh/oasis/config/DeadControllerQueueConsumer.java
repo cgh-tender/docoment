@@ -1,6 +1,7 @@
 package cn.com.cgh.oasis.config;
 
 import cn.com.cgh.oasis.log.service.ITbControllerLogService;
+import cn.com.cgh.oasis.util.IpSearcher;
 import cn.com.cgh.romantic.pojo.oasis.TbControllerLog;
 import cn.com.cgh.romantic.util.Application;
 import cn.hutool.json.JSONUtil;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class DeadControllerQueueConsumer extends DefaultConsumer {
     private ITbControllerLogService ibControllerLogService;
+    private IpSearcher ipSearcher;
 
     /**
      * Constructs a new instance and records its association to the passed-in channel.
@@ -35,9 +37,15 @@ public class DeadControllerQueueConsumer extends DefaultConsumer {
             if (ibControllerLogService == null){
                 this.ibControllerLogService = Application.getBean(ITbControllerLogService.class);
             }
+            if (ipSearcher == null) {
+                this.ipSearcher = Application.getBean(IpSearcher.class);
+            }
             String jsonString = new String(body, StandardCharsets.UTF_8);
             log.info(jsonString);
             TbControllerLog controllerLog = JSONUtil.parse(jsonString).toBean(TbControllerLog.class);
+            if (controllerLog.getClientIp() != null) {
+                controllerLog.setIpDetail(ipSearcher.search(controllerLog.getClientIp()));
+            }
             ibControllerLogService.saveOrUpdate(controllerLog);
         } catch (Exception e) {
             System.out.println("DeadControllerQueueConsumer handleDelivery error: " + e.getMessage());
