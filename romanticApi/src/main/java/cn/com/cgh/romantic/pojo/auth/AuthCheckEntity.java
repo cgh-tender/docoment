@@ -1,10 +1,9 @@
 package cn.com.cgh.romantic.pojo.auth;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpMethod;
+import lombok.experimental.Accessors;
 
 /**
  * @author cgh
@@ -12,7 +11,7 @@ import org.springframework.http.HttpMethod;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Accessors(chain = true)
 public class AuthCheckEntity {
     private String url;
     private String httpMethod;

@@ -52,22 +52,21 @@ public class SendLogFilter implements WebFilter {
                 mutate.header(THREAD_LOCAL_LOG_ID, id + "");
                 String userAgent = request.getHeaders().getFirst(USER_AGENT);
                 UserAgent parse = UserAgentUtil.parse(request.getHeaders().getFirst(USER_AGENT));
-                TbLoginLog loginLog = TbLoginLog.builder()
-                        .username(tbCfgUser.getUsername())
-                        .userId(tbCfgUser.getId() == null ? 0 : tbCfgUser.getId())
-                        .clientIp(request.getHeaders().getFirst(X_REAL_IP))
-                        .userAgent(userAgent)
-                        .browser(parse.getBrowser().getName() + "/" + parse.getVersion())
-                        .mobile(parse.isMobile())
-                        .engine(parse.getEngine().getName() + "/" + parse.getEngineVersion())
-                        .osSys(parse.getPlatform().getName() + "/" + parse.getOs().getName() + "/" + parse.getOsVersion())
-                        .loginStatus(LoginStatus.IN)
-                        .build();
+                TbLoginLog loginLog = new TbLoginLog()
+                        .setUsername(tbCfgUser.getUsername())
+                        .setUserId(tbCfgUser.getId() == null ? 0 : tbCfgUser.getId())
+                        .setClientIp(request.getHeaders().getFirst(X_REAL_IP))
+                        .setUserAgent(userAgent)
+                        .setBrowser(parse.getBrowser().getName() + "/" + parse.getVersion())
+                        .setMobile(parse.isMobile())
+                        .setEngine(parse.getEngine().getName() + "/" + parse.getEngineVersion())
+                        .setOsSys(parse.getPlatform().getName() + "/" + parse.getOs().getName() + "/" + parse.getOsVersion())
+                        .setLoginStatus(LoginStatus.IN);
                 loginLog.setId(id);
                 loginLog.setCreateTime(new Date());
-                MsgPojo<Object> build = MsgPojo.builder().id(id).msg(
+                MsgPojo<Object> build = new MsgPojo().setId(id).setMsg(
                         loginLog
-                ).build();
+                );
                 log.info(JSONUtil.toJsonStr(build));
                 sendQueue.doSendLoginQueue(build);
                 return chain.filter(exchange.mutate().request(mutate.build()).build());

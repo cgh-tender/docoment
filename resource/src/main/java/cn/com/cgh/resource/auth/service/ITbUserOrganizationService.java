@@ -1,7 +1,10 @@
 package cn.com.cgh.resource.auth.service;
 
+import cn.com.cgh.romantic.pojo.resource.TbCfgOrganization;
 import cn.com.cgh.romantic.pojo.resource.TbUserOrganization;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbUserOrganizationService extends IService<TbUserOrganization> {
 
+    int deleteByUserId(Long userId);
+
+    boolean insertByUserId(List<TbCfgOrganization> organizations, Long userId);
 }

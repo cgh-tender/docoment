@@ -1,14 +1,67 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue"
 import { FormProps, FormRules } from "element-plus"
-import { DefaultUserTableData } from "@/api/permission/user/types/base"
+import { DefaultUserTableData, Group, Organization, Position, Role } from "@/api/permission/user/types/base"
 import { CircleClose } from "@element-plus/icons-vue"
+import { useTreeFunction } from "@/hooks/useTreeSelect"
+import { SelectNode, SelectOption, useFetchSelect } from "@/hooks/useFetchSelect"
+import { addOrUpdateUser, loadOrganization, loadPosition, loadRole, queryUserGroup } from "@/api/permission/user"
+
+const {
+  treeSelectLoading: OrganizationSelectLoading,
+  treeLoadData: OrganizationLoadData,
+  treeModelNode: OrganizationModelNode,
+  treeFunction: OrganizationFunction,
+  treeSelectNode: OrganizationSelectNode
+} = useTreeFunction(loadOrganization)
+
+const OrganizationLoadFunction = (n: SelectNode, r: any) => {
+  OrganizationSelectNode.node = n.data
+  OrganizationSelectNode.resolve = r
+  OrganizationFunction()
+}
+
+const {
+  treeSelectLoading: PositionSelectLoading,
+  treeLoadData: PositionLoadData,
+  treeModelNode: PositionModelNode,
+  treeFunction: PositionFunction,
+  treeSelectNode: PositionSelectNode
+} = useTreeFunction(loadPosition)
+
+const PositionLoadFunction = (n: SelectNode, r: any) => {
+  PositionSelectNode.node = n.data
+  PositionSelectNode.resolve = r
+  PositionFunction()
+}
+
+const {
+  loading: groupLoading,
+  options: groupOptions,
+  value: groupValue
+} = useFetchSelect({
+  api: queryUserGroup
+})
+
+const {
+  treeSelectLoading: RoleSelectLoading,
+  treeLoadData: RoleLoadData,
+  treeModelNode: RoleModelNode,
+  treeFunction: RoleFunction,
+  treeSelectNode: RoleSelectNode
+} = useTreeFunction(loadRole)
+
+const RoleLoadFunction = (n: SelectNode, r: any) => {
+  RoleSelectNode.node = n.data
+  RoleSelectNode.resolve = r
+  RoleFunction()
+}
 
 const labelPosition = ref<FormProps["labelPosition"]>("right")
 
 const formRules: FormRules = reactive({
-  username: [{ required: true, trigger: "blur", message: "请输入用户名" }],
-  realname: [{ required: true, trigger: "blur", message: "请输入账号" }],
+  username: [{ required: true, trigger: "blur", message: "请输入账号" }],
+  realname: [{ required: true, trigger: "blur", message: "请输入用户名" }],
   email: [
     {
       required: true,
@@ -21,6 +74,18 @@ const formRules: FormRules = reactive({
         return callback()
       }
     }
+  ],
+  phone: [
+    {
+      required: true,
+      trigger: "blur",
+      message: "请输入手机号"
+    },
+    {
+      required: true,
+      trigger: "blur",
+      message: "请输入手机号"
+    }
   ]
 })
 
@@ -28,23 +93,87 @@ interface Props {
   dialogVisible: boolean
   formData: DefaultUserTableData
   titleName: string
-  isDisabled: boolean
+  isDisabled?: boolean
 }
 
 const prop = defineProps<Props>()
 
+prop.formData.organizations.map((item) => {
+  OrganizationModelNode.value.push(<SelectOption>{
+    label: item.name,
+    value: item.id
+  })
+})
+
+prop.formData.positions.map((item) => {
+  PositionModelNode.value.push(<SelectOption>{
+    label: item.name,
+    value: item.id
+  })
+})
+
+prop.formData.roles.map((item) => {
+  RoleModelNode.value.push(<SelectOption>{
+    label: item.name,
+    value: item.id
+  })
+})
+
+groupValue.value = prop.formData.groups.map((item) => {
+  return <string>item.id
+})
+
 const cProp = ref<Props>(prop)
 
-const emit = defineEmits(["dialogVisibleClose"])
+const emit = defineEmits(["dialogVisibleClose", "dialogLoading"])
 
 const dialogVisibleProp = ref(prop.dialogVisible)
 
+/**
+ * 关闭 dialog
+ */
 const handleUpdate = () => {
   emit("dialogVisibleClose")
 }
 
-const handleCreate = () => {
-  console.log("create")
+const save = () => {
+  emit("dialogLoading", true)
+  const data: DefaultUserTableData = {
+    gender: cProp.value.formData.gender,
+    id: cProp.value.formData.id,
+    email: cProp.value.formData.email,
+    phone: cProp.value.formData.phone,
+    realname: cProp.value.formData.realname,
+    organizations: OrganizationModelNode.value.flatMap(
+      (item) =>
+        <Organization>{
+          id: typeof item === "object" && "label" in item && "value" in item ? item.value : item
+        }
+    ),
+    positions: PositionModelNode.value.flatMap(
+      (item) =>
+        <Position>{
+          id: typeof item === "object" && "label" in item && "value" in item ? item.value : item
+        }
+    ),
+    roles: RoleModelNode.value.map(
+      (item) =>
+        <Role>{
+          id: typeof item === "object" && "label" in item && "value" in item ? item.value : item
+        }
+    ),
+    groups: groupValue.value.flatMap(
+      (item) =>
+        <Group>{
+          id: item
+        }
+    )
+  }
+  console.log(data)
+  addOrUpdateUser(data).finally(() => {
+    emit("dialogLoading", false)
+    handleUpdate()
+  })
 }
 
 const gender = ref(cProp.value.formData.gender === "男")
@@ -65,31 +194,100 @@ const changeGender = (val: any) => {
     >
       <el-row>
         <el-col :span="12">
-          <el-form-item prop="username" label="登录名">
-            <el-input v-model="cProp.formData.username" placeholder="请输入登录名" />
+          <el-form-item prop="username" label="账号">
+            <el-input v-model="cProp.formData.username" placeholder="请输入账号" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item prop="realname" label="账号">
-            <el-input v-model="cProp.formData.realname" placeholder="请输入账号" />
+          <el-form-item prop="realname" label="用户名">
+            <el-input v-model="cProp.formData.realname" placeholder="请输入用户名" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
+          <el-form-item prop="phone" label="手机号">
+            <el-input v-model="cProp.formData.phone" placeholder="请输入手机号" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item prop="email" label="邮箱">
             <el-input v-model="cProp.formData.email" placeholder="请输入邮箱" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
           <el-form-item prop="gender" label="性别">
             <el-switch @change="changeGender" inline-prompt v-model="gender" active-text="男" inactive-text="女" />
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item prop="organizations" label="组织">
+            <el-tree-select
+              v-loading="OrganizationSelectLoading"
+              v-model="OrganizationModelNode"
+              lazy
+              :load="OrganizationLoadFunction"
+              :data="OrganizationLoadData"
+              placeholder="请选择组织"
+              multiple
+              show-checkbox
+              check-strictly
+              check-on-click-node
+              :render-after-expand="false"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="positions" label="职位">
+            <el-tree-select
+              v-loading="PositionSelectLoading"
+              v-model="PositionModelNode"
+              lazy
+              :load="PositionLoadFunction"
+              :data="PositionLoadData"
+              placeholder="请选择职位"
+              multiple
+              show-checkbox
+              check-on-click-node
+              check-strictly
+              :render-after-expand="false"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item prop="groups" label="用户组">
+            <el-select :loading="groupLoading" v-model="groupValue" filterable multiple placeholder="请选择用户组">
+              <el-option v-for="(item, index) in groupOptions" v-bind="item" :key="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="roles" label="角色">
+            <el-tree-select
+              v-loading="RoleSelectLoading"
+              v-model="RoleModelNode"
+              lazy
+              :load="RoleLoadFunction"
+              :data="RoleLoadData"
+              placeholder="请选择职位"
+              show-checkbox
+              check-strictly
+              multiple
+              check-on-click-node
+              :render-after-expand="false"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label-width="60%">
         <el-button :icon="CircleClose" @click="handleUpdate">取消</el-button>
-        <el-button type="primary" @click="handleCreate">确认</el-button>
+        <el-button type="primary" @click="save">确认</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>

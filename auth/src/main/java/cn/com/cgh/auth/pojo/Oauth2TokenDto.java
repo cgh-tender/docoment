@@ -1,13 +1,13 @@
 package cn.com.cgh.auth.pojo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@Accessors(chain = true)
 @Schema(description = "Oauth2TokenDto")
 public class Oauth2TokenDto {
     @Schema(description = "访问令牌")

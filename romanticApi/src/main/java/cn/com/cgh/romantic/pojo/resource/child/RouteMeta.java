@@ -2,15 +2,15 @@ package cn.com.cgh.romantic.pojo.resource.child;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * @author cgh
  */
 @Data
-@Builder
+@Accessors(chain =true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "资源配置表。")
@@ -38,7 +38,6 @@ public class RouteMeta {
     /**
      * 默认 true，如果设置为 false，则不会在面包屑中显示
      */
-    @Builder.Default
     private Boolean breadcrumb = Boolean.TRUE;
     /**
      * 默认 false，如果设置为 true，它则会固定在 tags-view 中

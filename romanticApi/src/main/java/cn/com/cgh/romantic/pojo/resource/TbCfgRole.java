@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -14,9 +15,9 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Accessors(chain = true)
 @Schema(description = "角色表")
 @TableName("tb_cfg_role")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbCfgRole extends TbBaseEntity {
@@ -24,7 +25,7 @@ public class TbCfgRole extends TbBaseEntity {
    private String name;
    @Schema(description = "角色描述")
    private String description;
-   @Schema(description = "角色描述")
+   @Schema(description = "父级角色")
    private Long parentId;
 
    @TableField(exist = false)

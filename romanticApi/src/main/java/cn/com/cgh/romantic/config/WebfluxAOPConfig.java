@@ -1,9 +1,12 @@
 package cn.com.cgh.romantic.config;
 
+import cn.hutool.jwt.JWTPayload;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
+
+import java.util.Objects;
 
 /**
  * @author cgh
@@ -29,6 +32,14 @@ public class WebfluxAOPConfig {
         public static ServerWebExchange get() {
             return EXCHANGE.get();
         }
+        public static Long getUserId() {
+            return Long.valueOf(Objects.requireNonNull(EXCHANGE.get().getRequest().getHeaders().getFirst(JWTPayload.AUDIENCE)));
+        }
+
+        public static String getUsername() {
+            return EXCHANGE.get().getRequest().getHeaders().getFirst(JWTPayload.SUBJECT);
+        }
+
 
         public static void remove() {
             EXCHANGE.remove();

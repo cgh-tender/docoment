@@ -2,6 +2,7 @@ package cn.com.cgh.romantic.advice;
 
 import cn.com.cgh.romantic.util.ResponseImpl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,30 +25,30 @@ import java.util.Arrays;
 @Aspect
 @ControllerAdvice
 @Order(value = 1000)
+@Slf4j
 public class NotVoidResponseBodyAdvice {
 
     @Around(value = "execution(* org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler.handleResult(..)) && args(exchange, result)", argNames = "point,exchange,result")
     public Object handleResult(ProceedingJoinPoint point, ServerWebExchange exchange, HandlerResult result) throws Throwable {
         Object body = result.getReturnValue();
-        if (body instanceof Mono || body instanceof Flux || body == null){
+        if (body instanceof Mono || body instanceof Flux || body == null) {
             return point.proceed();
         } else if (!(body instanceof ResponseImpl)) {
-            if (body instanceof Page){
+            if (body instanceof Page) {
                 Page p = (Page) body;
                 return point.proceed(Arrays.asList(
                         exchange,
                         new HandlerResult(result.getHandler(),
-                                Mono.just(ResponseImpl.builder()
-                                        .records(p.getRecords())
-                                        .total(p.getTotal())
-                                        .build()
+                                Mono.just(new ResponseImpl()
+                                        .setRecords(p.getRecords())
+                                        .setTotal(p.getTotal())
                                         .success()), result.getReturnTypeSource())
                 ).toArray());
-            }else{
+            } else {
                 return point.proceed(Arrays.asList(
                         exchange,
                         new HandlerResult(result.getHandler(),
-                                Mono.just(ResponseImpl.builder().data(body).build().success()), result.getReturnTypeSource())
+                                Mono.just(new ResponseImpl().setData(body).success()), result.getReturnTypeSource())
                 ).toArray());
             }
         }

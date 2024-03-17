@@ -1,5 +1,6 @@
 import { request } from "@/utils/service"
-import { GetBaseUserTableData, checkPasswordRule, DefaultUserTableData } from "@/api/permission/user/types/base"
+import { checkPasswordRule, DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
+import { SelectOption } from "@/hooks/useFetchSelect"
 
 export function getUserTable(params: GetBaseUserTableData) {
   return request<TableResponseData<DefaultUserTableData>>({
@@ -16,10 +17,49 @@ export function checkPassword(params: checkPasswordRule) {
   })
 }
 
-export function resetquest(params: any) {
+export function addOrUpdateUser(data: DefaultUserTableData) {
   return request<ApiResponseData<string>>({
-    url: "resource/user/resetquest",
+    url: "resource/user",
+    method: "post",
+    data
+  })
+}
+
+function loadTree(url: string, node: SelectOption) {
+  return request<ApiResponseData<SelectOption[]>>({
+    url: url,
     method: "get",
-    params
+    params: {
+      parentId: node?.value
+    }
+  })
+}
+
+export function loadOrganization(node: SelectOption) {
+  return loadTree("resource/organization/getTree", node)
+}
+
+export function loadPosition(node: SelectOption) {
+  return loadTree("resource/position/getTree", node)
+}
+
+export function queryUserGroup() {
+  return request<ApiResponseData<SelectOption[]>>({
+    url: "resource/group",
+    method: "get"
+  })
+}
+
+export function loadRole(node: SelectOption) {
+  return loadTree("resource/role/getTree", node)
+}
+
+export function deleteUserById(id: string | number) {
+  return request<ApiResponseData<SelectOption[]>>({
+    url: `resource/user/deleteUser/${id}`,
+    method: "get",
+    params: {
+      id: id
+    }
   })
 }

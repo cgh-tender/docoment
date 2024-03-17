@@ -11,6 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 public class Properties {
-    @Value("${allPermissionPath:GET /resource,GET /image/*,POST /login}")
+    @Value("${allPermissionPath:GET /resource,GET /image/*,POST /login,POST /logout}")
     private String allPermissionPath;
 }

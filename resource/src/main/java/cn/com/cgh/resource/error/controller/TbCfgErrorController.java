@@ -35,7 +35,7 @@ public class TbCfgErrorController {
     public String saeMessage(Long targetCode, String message, @PathVariable Long code) {
         TbCfgError one = tbCfgErrorService.lambdaQuery().eq(TbCfgError::getCode, code).one();
         isNull(one, "code【" + code + "】响应异常结果是：【" + (one == null ? null : one.getMessage()) + "】");
-        TbCfgError build = TbCfgError.builder().code(code).message(message).targetCode(targetCode).build();
+        TbCfgError build = new TbCfgError().setCode(code).setMessage(message).setTargetCode(targetCode);
         boolean save = tbCfgErrorService.save(build);
         return save ? "保存成功" : "保存失败";
     }

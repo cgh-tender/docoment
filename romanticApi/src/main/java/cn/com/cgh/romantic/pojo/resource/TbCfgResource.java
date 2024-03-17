@@ -27,7 +27,6 @@ import java.util.List;
 @Accessors(chain = true)
 @Schema(description = "菜单表")
 @TableName("tb_cfg_resource")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -3,8 +3,8 @@ interface ApiResponseData<T> {
   // 基础数据
   code: number
   data: T
-  message: string
-  type: string
+  message?: string
+  type?: string
 }
 
 interface TableResponseData<T> extends ApiResponseData<T> {

@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("tb_cfg_error")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbCfgError extends TbBaseEntity {

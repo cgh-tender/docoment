@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -21,7 +20,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("tb_cfg_datasource")
 @Schema(name = "TbCfgDatasource对象", description = "数据库连接表")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbCfgDatasource extends TbBaseEntity {

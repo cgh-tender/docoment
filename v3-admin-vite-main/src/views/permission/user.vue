@@ -1,20 +1,23 @@
 <script lang="ts" setup>
 import { computed, ref, watchEffect } from "vue"
 import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
-import { getUserTable } from "@/api/permission/user"
+import { deleteUserById, getUserTable } from "@/api/permission/user"
 import { usePagination } from "@/hooks/usePagination"
-import { type FormInstance } from "element-plus"
+import { ElMessage, type FormInstance } from "element-plus"
 import { Compass, Delete, Edit, Lock, More, Refresh, Search, Unlock, View, ZoomIn } from "@element-plus/icons-vue"
 import updatePassword from "@/views/permission/components/user/updatePassword.vue"
 import AddOrUpdate from "@/views/permission/components/user/addOrUpdate.vue"
+import { useFullscreenLoading } from "@/hooks/useFullscreenLoading"
 
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
+const dialogDisable = ref<boolean>(false)
 const handleUpdatePassword = ref<boolean>(false)
 const titleName = ref<string>("")
 const tableData = ref<DefaultUserTableData[]>([])
 const lock = ref<boolean>(false)
-
+const adminUser = import.meta.env.VITE_ADMIN_USER
+const adminUsers: string[] = adminUser.split(",")
 const searchData = computed<GetBaseUserTableData>(() => {
   return {
     currentPage: paginationData.currentPage,
@@ -32,10 +35,13 @@ const initFormData: DefaultUserTableData = {
   createTime: "",
   gender: "",
   email: "",
-  id: undefined,
+  id: "",
   phone: "",
   realname: "",
-  roles: "",
+  roles: [],
+  groups: [],
+  organizations: [],
+  positions: [],
   status: "",
   username: ""
 }
@@ -47,6 +53,10 @@ const formData = ref<DefaultUserTableData>(initFormData)
  * @param row
  */
 const handleUpdate = (row: DefaultUserTableData) => {
+  if (!adminUsers.indexOf(<string>row.username)) {
+    ElMessage.error("该用户为系统管理员，无法修改！")
+    return
+  }
   titleName.value = "修改用户"
   formData.value = row
   dialogVisible.value = true
@@ -95,10 +105,10 @@ const showUserDetail = (row: DefaultUserTableData) => {
   formData.value = row
   titleName.value = "用户详情"
   dialogVisible.value = true
+  dialogDisable.value = true
 }
 
 const handleOpen = (row: DefaultUserTableData) => {
-  console.log(handleUpdatePassword.value)
   lock.value = "正常" === row.status
 }
 
@@ -113,42 +123,18 @@ const update_password = (row: DefaultUserTableData) => {
   console.log(handleUpdatePassword.value)
 }
 
-const handleCreate = () => {
-  formRef.value?.validate((valid: boolean, fields) => {
-    if (valid) {
-      console.log(formData)
-      // if (currentUpdateId.value === undefined) {
-      //   createTableDataApi(formData)
-      //     .then(() => {
-      //       ElMessage.success("新增成功")
-      //       getTableData()
-      //     })
-      //     .finally(() => {
-      //       dialogVisible.value = false
-      //     })
-      // } else {
-      //   updateTableDataApi({
-      //     id: currentUpdateId.value,
-      //     username: formData.username
-      //   })
-      //     .then(() => {
-      //       ElMessage.success("修改成功")
-      //       getTableData()
-      //     })
-      //     .finally(() => {
-      //       dialogVisible.value = false
-      //     })
-      // }
-    } else {
-      console.error("表单校验不通过", fields)
-    }
-  })
+const deleteUserRow = async (row: DefaultUserTableData) => {
+  await useFullscreenLoading(deleteUserById)(row.id)
 }
 
 const handleDialogVisibleClose = () => {
   resetForm()
   getTableData()
   dialogVisible.value = false
+  dialogDisable.value = false
+}
+const dialogLoading = (value: boolean) => {
+  loading.value = value
 }
 
 watchEffect(() => {
@@ -157,8 +143,8 @@ watchEffect(() => {
 })
 </script>
 <template>
-  <div class="app-container">
-    <el-card v-loading="loading" shadow="never" class="search-wrapper">
+  <div class="app-container" v-loading="loading">
+    <el-card shadow="never" class="search-wrapper">
       <el-form ref="searchFormRef" :inline="true" :model="searchData">
         <el-form-item prop="username" label="用户名">
           <el-input v-model="searchData.username" placeholder="请输入" />
@@ -173,18 +159,20 @@ watchEffect(() => {
         </el-form-item>
       </el-form>
     </el-card>
-    <el-card v-loading="loading" shadow="never">
+    <el-card shadow="never">
       <el-table border :data="tableData">
         <el-table-column type="selection" width="50" align="center" />
-        <el-table-column fixed prop="username" label="用户名" align="center" />
+        <el-table-column fixed prop="username" label="账号" align="center" />
         <el-table-column prop="realname" label="用户名" align="center" />
+        <el-table-column prop="phone" label="手机" align="center" />
         <el-table-column prop="email" label="邮箱" align="center" />
         <el-table-column prop="gender" label="性别" align="center" />
         <el-table-column prop="status" label="状态" align="center" />
         <el-table-column prop="roles" label="角色" align="center">
           <template #default="scope">
-            <el-tag v-if="scope.row.roles === 'admin'" effect="plain">admin</el-tag>
-            <el-tag v-else type="warning" effect="plain">{{ scope.row.roles }}</el-tag>
+            <el-tag type="warning" effect="plain" :key="role.id" v-for="role in scope.row.roles"
+              >{{ role.name }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="150" align="center">
@@ -202,7 +190,7 @@ watchEffect(() => {
                 <el-dropdown-menu>
                   <el-dropdown-item :icon="View" @click="showUserDetail(scope.row)">详情</el-dropdown-item>
                   <el-dropdown-item :icon="Compass" @click="update_password(scope.row)">密码</el-dropdown-item>
-                  <el-dropdown-item :icon="Delete">删除</el-dropdown-item>
+                  <el-dropdown-item :icon="Delete" @click="deleteUserRow(scope.row)">删除</el-dropdown-item>
                   <el-dropdown-item v-if="lock" :icon="Lock">冻结</el-dropdown-item>
                   <el-dropdown-item v-if="!lock" :icon="Unlock">解冻</el-dropdown-item>
                 </el-dropdown-menu>
@@ -227,10 +215,12 @@ watchEffect(() => {
     <transition name="el-zoom-in-center">
       <div v-if="dialogVisible">
         <add-or-update
-          v-model:dialog-visible="dialogVisible"
+          :dialog-visible="dialogVisible"
+          :is-disabled="dialogDisable"
           v-model:form-data="formData"
-          v-model:title-name="titleName"
+          :title-name="titleName"
           @dialogVisibleClose="handleDialogVisibleClose"
+          @dialogLoading="dialogLoading"
         />
       </div>
     </transition>

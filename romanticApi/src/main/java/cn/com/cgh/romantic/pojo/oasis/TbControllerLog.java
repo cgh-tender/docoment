@@ -15,7 +15,6 @@ import org.springframework.http.HttpMethod;
 @Accessors(chain = true)
 @TableName("tb_controller_log")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbControllerLog extends TbBaseEntity {

@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.cgh.resource.auth.mapper.TbCfgOrganizationMapper">
 
+    <select id="queryAllByUserId" resultType="cn.com.cgh.romantic.pojo.resource.TbCfgOrganization">
+        select r.id, r.name, r.description, r.parent_id from tb_cfg_organization r, tb_user_organization uo where r.id = uo.organization_id and uo.user_id = ${userId}
+    </select>
 </mapper>

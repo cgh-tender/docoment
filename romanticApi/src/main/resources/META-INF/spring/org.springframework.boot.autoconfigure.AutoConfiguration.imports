@@ -6,6 +6,7 @@ cn.com.cgh.romantic.config.AuthBaseConfig
 cn.com.cgh.romantic.config.LoggerConfig
 cn.com.cgh.romantic.config.ValidationConfig
 cn.com.cgh.romantic.config.LoginProperties
+cn.com.cgh.romantic.config.PermissionConfig
 cn.com.cgh.romantic.config.WebClientConfig
 cn.com.cgh.romantic.config.WebfluxAOPConfig
 cn.com.cgh.romantic.advice.GlobalErrorWebException
@@ -14,6 +15,7 @@ cn.com.cgh.romantic.util.Application
 cn.com.cgh.romantic.util.SendQueue
 cn.com.cgh.romantic.util.JwtTokenUtil
 cn.com.cgh.romantic.util.IdWork
+cn.com.cgh.romantic.util.PermissionUserUtil
 
 cn.com.cgh.romantic.config.db.MybatisConfig
 cn.com.cgh.romantic.config.db.DataSourceUtil

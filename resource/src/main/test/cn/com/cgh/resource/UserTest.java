@@ -63,12 +63,11 @@ public class UserTest {
                     for (Field field : fields) {
                         Schema schema = field.getAnnotation(Schema.class);
                         if (schema != null){
-                            TbCfgTableResource build = TbCfgTableResource.builder().tableCn(tableCn).tableEn(tableEn)
-                                    .filedCn(schema.description())
-                                    .filedEn(field.getName())
-                                    .filedDesc(schema.description())
-                                    .filedPk(field.getName().equals("id") ? 1 : 0)
-                                    .build();
+                            TbCfgTableResource build = new TbCfgTableResource().setTableCn(tableCn).setTableEn(tableEn)
+                                    .setFiledCn(schema.description())
+                                    .setFiledEn(field.getName())
+                                    .setFiledDesc(schema.description())
+                                    .setFiledPk(field.getName().equals("id") ? 1 : 0);
                             arrayList.add(build);
                         }
                     }
@@ -77,12 +76,11 @@ public class UserTest {
                 for (Field field : fields) {
                     Schema schema = field.getAnnotation(Schema.class);
                     if (schema != null){
-                        TbCfgTableResource build = TbCfgTableResource.builder().tableCn(tableCn).tableEn(tableEn)
-                                .filedCn(schema.description())
-                                .filedEn(field.getName())
-                                .filedPk(field.getName().equals("id") ? 1 : 0)
-                                .filedDesc(schema.description())
-                                .build();
+                        TbCfgTableResource build = new TbCfgTableResource().setTableCn(tableCn).setTableEn(tableEn)
+                                .setFiledCn(schema.description())
+                                .setFiledEn(field.getName())
+                                .setFiledDesc(schema.description())
+                                .setFiledPk(field.getName().equals("id") ? 1 : 0);
                         arrayList.add(build);
                     }
                 }

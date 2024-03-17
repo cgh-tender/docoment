@@ -26,7 +26,7 @@ public class TokenLogoutSuccessHandler implements ServerLogoutSuccessHandler {
         httpHeaders.add("Content-Type", "application/json; charset=UTF-8");
         httpHeaders.add("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         return response.writeWith(Mono.just(response.bufferFactory().wrap(
-                JSON.toJSONBytes(ResponseImpl.builder().message("退出成功").build().success())
+                JSON.toJSONBytes(new ResponseImpl().setMessage("退出成功").success())
         )));
     }
 }

@@ -1,18 +1,62 @@
 import { PaginationData } from "@/hooks/usePagination"
 
 /**
+ * 角色
+ */
+export interface Role {
+  id: string | number
+  name?: string
+  description?: string
+  parentId?: bigint
+  children?: Role[]
+}
+
+/**
+ * 组织
+ */
+export interface Organization {
+  id: string | number
+  name?: string
+  description?: string
+  parentId?: bigint
+  children?: Organization[]
+}
+
+/**
+ * 用户组
+ */
+export interface Group {
+  id: string | number
+  name?: string
+}
+
+/**
+ * 职位
+ */
+export interface Position {
+  id: string | number
+  name?: string
+  description?: string
+  parentId?: bigint
+  children?: Position[]
+}
+
+/**
  * 用户管理列表数据
  */
 export interface DefaultUserTableData {
-  id: bigint | undefined
+  id: string | number
   gender: string
-  createTime: string
+  createTime?: string
   email: string
   phone: string
-  roles: string
-  status: string
-  username: string
+  status?: string
+  username?: string
   realname: string
+  roles: Role[]
+  organizations: Organization[]
+  groups: Group[]
+  positions: Position[]
 }
 
 /**

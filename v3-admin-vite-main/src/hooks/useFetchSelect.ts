@@ -1,24 +1,18 @@
-import { ref, onMounted } from "vue"
-
-type OptionValue = string | number
+import { onMounted, ref } from "vue"
 
 /** Select 需要的数据格式 */
-interface SelectOption {
-  value: OptionValue
+export interface SelectOption {
+  value: string | number
   label: string
   disabled?: boolean
+  children?: SelectOption[] | undefined
 }
 
-/** 接口响应格式 */
-interface ApiData {
-  code: number
-  data: SelectOption[]
-  message: string
-}
+export interface SelectNode extends ApiResponseData<SelectOption> {}
 
 /** 入参格式，暂时只需要传递 api 函数即可 */
 interface FetchSelectProps {
-  api: () => Promise<ApiData>
+  api: () => Promise<ApiResponseData<SelectOption[]>>
 }
 
 export function useFetchSelect(props: FetchSelectProps) {
@@ -26,7 +20,7 @@ export function useFetchSelect(props: FetchSelectProps) {
 
   const loading = ref<boolean>(false)
   const options = ref<SelectOption[]>([])
-  const value = ref<OptionValue>("")
+  const value = ref<string[] | number[]>([])
 
   /** 调用接口获取数据 */
   const loadData = () => {

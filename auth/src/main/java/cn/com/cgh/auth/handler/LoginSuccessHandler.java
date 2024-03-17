@@ -49,23 +49,22 @@ public class LoginSuccessHandler implements ServerAuthenticationSuccessHandler {
             String id = request.getHeaders().getFirst(THREAD_LOCAL_LOG_ID);
             payload.put(JWTPayload.JWT_ID, id);
             Map<String, Object> map = jwtTokenUtil.generateTokenAndRefreshToken(securityUser.getId(), securityUser.getUsername(), payload);
-            return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.builder().message("登录成功").data(map).build().success()))));
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(new ResponseImpl().setMessage("登录成功").setData(map).success()))));
         }).doOnSuccess(a -> {
             ServerHttpRequest request = webFilterExchange.getExchange().getRequest();
             TbCfgUser securityUser = (TbCfgUser) authentication.getPrincipal();
             String id = request.getHeaders().getFirst(THREAD_LOCAL_LOG_ID);
             if (StringUtils.isNotEmpty(id)) {
-                TbLoginLog loginLog = TbLoginLog.builder()
-                        .username(securityUser.getUsername())
-                        .userId(securityUser.getId())
-                        .loginStatus(LoginStatus.SUCCESS)
-                        .build();
+                TbLoginLog loginLog = new TbLoginLog()
+                        .setUsername(securityUser.getUsername())
+                        .setUserId(securityUser.getId())
+                        .setLoginStatus(LoginStatus.SUCCESS);
                 loginLog.setId(Long.valueOf(id));
                 loginLog.setUpdateTime(new Date());
                 log.info(JSONUtil.toJsonStr(loginLog));
-                MsgPojo<Object> build = MsgPojo.builder().id(securityUser.getId()).msg(
+                MsgPojo<Object> build = new MsgPojo().setId(securityUser.getId()).setMsg(
                         loginLog
-                ).build();
+                );
                 sendQueue.doSendLoginQueue(build);
             }
         });

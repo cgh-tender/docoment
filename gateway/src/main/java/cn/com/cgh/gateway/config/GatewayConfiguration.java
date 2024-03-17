@@ -2,6 +2,7 @@ package cn.com.cgh.gateway.config;
 
 import cn.com.cgh.gateway.error.MySentinelGatewayBlockExceptionHandler;
 import cn.com.cgh.gateway.error.MySentinelRequestHandler;
+import com.alibaba.csp.sentinel.adapter.gateway.common.SentinelGatewayConstants;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
@@ -34,7 +35,7 @@ import java.util.Set;
  */
 @Component
 @Slf4j
-public class GatewayConfiguration implements ApplicationRunner , ApplicationContextAware {
+public class GatewayConfiguration implements ApplicationRunner, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
@@ -45,6 +46,7 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
 
     private final List<ViewResolver> viewResolvers;
     private final ServerCodecConfigurer serverCodecConfigurer;
+
     public GatewayConfiguration(ObjectProvider<List<ViewResolver>> viewResolversProvider,
                                 ServerCodecConfigurer serverCodecConfigurer) {
         this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
@@ -152,9 +154,11 @@ public class GatewayConfiguration implements ApplicationRunner , ApplicationCont
                          * 还是用户在 Sentinel 中定义的 API 分组（RESOURCE_MODE_CUSTOM_API_NAME），默认是 route。
                          */
 //                .setResourceMode(SentinelGatewayConstants.RESOURCE_MODE_ROUTE_ID)
-                        .setCount(3)
+                        .setCount(10)
                         .setIntervalSec(1)
                         .setGrade(RuleConstant.FLOW_GRADE_QPS)
+                        .setControlBehavior(RuleConstant.CONTROL_BEHAVIOR_DEFAULT) // 这里不直接设置等待，但在集群模式下，可能会有排队效果
+
         );
         GatewayRuleManager.loadRules(rules);
     }

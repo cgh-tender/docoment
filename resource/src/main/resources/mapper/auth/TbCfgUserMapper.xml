@@ -9,7 +9,7 @@
         <result column="phone" property="phone" jdbcType="VARCHAR" />
         <result column="gender" property="gender" jdbcType="INTEGER" />
         <result column="status" property="status" jdbcType="INTEGER" />
-        <collection property="tbCfgRoles"
+        <collection property="roles"
                     select="cn.com.cgh.resource.auth.mapper.TbCfgRoleMapper.queryAllByUserId"
                     column="id"
                     ofType="cn.com.cgh.romantic.pojo.resource.TbCfgRole"
@@ -18,5 +18,49 @@
     </resultMap>
     <select id="queryOneByUsername" resultMap="base" parameterType="String">
         select id,username,password,gender,status from tb_cfg_user where username = #{username}
+    </select>
+
+    <resultMap id="UserAll" type="cn.com.cgh.romantic.pojo.resource.TbCfgUser">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="gender" property="gender" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <collection property="roles"
+                    select="cn.com.cgh.resource.auth.mapper.TbCfgRoleMapper.queryAllByUserId"
+                    column="id"
+                    ofType="cn.com.cgh.romantic.pojo.resource.TbCfgRole"
+                    typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+        <collection property="organizations"
+                    select="cn.com.cgh.resource.auth.mapper.TbCfgOrganizationMapper.queryAllByUserId"
+                    column="id"
+                    ofType="cn.com.cgh.romantic.pojo.resource.TbCfgOrganization"
+                    typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+        <collection property="groups"
+                    select="cn.com.cgh.resource.auth.mapper.TbCfgGroupMapper.queryAllByUserId"
+                    column="id"
+                    ofType="cn.com.cgh.romantic.pojo.resource.TbCfgGroup"
+                    typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+        <collection property="positions"
+                    select="cn.com.cgh.resource.auth.mapper.TbCfgPositionMapper.queryAllByUserId"
+                    column="id"
+                    ofType="cn.com.cgh.romantic.pojo.resource.TbCfgPosition"
+                    typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
+    </resultMap>
+    <select id="queryUsers" resultMap="UserAll">
+        select id,username,realname,phone,email,gender,status from tb_cfg_user
+        <where>
+            <if test="user.username != null">
+                and username like concat('%',#{user.username},'%')
+            </if>
+            <if test="user.realname != null">
+                and realname like concat('%',#{user.realname},'%')
+            </if>
+            <if test="admin != true">
+                and deleted = 0
+            </if>
+        </where>
     </select>
 </mapper>

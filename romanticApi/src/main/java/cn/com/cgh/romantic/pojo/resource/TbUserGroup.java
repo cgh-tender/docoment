@@ -4,6 +4,7 @@ import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * 用户-用户组关系表
@@ -12,7 +13,7 @@ import lombok.*;
 @Data
 @Schema(description = "用户-用户组关系表")
 @TableName("tb_user_group")
-@Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbUserGroup extends TbBaseEntity {

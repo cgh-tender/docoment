@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.cgh.resource.auth.mapper.TbCfgPositionMapper">
 
+    <select id="queryAllByUserId" resultType="cn.com.cgh.romantic.pojo.resource.TbCfgPosition">
+        select r.id, r.name, r.description, r.parent_id from tb_cfg_position r, tb_user_position up where r.id = up.position_id and up.user_id = ${userId}
+    </select>
 </mapper>

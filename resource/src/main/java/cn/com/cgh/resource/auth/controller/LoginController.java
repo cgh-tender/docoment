@@ -69,7 +69,7 @@ public class LoginController {
     }
     @GetMapping("/hello1")
     public ResponseImpl hello1() {
-        return ResponseImpl.<String>builder().data("hello1").build().success();
+        return new ResponseImpl<String>().setData("hello1").success();
     }
     @GetMapping("/hello2")
     public Mono<String> hello2() {
@@ -77,7 +77,7 @@ public class LoginController {
     }
     @GetMapping("/hello3")
     public Mono<ResponseImpl> hello3() {
-        return Mono.just(ResponseImpl.builder().data("hello3").build().success());
+        return Mono.just(new ResponseImpl().setData("hello3").success());
     }
 
     @Autowired
@@ -87,14 +87,13 @@ public class LoginController {
     private IdWork idWork;
     @GetMapping("/send")
     public String senQuery() {
-        sendQueue.doSendControllerQueue(MsgPojo.builder().id(idWork.nextId()).msg(
-                TbControllerLog.builder()
-                        .httpMethod(HttpMethod.GET)
-                        .requestUrl("/send")
-                        .clientIp("127.0.0.1")
-                        .userAgent("admin")
-                        .build()
-        ).build());
+        sendQueue.doSendControllerQueue(new MsgPojo().setId(idWork.nextId()).setMsg(
+                new TbControllerLog()
+                        .setHttpMethod(HttpMethod.GET)
+                        .setRequestUrl("/send")
+                        .setClientIp("127.0.0.1")
+                        .setUserAgent("admin")
+        ));
         return "成功";
     }
 }

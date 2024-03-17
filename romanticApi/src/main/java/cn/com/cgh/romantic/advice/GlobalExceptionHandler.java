@@ -31,7 +31,6 @@ public class GlobalExceptionHandler {
 
     /**
      * sql异常
-     *
      */
     @ResponseBody
     @ExceptionHandler(SQLException.class)
@@ -40,15 +39,14 @@ public class GlobalExceptionHandler {
         LOGGER.error("code {}", rsp.getResponse().getStatusCode().value());
         ServerHttpResponse response = rsp.getResponse();
         assert ex != null;
-        return globalErrorWebException.parser(ex.getMessage(),response,ex).flatMap((builder) ->
+        return globalErrorWebException.parser(ex.getMessage(), response, ex).flatMap((builder) ->
                 ResponseUtil.writeResponseAsApplicationJson(response, builder)
-        ).doOnError((e)-> LOGGER.info(e.getMessage()));
+        ).doOnError((e) -> LOGGER.info(e.getMessage()));
     }
 
 
     /**
      * 500错误.
-     *
      */
     @ResponseBody
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
@@ -58,9 +56,9 @@ public class GlobalExceptionHandler {
         LOGGER.error("code {}", rsp.getResponse().getStatusCode().value());
         ServerHttpResponse response = rsp.getResponse();
         assert ex != null;
-        return globalErrorWebException.parser(ex.getMessage(),response,ex).flatMap((builder) ->
+        return globalErrorWebException.parser(ex.getMessage(), response, ex).flatMap((builder) ->
                 ResponseUtil.writeResponseAsApplicationJson(response, builder)
-        ).doOnError((e)-> LOGGER.info(e.getMessage()));
+        ).doOnError((e) -> LOGGER.info(e.getMessage()));
     }
 
 
@@ -71,15 +69,15 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Mono<ResponseImpl<String>> requestTypeMismatch(TypeMismatchException ex) {
         LOGGER.error("参数类型有误:{}", ex.getMessage());
-        return Mono.just(ResponseImpl.<String>builder().code("99999").message("参数类型不匹配,参数" + ex.getPropertyName() + "类型应该为" + ex.getRequiredType()).build().full());
+        return Mono.just(new ResponseImpl<String>().setCode("99999").setMessage("参数类型不匹配,参数" + ex.getPropertyName() + "类型应该为" + ex.getRequiredType()).full());
     }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseBody
     public Mono<ResponseImpl<String>> fileSizeLimit(MultipartException ex) {
         LOGGER.error("认证有误:{}", ex.getMessage());
-        return Mono.just(ResponseImpl.<String>builder().code("99999")
-                .message(ex.getMessage()).build().full());
+        return Mono.just(new ResponseImpl<String>().setCode("99999")
+                .setMessage(ex.getMessage()).full());
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -89,7 +87,7 @@ public class GlobalExceptionHandler {
         if (m.getCause() != null) {
             LOGGER.error("超过文件上传大小限制:" + m.getCause().getMessage());
         }
-        return Mono.just(ResponseImpl.<String>builder().code("99999").message("超过文件大小限制,最大10MB").build().full());
+        return Mono.just(new ResponseImpl<String>().setCode("99999").setMessage("超过文件大小限制,最大10MB").full());
     }
 
 }

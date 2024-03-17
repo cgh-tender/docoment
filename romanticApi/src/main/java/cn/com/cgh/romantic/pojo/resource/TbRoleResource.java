@@ -5,6 +5,7 @@ import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * @author cgh
@@ -13,7 +14,7 @@ import lombok.*;
 @Data
 @Schema(description = "角色资源关系表")
 @TableName("tb_role_resource")
-@Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbRoleResource extends TbBaseEntity {

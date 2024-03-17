@@ -14,7 +14,11 @@ public enum UserStatus implements DisplayedEnum {
     /**
      * 锁定
      */
-    LOCK(1, "锁定");
+    LOCK(1, "锁定"),
+    /**
+     * 删除
+     */
+    DELETE(10, "删除");
 
     private final Integer value;
     private final String label;

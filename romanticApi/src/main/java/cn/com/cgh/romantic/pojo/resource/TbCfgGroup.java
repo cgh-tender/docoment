@@ -4,16 +4,17 @@ import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * 用户组表
  * @author cgh
  */
 @EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Data
 @Schema(description = "用户组")
 @TableName("tb_cfg_group")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbCfgGroup extends TbBaseEntity {

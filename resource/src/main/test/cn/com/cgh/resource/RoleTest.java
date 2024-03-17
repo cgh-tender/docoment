@@ -18,15 +18,13 @@ public class RoleTest {
 
     @Test
     public void test() {
-        TbUserRole admin = TbUserRole
-                .builder()
-                .roleId(1L)
-                .userId(1L).build();
+        TbUserRole admin = new TbUserRole()
+                .setRoleId(1L)
+                .setUserId(1L);
 
-        TbUserRole test = TbUserRole
-                .builder()
-                .roleId(2L)
-                .userId(2L).build();
+        TbUserRole test = new TbUserRole()
+                .setRoleId(2L)
+                .setUserId(2L);
         tbCfgUserRoleService.save(admin);
         tbCfgUserRoleService.save(test);
     }

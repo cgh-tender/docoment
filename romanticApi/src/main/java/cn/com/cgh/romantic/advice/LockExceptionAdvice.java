@@ -2,6 +2,7 @@ package cn.com.cgh.romantic.advice;
 
 import cn.com.cgh.romantic.exception.RequestLockException;
 import cn.com.cgh.romantic.util.ResponseImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono;
  * @author cgh
  */
 @Order(100)
+@Slf4j
 public class LockExceptionAdvice {
 
     /**
@@ -23,7 +25,8 @@ public class LockExceptionAdvice {
     @ExceptionHandler(value = {RequestLockException.class})
     @ResponseBody
     public Mono<ResponseImpl<String>> exceptionHandler(RequestLockException e) {
+        log.info("LockExceptionAdvice", e);
         // 构建并返回一个包含异常消息的响应体
-        return Mono.just(ResponseImpl.<String>builder().message(e.getMessage()).build().full());
+        return Mono.just(new ResponseImpl<String>().setMessage(e.getMessage()).full());
     }
 }

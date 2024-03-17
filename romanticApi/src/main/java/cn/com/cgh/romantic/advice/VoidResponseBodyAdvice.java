@@ -49,6 +49,6 @@ package cn.com.cgh.romantic.advice;//package cn.com.cgh.core.advice;
 //                                  Class<? extends HttpMessageConverter<?>> selectedConverterType,
 //                                  ServerHttpRequest request,
 //                                  ServerHttpResponse response) {
-//        return ResponseImpl.builder().build().SUCCESS();
+//        return new ResponseImpl().success();
 //    }
 //}

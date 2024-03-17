@@ -1,7 +1,10 @@
 package cn.com.cgh.resource.auth.service;
 
+import cn.com.cgh.romantic.pojo.resource.TbCfgPosition;
 import cn.com.cgh.romantic.pojo.resource.TbUserPosition;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ITbUserPositionService extends IService<TbUserPosition> {
 
+    int deleteByUserId(Long userId);
+
+    boolean insertByUserId(List<TbCfgPosition> positions, Long userId);
 }

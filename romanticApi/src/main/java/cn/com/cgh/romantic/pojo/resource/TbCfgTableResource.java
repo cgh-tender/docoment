@@ -4,6 +4,7 @@ import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * @author cgh
@@ -12,7 +13,7 @@ import lombok.*;
 @Data
 @Schema(description = "表资源")
 @TableName("tb_cfg_table_resource")
-@Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbCfgTableResource extends TbBaseEntity {

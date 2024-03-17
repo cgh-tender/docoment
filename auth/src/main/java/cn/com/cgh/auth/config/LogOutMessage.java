@@ -37,16 +37,14 @@ public class LogOutMessage implements RedisMessageAdvice {
         if (key.startsWith("jwt:")) {
             String[] users = key.split(":");
             Long tokenId = Long.valueOf(users[2]);
-            TbLoginLog logOut = TbLoginLog.builder()
-                    .loginStatus(LoginStatus.LOGOUT)
-                    .logoutTime(new Date())
-                    .build();
+            TbLoginLog logOut = new TbLoginLog()
+                    .setLoginStatus(LoginStatus.LOGOUT)
+                    .setLogoutTime(new Date());
             logOut.setId(tokenId);
             sendQueue.doSendLoginQueue(
-                    MsgPojo.builder()
-                            .id(idWork.nextId())
-                            .msg(logOut)
-                            .build()
+                    new MsgPojo()
+                            .setId(idWork.nextId())
+                            .setMsg(logOut)
             );
             log.info("redis删除key:{}", new String(message.getBody()));
         }

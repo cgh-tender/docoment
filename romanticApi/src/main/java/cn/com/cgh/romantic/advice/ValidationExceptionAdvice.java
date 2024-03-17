@@ -4,6 +4,7 @@ import cn.com.cgh.romantic.util.ResponseImpl;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.CollectionUtils;
@@ -25,17 +26,19 @@ import java.util.stream.Collectors;
  */
 @ControllerAdvice
 @Order(100)
+@Slf4j
 public class ValidationExceptionAdvice {
     @ExceptionHandler(value = {BindException.class, ValidationException.class})
     @ResponseBody
     public Mono<ResponseImpl<String>> exceptionHandler(Exception e) throws Exception {
+        log.info("ValidationExceptionAdvice", e);
         if (e instanceof BindException) {
             return this.handleBindException((BindException) e);
         }
         if (e instanceof ConstraintViolationException) {
             return this.handleConstraintViolationException(e);
         }
-        return Mono.just(ResponseImpl.<String>builder().message(e.getMessage()).build().full());
+        return Mono.just(new ResponseImpl<String>().setMessage(e.getMessage()).full());
     }
 
     //Controller方法的参数校验码
@@ -67,13 +70,13 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return Mono.just(ResponseImpl.<String>builder().message(msg).build().full());
+        return Mono.just(new ResponseImpl<String>().setMessage(msg).full());
     }
 
     private Mono<ResponseImpl<String>> handleConstraintViolationException(Exception e) throws Exception {
         ConstraintViolationException exception = (ConstraintViolationException) e;
         Set<ConstraintViolation<?>> violationSet = exception.getConstraintViolations();
         String msg = violationSet.stream().map(s -> s.getConstraintDescriptor().getMessageTemplate()).collect(Collectors.joining(";"));
-        return Mono.just(ResponseImpl.<String>builder().message(msg).build().full());
+        return Mono.just(new ResponseImpl<String>().setMessage(msg).full());
     }
 }

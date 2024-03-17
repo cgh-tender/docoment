@@ -3,10 +3,7 @@ package cn.com.cgh.resource.auth.service;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -26,9 +23,12 @@ public interface ITbCfgUserService extends IService<TbCfgUser> {
     @GetMapping("/checkPassword/{password}")
     public Boolean checkPassword(@PathVariable String password);
 
+    @GetMapping("/deleteUser/{userId}")
+    public Boolean deleteUser(@PathVariable Long userId);
+
     @GetMapping
     public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int pageSize);
 
     @PostMapping
-    public String add(TbCfgUser user);
+    public String addOrUpdate(@RequestBody TbCfgUser user);
 }

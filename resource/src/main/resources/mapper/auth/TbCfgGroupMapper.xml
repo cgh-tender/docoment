@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.cgh.resource.auth.mapper.TbCfgGroupMapper">
 
+    <select id="queryAllByUserId" resultType="cn.com.cgh.romantic.pojo.resource.TbCfgGroup">
+        select r.id, r.name from tb_cfg_group r, tb_user_group ug where r.id = ug.group_id and ug.user_id = ${userId}
+    </select>
 </mapper>

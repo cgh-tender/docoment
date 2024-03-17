@@ -113,10 +113,8 @@ public class GlobalIpFilter implements GlobalFilter {
         map.put(JWT_TOKEN_HEADER, Collections.singletonList(request.getHeaders().getFirst(JWT_TOKEN_HEADER)));
         Assert.isTrue(iAuthCheckController
                 .controllerCheckAuth(
-                        AuthCheckEntity.builder()
-                                .url(url)
-                                .httpMethod(request.getMethod().name())
-                                .build(), map
+                        new AuthCheckEntity().setUrl(url).setHttpMethod(request.getMethod().name())
+                        , map
                 ), "500");
         return true;
     }

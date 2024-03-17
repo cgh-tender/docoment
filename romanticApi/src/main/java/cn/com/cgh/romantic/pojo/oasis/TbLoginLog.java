@@ -19,7 +19,6 @@ import java.util.Date;
 @Accessors(chain = true)
 @TableName("tb_login_log")
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TbLoginLog extends TbBaseEntity {

@@ -39,15 +39,14 @@ public class LoginFailureHandler implements ServerAuthenticationFailureHandler {
     public Mono<Void> sendLoginFailure(ServerWebExchange exchange, RuntimeException exception) {
         String id = exchange.getRequest().getHeaders().getFirst(THREAD_LOCAL_LOG_ID);
         return Mono.justOrEmpty(id).flatMap(i -> {
-            TbLoginLog loginLog = TbLoginLog.builder()
-                    .loginStatus(LoginStatus.ERROR)
-                    .logoutTime(new Date())
-                    .build();
+            TbLoginLog loginLog = new TbLoginLog()
+                    .setLoginStatus(LoginStatus.ERROR)
+                    .setLogoutTime(new Date());
             loginLog.setId(Long.valueOf(i));
             log.info(JSONUtil.toJsonStr(loginLog));
-            MsgPojo<Object> build = MsgPojo.builder().id(loginLog.getId()).msg(
+            MsgPojo build = new MsgPojo().setId(loginLog.getId()).setMsg(
                     loginLog
-            ).build();
+            );
             sendQueue.doSendLoginQueue(build);
             if (exception instanceof BadCredentialsException){
                 return Mono.error(new ServiceException(11001));

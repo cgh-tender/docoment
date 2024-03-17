@@ -10,3 +10,5 @@ feign:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+permission:
+  admin-user: admin

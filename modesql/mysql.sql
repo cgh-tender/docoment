@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS tb_cfg_user
     email       varchar(20) DEFAULT NULL COMMENT '邮箱',
     gender tinyint(2) DEFAULT 0 COMMENT '性别',
     status  tinyint(2) DEFAULT 0 COMMENT '用户状态',
+    deleted  tinyint(2) DEFAULT 0 COMMENT '用户状态',
     PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';

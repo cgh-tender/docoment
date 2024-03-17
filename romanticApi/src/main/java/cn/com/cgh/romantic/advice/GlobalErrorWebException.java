@@ -4,6 +4,7 @@ import cn.com.cgh.romantic.server.resource.IResourceErrorController;
 import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.romantic.util.ResponseUtil;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@Getter
 public class GlobalErrorWebException implements ErrorWebExceptionHandler {
     @Autowired
     private IResourceErrorController iResourceErrorController;
@@ -46,36 +48,43 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
      * 返回一个Mono<Void>类型的对象。它接受两个参数，一个是ServerWebExchange对象，
      * 另一个是Throwable对象。函数的目的是处理服务器网络交换和异常。
      * 返回的Mono<Void>对象为空。
-     *
      */
     @Override
     public @NotNull Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        log.info("GlobalErrorWebException", ex);
         ServerHttpResponse response = exchange.getResponse();
-        return parser(ex.getMessage(),response,ex).flatMap((builder) ->
-                ResponseUtil.writeResponseAsApplicationJson(response, builder)
-        ).doOnError((e)-> log.info(e.getMessage()));
+        return parser(ex.getMessage(), response, ex).flatMap((builder) ->
+        {
+            log.info(builder.toString());
+            return ResponseUtil.writeResponseAsApplicationJson(response, builder);
+        }
+        ).doOnError((e) -> {
+            log.info("11111");
+            log.info(e.getMessage());
+        });
     }
 
-    public <T> Mono<ResponseImpl<T>> parser(String messageStr,ServerHttpResponse response,Throwable ex) {
+    public <T> Mono<ResponseImpl<T>> parser(String messageStr, ServerHttpResponse response, Throwable ex) {
         if (response.isCommitted()) {
             return Mono.error(ex);
         }
         return Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
             String message = messageStr;
-            ResponseImpl.ResponseImplBuilder<T> builder = ResponseImpl.builder();
-            if (message != null && REGEX.matcher(message).find()){
+            ResponseImpl<T> builder = new ResponseImpl();
+            if (message != null && REGEX.matcher(message).find()) {
                 ResponseImpl<String> errorMessage = iResourceErrorController.getErrorMessage(Long.valueOf(message));
-                builder.code(message);
+                builder.setCode(message);
                 message = errorMessage.getData() == null ? message : errorMessage.getData();
-            }else {
+            } else {
                 HttpStatusCode statusCode = parserStatusCode(response, ex);
                 message = ERROR_CONVERTERS.get(String.valueOf(statusCode)) == null ? message : String.valueOf(ERROR_CONVERTERS.get(String.valueOf(statusCode)));
             }
-            builder.message(message);
-            return builder.build().full();
+            builder.setMessage(message);
+            return builder.full();
         }, threadPoolTaskExecutor));
 
     }
+
     private HttpStatusCode parserStatusCode(ServerHttpResponse response, Throwable ex) {
         HttpStatusCode statusCode;
         if (ex instanceof ResponseStatusException) {
