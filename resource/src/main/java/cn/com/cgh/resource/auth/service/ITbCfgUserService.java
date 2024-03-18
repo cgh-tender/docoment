@@ -1,5 +1,6 @@
 package cn.com.cgh.resource.auth.service;
 
+import cn.com.cgh.romantic.em.UserStatus;
 import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -31,4 +32,7 @@ public interface ITbCfgUserService extends IService<TbCfgUser> {
 
     @PostMapping
     public String addOrUpdate(@RequestBody TbCfgUser user);
+
+    @PostMapping("/upUserStatus/{id}/{status}")
+    public String upUserStatus(@PathVariable Long id,@PathVariable UserStatus status);
 }

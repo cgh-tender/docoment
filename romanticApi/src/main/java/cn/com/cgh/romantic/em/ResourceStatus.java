@@ -1,5 +1,8 @@
 package cn.com.cgh.romantic.em;
 
+import cn.hutool.core.util.EnumUtil;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -19,6 +22,12 @@ public enum ResourceStatus implements DisplayedEnum {
      */
     BUTTON(1L, "按钮");
 
+    @JsonValue
     private final Long value;
     private final String label;
+
+    @JsonCreator
+    public static ResourceStatus fromValue(String value) {
+        return EnumUtil.fromString(ResourceStatus.class, value);
+    }
 }

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue"
-import { DefaultUserTableData, updatePasswordData } from "@/api/permission/user/types/base"
+import { updatePasswordData } from "@/api/permission/user/types/base"
 import { checkPassword } from "@/api/permission/user"
 import { FormRules } from "element-plus"
 import { Pointer, Refresh } from "@element-plus/icons-vue"
 
 interface Props {
-  user: DefaultUserTableData
+  userId: number
   openUpdatePassword: boolean
 }
 
 const prop = defineProps<Props>()
 const LocalOpenUpdatePassword = ref(prop.openUpdatePassword)
-
+const LocalUserId = ref(prop.userId)
+console.log(LocalUserId)
 const emit = defineEmits(["update:openUpdatePassword"])
 
 const updateFormData = ref<updatePasswordData>({

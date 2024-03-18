@@ -67,3 +67,10 @@ export function getUserStatus() {
     method: "get"
   })
 }
+
+export function upUserStatus(userId: number, status: number) {
+  return request<ApiResponseData<string>>({
+    url: `resource/user/upUserStatus/${userId}/${status}`,
+    method: "post"
+  })
+}

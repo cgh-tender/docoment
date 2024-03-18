@@ -54,8 +54,8 @@ dependencies:
     specifier: 4.5.21
     version: 4.5.21(vue@3.4.21)(xe-utils@3.5.22)
   vxe-table-plugin-element:
-    specifier: 4.0.0
-    version: 4.0.0(vxe-table@4.5.21)
+    specifier: 4.0.1
+    version: 4.0.1(vxe-table@4.5.21)
   xe-utils:
     specifier: 3.5.22
     version: 3.5.22
@@ -940,7 +940,6 @@ packages:
     resolution: {integrity: sha512-Iu0Kno1vrD7zHQDxOmvweqLkAzjxEVqNhUIXBsZ8hu8Oak7/5VTPrxOEZXYC1nmrBVJp0ZcL2E7lSuuOVaE3+w==}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     dev: true
     optional: true
@@ -949,7 +948,6 @@ packages:
     resolution: {integrity: sha512-C31QrW47llgVyrRjIwiOwsHFcaIwmkKi3PCroQY5aVq4H0A5v/vVVAtFsI1nfBngtoRpeREvZOkIhmRwUKkAdw==}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
     requiresBuild: true
     dev: true
     optional: true
@@ -958,7 +956,6 @@ packages:
     resolution: {integrity: sha512-Oq90dtMHvthFOPMl7pt7KmxzX7E71AfyIhh+cPhLY9oko97Zf2C9tt/XJD4RgxhaGeAraAXDtqxvKE1y/j35lA==}
     cpu: [riscv64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     dev: true
     optional: true
@@ -967,7 +964,6 @@ packages:
     resolution: {integrity: sha512-yUD/8wMffnTKuiIsl6xU+4IA8UNhQ/f1sAnQebmE/lyQ8abjsVyDkyRkWop0kdMhKMprpNIhPmYlCxgHrPoXoA==}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
     requiresBuild: true
     dev: true
     optional: true
@@ -976,7 +972,6 @@ packages:
     resolution: {integrity: sha512-9RyNqoFNdF0vu/qqX63fKotBh43fJQeYC98hCaf89DYQpv+xu0D8QFSOS0biA7cGuqJFOc1bJ+m2rhhsKcw1hw==}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
     requiresBuild: true
     dev: true
     optional: true
@@ -3810,7 +3805,7 @@ packages:
       acorn: 8.11.3
       pathe: 1.1.2
       pkg-types: 1.0.3
-      ufo: 1.5.1
+      ufo: 1.5.2
     dev: true
 
   /mrmime@2.0.0:
@@ -3948,7 +3943,7 @@ packages:
     dependencies:
       destr: 2.0.3
       node-fetch-native: 1.6.2
-      ufo: 1.5.1
+      ufo: 1.5.2
     dev: true
 
   /once@1.4.0:
@@ -4866,8 +4861,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  /ufo@1.5.1:
-    resolution: {integrity: sha512-HGyF79+/qZ4soRvM+nHERR2pJ3VXDZ/8sL1uLahdgEDf580NkgiWOxLk33FetExqOWp352JZRsgXbG/4MaGOSg==}
+  /ufo@1.5.2:
+    resolution: {integrity: sha512-eiutMaL0J2MKdhcOM1tUy13pIrYnyR87fEd8STJQFrrAwImwvlXkxlZEjaKah8r2viPohld08lt73QfLG1NxMg==}
     dev: true
 
   /unconfig@0.3.11:
@@ -5215,8 +5210,8 @@ packages:
       '@vue/shared': 3.4.21
       typescript: 5.4.2
 
-  /vxe-table-plugin-element@4.0.0(vxe-table@4.5.21):
-    resolution: {integrity: sha512-V8T7WfOZK0+cmi+neq6ccN1uTIFf8XXdd68JwjGScnvOukCQbD6toPct+yFZF/mq+lwv092oIXdRjsaGZA3KHA==}
+  /vxe-table-plugin-element@4.0.1(vxe-table@4.5.21):
+    resolution: {integrity: sha512-q5CS+aeFl4LmRmgzLhj+n6ob25O7nU7uxkpBsdHuSK/Ql9DuI3fUO95HsOHZdzdTMDvrcOtu1eV5Z5nK4b7arA==}
     peerDependencies:
       vxe-table: ^4.5.0
     dependencies:

@@ -7,13 +7,29 @@ import { useTreeFunction } from "@/hooks/useTreeSelect"
 import { SelectNode, SelectOption, useFetchSelect } from "@/hooks/useFetchSelect"
 import { addOrUpdateUser, loadOrganization, loadPosition, loadRole, queryUserGroup } from "@/api/permission/user"
 
+interface Props {
+  dialogVisible: boolean
+  formData: DefaultUserTableData
+  titleName: string
+  isDisabled?: boolean
+}
+
+const prop = defineProps<Props>()
+const cProp = ref<Props>(prop)
+const disabled = ref(!cProp.value.titleName.startsWith("新增"))
+const dialogVisibleProp = ref(prop.dialogVisible)
+const emit = defineEmits(["dialogVisibleClose", "dialogLoading"])
+
 const {
   treeSelectLoading: OrganizationSelectLoading,
   treeLoadData: OrganizationLoadData,
   treeModelNode: OrganizationModelNode,
   treeFunction: OrganizationFunction,
   treeSelectNode: OrganizationSelectNode
-} = useTreeFunction(loadOrganization)
+} = useTreeFunction({
+  api: loadOrganization,
+  noInitQuery: cProp.value.isDisabled
+})
 
 const OrganizationLoadFunction = (n: SelectNode, r: any) => {
   OrganizationSelectNode.node = n.data
@@ -27,7 +43,10 @@ const {
   treeModelNode: PositionModelNode,
   treeFunction: PositionFunction,
   treeSelectNode: PositionSelectNode
-} = useTreeFunction(loadPosition)
+} = useTreeFunction({
+  api: loadPosition,
+  noInitQuery: cProp.value.isDisabled
+})
 
 const PositionLoadFunction = (n: SelectNode, r: any) => {
   PositionSelectNode.node = n.data
@@ -40,7 +59,8 @@ const {
   options: groupOptions,
   value: groupValue
 } = useFetchSelect({
-  api: queryUserGroup
+  api: queryUserGroup,
+  noInitQuery: cProp.value.isDisabled
 })
 
 const {
@@ -49,7 +69,10 @@ const {
   treeModelNode: RoleModelNode,
   treeFunction: RoleFunction,
   treeSelectNode: RoleSelectNode
-} = useTreeFunction(loadRole)
+} = useTreeFunction({
+  api: loadRole,
+  noInitQuery: cProp.value.isDisabled
+})
 
 const RoleLoadFunction = (n: SelectNode, r: any) => {
   RoleSelectNode.node = n.data
@@ -89,15 +112,6 @@ const formRules: FormRules = reactive({
   ]
 })
 
-interface Props {
-  dialogVisible: boolean
-  formData: DefaultUserTableData
-  titleName: string
-  isDisabled?: boolean
-}
-
-const prop = defineProps<Props>()
-
 prop.formData.organizations.map((item) => {
   OrganizationModelNode.value.push(<SelectOption>{
     label: item.name,
@@ -122,14 +136,6 @@ prop.formData.roles.map((item) => {
 groupValue.value = prop.formData.groups.map((item) => {
   return <string>item.id
 })
-
-const cProp = ref<Props>(prop)
-
-const disabled = ref(!cProp.value.titleName.startsWith("新增"))
-
-const emit = defineEmits(["dialogVisibleClose", "dialogLoading"])
-
-const dialogVisibleProp = ref(prop.dialogVisible)
 
 /**
  * 关闭 dialog
@@ -173,7 +179,6 @@ const save = () => {
         }
     )
   }
-  console.log(data)
   addOrUpdateUser(data).finally(() => {
     emit("dialogLoading", false)
     handleUpdate()

@@ -122,4 +122,13 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
         roleService.addOrUpdate(roles,id);
         return "success";
     }
+
+    @Override
+    public String upUserStatus(Long id,UserStatus status) {
+        LambdaUpdateWrapper<TbCfgUser> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.set(TbCfgUser::getStatus, status);
+        wrapper.eq(TbCfgUser::getId,id);
+        baseMapper.update(wrapper);
+        return "更新成功";
+    }
 }

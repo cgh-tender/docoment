@@ -1,48 +1,60 @@
 <script setup lang="ts">
-import { ref, watchEffect } from "vue"
+import { ref } from "vue"
 import { Refresh } from "@element-plus/icons-vue"
+import { getUserStatus, upUserStatus } from "@/api/permission/user"
+import { SelectOption } from "@/hooks/useFetchSelect"
 
 interface Props {
   dialogUserStatus: boolean
-  status: string
+  status: any
+  userId: number
 }
 
 const prop = defineProps<Props>()
-console.log(prop)
 const dialogUserStatusProp = ref(prop.dialogUserStatus)
 const statusProp = ref(prop.status)
+const LocalUserId = ref(prop.userId)
 
-const emit = defineEmits(["handleCloseUserStatus", "handleUpdateUserStatus"])
+const emit = defineEmits(["update:dialogUserStatus", "handleUpdateUserStatus"])
 
-function handleCloseUser() {
-  emit("handleCloseUserStatus")
+const updateStatus = () => {
+  if (!(statusProp instanceof String)) {
+    upUserStatus(LocalUserId.value, statusProp.value)
+  }
+  handleClose()
 }
 
-function updateStatus() {
-  emit("handleUpdateUserStatus", statusProp.value)
+const handleClose = () => {
+  emit("update:dialogUserStatus", false)
 }
 
-watchEffect(() => {
-  console.log(dialogUserStatusProp.value)
+const statusList = ref<SelectOption[]>([])
+getUserStatus().then((data) => {
+  statusList.value = data.data
 })
-const status1 = [{ value: "1", label: "成功" }]
 </script>
 
 <template>
-  <el-dialog v-model="dialogUserStatusProp" title="Tips" width="500" :before-close="handleCloseUser">
+  <el-dialog v-model="dialogUserStatusProp" title="更新用户状态" width="500" :before-close="handleClose">
     <el-card shadow="never" class="search-wrapper">
-      <el-form :inline="true" label-width="auto">
-        <el-form-item label="请输选择状态">
-          <el-select v-model="statusProp">
-            <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in status1" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
+      <el-form-item label="请输选择更新状态">
+        <el-select v-model="statusProp">
+          <el-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statusList" />
+        </el-select>
+      </el-form-item>
+      <template #footer>
+        <div class="my-el-button">
           <el-button :icon="Refresh" @click="updateStatus">更新</el-button>
-        </el-form-item>
-      </el-form>
+        </div>
+      </template>
     </el-card>
   </el-dialog>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.my-el-button {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 85%;
+}
+</style>

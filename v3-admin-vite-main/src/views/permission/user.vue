@@ -3,7 +3,7 @@ import { computed, ref, watchEffect } from "vue"
 import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
 import { deleteUserById, getUserStatus, getUserTable } from "@/api/permission/user"
 import { usePagination } from "@/hooks/usePagination"
-import { ElMessage, type FormInstance } from "element-plus"
+import { ElMessage } from "element-plus"
 import { Compass, Delete, Edit, Lock, More, Refresh, Search, Unlock, View, ZoomIn } from "@element-plus/icons-vue"
 import updatePassword from "@/views/permission/components/user/updatePassword.vue"
 import AddOrUpdate from "@/views/permission/components/user/addOrUpdate.vue"
@@ -56,7 +56,7 @@ const formData = ref<DefaultUserTableData>(initFormData)
  * @param row
  */
 const handleUpdate = (row: DefaultUserTableData) => {
-  if (!isAdmin(<string>row.username)) {
+  if (row.username && isAdmin(row.username)) {
     ElMessage.error("该用户为系统管理员，无法修改！")
   } else {
     titleName.value = "修改用户"
@@ -143,13 +143,10 @@ const deleteUserRow = async (row: DefaultUserTableData) => {
   getTableData()
 }
 
-const handleCloseUserStatus = () => {
-  dialogUserStatus.value = false
-}
 const handleUpdateUserStatus = (row: DefaultUserTableData) => {
   formData.value.status = row.status
+  formData.value.id = row.id
   dialogUserStatus.value = true
-  console.log(row)
 }
 
 const handleDialogVisibleClose = () => {
@@ -161,15 +158,31 @@ const handleDialogVisibleClose = () => {
 const dialogLoading = (value: boolean) => {
   loading.value = value
 }
-console.log(admin)
-const titp = ref<boolean>(false)
 const tagVisible = ref<boolean>(false)
-watchEffect(() => {
-  titp.value = admin && tagVisible.value
-})
+
+const parserTagType = (status: string) => {
+  if (status) {
+    switch (status) {
+      case "使用":
+        return "success"
+      case "锁定":
+        return "warning"
+      case "删除":
+        return "danger"
+    }
+  } else {
+    return "primary"
+  }
+}
 watchEffect(() => {
   paginationData
+  dialogUserStatus
   getTableData()
+})
+watchEffect(() => {
+  if (!handleUpdatePassword.value) {
+    resetForm()
+  }
 })
 </script>
 <template>
@@ -200,11 +213,12 @@ watchEffect(() => {
         <el-table-column prop="status" label="状态" align="center">
           <template #default="scope">
             <el-tag
+              :style="{ cursor: admin && tagVisible ? 'pointer' : 'text' }"
               @mouseenter="tagVisible = true"
               @mouseleave="tagVisible = false"
-              type="primary"
+              :type="parserTagType(scope.row.status)"
               effect="light"
-              @click="handleUpdateUserStatus(scope.row)"
+              @click="admin && tagVisible ? handleUpdateUserStatus(scope.row) : ''"
               :key="scope.row.id"
               >{{ scope.row.status }}
             </el-tag>
@@ -268,16 +282,15 @@ watchEffect(() => {
     </transition>
     <transition>
       <div v-if="handleUpdatePassword">
-        <updatePassword v-model:openUpdatePassword="handleUpdatePassword" v-model:user="formData" />
+        <updatePassword v-model:openUpdatePassword="handleUpdatePassword" v-model:user-id="formData.id" />
       </div>
     </transition>
     <transition>
       <div v-if="dialogUserStatus">
         <update-user-status
-          @handleCloseUserStatus="handleCloseUserStatus"
-          @handleUpdateUserStatus="handleUpdateUserStatus"
           v-model:dialogUserStatus="dialogUserStatus"
           v-model:status="formData.status"
+          v-model:user-id="formData.id"
         />
       </div>
     </transition>

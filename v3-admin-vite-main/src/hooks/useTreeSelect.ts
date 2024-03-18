@@ -14,33 +14,44 @@ const useTreeSelect: TreeSelectProps = (
   fn,
   node: SelectOption,
   resolve: (data: SelectOption[]) => void
-): ((...args: any[]) => Promise<SelectOption[]>) => {
-  return async (...args) => {
+): ((config: Params) => Promise<SelectOption[]>) => {
+  return async (config) => {
     if (node?.children) {
       resolve(node.children)
       return node.children
     } else {
-      return fn(node, args).then((data) => {
-        node.children = data.data
-        resolve ? resolve(data.data) : ""
-        return data.data
-      })
+      if (config.noInitQuery) {
+        config.noInitQuery = false
+        return []
+      } else {
+        return fn(node, config).then((data) => {
+          node.children = data.data
+          resolve ? resolve(data.data) : ""
+          return data.data
+        })
+      }
     }
   }
 }
 
+interface Params {
+  noInitQuery?: boolean
+  api: (node: SelectOption) => Promise<ApiResponseData<any>>
+}
+
 interface treeSelectNode {
   node: SelectOption
-  args: []
+  config: Params
   resolve: (data: SelectOption[]) => void
 }
 
-export function useTreeFunction(api: (node: SelectOption) => Promise<ApiResponseData<any>>) {
+export function useTreeFunction(config: Params) {
+  const { api } = config
   const treeSelectLoading = ref(false)
   const treeLoadData = ref<SelectOption[]>([])
   const treeModelNode = ref<any[]>([]) // 选择的节点
   const treeSelectNode = reactive<treeSelectNode>({
-    args: [],
+    config: { ...config },
     node: <SelectOption>{},
     resolve(data: SelectOption[]): void {}
   }) // 选择的节点
@@ -51,7 +62,7 @@ export function useTreeFunction(api: (node: SelectOption) => Promise<ApiResponse
       api,
       treeSelectNode.node,
       treeSelectNode.resolve
-    )(treeSelectNode.args)
+    )(treeSelectNode.config)
       .then((data: SelectOption[]) => {
         if (!treeLoadData.value) {
           treeLoadData.value = data

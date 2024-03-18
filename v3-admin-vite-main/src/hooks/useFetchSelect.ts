@@ -13,6 +13,7 @@ export interface SelectNode extends ApiResponseData<SelectOption> {}
 /** 入参格式，暂时只需要传递 api 函数即可 */
 interface FetchSelectProps {
   api: () => Promise<ApiResponseData<SelectOption[]>>
+  noInitQuery?: boolean
 }
 
 export function useFetchSelect(props: FetchSelectProps) {
@@ -36,7 +37,11 @@ export function useFetchSelect(props: FetchSelectProps) {
   }
 
   onMounted(() => {
-    loadData()
+    if (props.noInitQuery) {
+      props.noInitQuery = false
+    } else {
+      loadData()
+    }
   })
 
   return {

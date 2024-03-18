@@ -1,6 +1,7 @@
 package cn.com.cgh.romantic.util;
 
 import cn.com.cgh.romantic.em.DisplayedEnum;
+import cn.com.cgh.romantic.em.UserStatus;
 import cn.com.cgh.romantic.pojo.SelectOption;
 
 import java.util.Arrays;
@@ -13,5 +14,9 @@ import java.util.stream.Collectors;
 public class DisplayedEnumUtil {
     public static List<SelectOption> parser(DisplayedEnum[] aa){
         return Arrays.stream(aa).map(s -> new SelectOption().setLabel(s.getLabel()).setValue(s.getValue())).collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        parser(UserStatus.values());
     }
 }
