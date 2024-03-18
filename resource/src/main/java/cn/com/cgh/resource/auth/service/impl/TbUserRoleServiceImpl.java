@@ -1,10 +1,9 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.resource.TbCfgRole;
-import cn.com.cgh.romantic.pojo.resource.TbUserGroup;
-import cn.com.cgh.romantic.pojo.resource.TbUserRole;
 import cn.com.cgh.resource.auth.mapper.TbUserRoleMapper;
 import cn.com.cgh.resource.auth.service.ITbUserRoleService;
+import cn.com.cgh.romantic.pojo.resource.TbCfgRole;
+import cn.com.cgh.romantic.pojo.resource.TbUserRole;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class TbUserRoleServiceImpl extends ServiceImpl<TbUserRoleMapper, TbUserRole> implements ITbUserRoleService {
     @Override
+    @Transactional
     public int deleteByUserId(Long userId) {
         LambdaUpdateWrapper<TbUserRole> delete = new LambdaUpdateWrapper<>();
         delete.eq(TbUserRole::getUserId, userId);

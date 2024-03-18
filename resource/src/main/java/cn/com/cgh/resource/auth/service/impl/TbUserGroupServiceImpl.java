@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class TbUserGroupServiceImpl extends ServiceImpl<TbUserGroupMapper, TbUserGroup> implements ITbUserGroupService {
     @Override
+    @Transactional
     public int deleteByUserId(Long userId) {
         LambdaUpdateWrapper<TbUserGroup> delete = new LambdaUpdateWrapper<>();
         delete.eq(TbUserGroup::getUserId, userId);

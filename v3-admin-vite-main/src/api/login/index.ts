@@ -24,7 +24,7 @@ export function loginApi(data: Login.LoginRequestData) {
 }
 
 export function logOutApi() {
-  return request<Login.LoginResponseData>({
+  return request<ApiResponseData<string>>({
     url: "auth/logout",
     method: "post",
     headers: {

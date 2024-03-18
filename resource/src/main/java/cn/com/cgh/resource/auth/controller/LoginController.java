@@ -57,9 +57,12 @@ public class LoginController {
     public Map info(ServerHttpRequest request) {
         String authorization = request.getHeaders().getFirst(JWT_TOKEN_HEADER);
         Long userId = jwtTokenUtil.getUserIdFromToken(authorization);
+        String username = jwtTokenUtil.getUserNameFromToken(authorization);
         Set<Long> data = iTbCfgRoleService.queryUserRoles(userId);
         Map<String, Object> map = new HashMap<>();
         map.put("roles", data);
+        map.put("username", username);
+        map.put("userId", userId);
         return map;
     }
     @GetMapping("/hello")

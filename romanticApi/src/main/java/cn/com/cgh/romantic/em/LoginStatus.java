@@ -1,35 +1,32 @@
 package cn.com.cgh.romantic.em;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
  * @author cgh
  */
-
+@AllArgsConstructor
+@Getter
 public enum LoginStatus implements DisplayedEnum {
     /**
      * 正常
      */
-    SUCCESS(0, "登录成功"),
+    SUCCESS(0L, "登录成功"),
     /**
      * 登录失败
      */
-    ERROR(1, "登录失败"),
+    ERROR(1L, "登录失败"),
     /**
      * 登录失败
      */
-    IN(2, "正在登录"),
+    IN(2L, "正在登录"),
     /**
      * 登录失败
      */
-    LOGOUT(3, "退出登录");
+    LOGOUT(3L, "退出登录");
     @Getter
-    private final Integer value;
+    private final Long value;
     private final String label;
-
-    LoginStatus(Integer value, String desc) {
-        this.value = value;
-        this.label = desc;
-    }
 
 }

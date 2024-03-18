@@ -48,6 +48,7 @@ export interface DefaultUserTableData {
   id: string | number
   gender: string
   createTime?: string
+  password?: string
   email: string
   phone: string
   status?: string

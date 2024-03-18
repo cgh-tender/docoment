@@ -1,6 +1,5 @@
 package cn.com.cgh.romantic.em;
 
-import com.baomidou.mybatisplus.annotation.IEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,16 +9,16 @@ public enum UserStatus implements DisplayedEnum {
     /**
      * 正常
      */
-    NORMAL(0, "正常"),
+    NORMAL(0L, "使用"),
     /**
      * 锁定
      */
-    LOCK(1, "锁定"),
+    LOCK(1L, "锁定"),
     /**
      * 删除
      */
-    DELETE(10, "删除");
+    DELETE(10L, "删除");
 
-    private final Integer value;
+    private final Long value;
     private final String label;
 }

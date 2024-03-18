@@ -57,9 +57,13 @@ export function loadRole(node: SelectOption) {
 export function deleteUserById(id: string | number) {
   return request<ApiResponseData<SelectOption[]>>({
     url: `resource/user/deleteUser/${id}`,
-    method: "get",
-    params: {
-      id: id
-    }
+    method: "get"
+  })
+}
+
+export function getUserStatus() {
+  return request<ApiResponseData<SelectOption[]>>({
+    url: `resource/dict/getUserStatus`,
+    method: "get"
   })
 }

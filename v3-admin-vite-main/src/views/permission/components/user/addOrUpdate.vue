@@ -125,6 +125,8 @@ groupValue.value = prop.formData.groups.map((item) => {
 
 const cProp = ref<Props>(prop)
 
+const disabled = ref(!cProp.value.titleName.startsWith("新增"))
+
 const emit = defineEmits(["dialogVisibleClose", "dialogLoading"])
 
 const dialogVisibleProp = ref(prop.dialogVisible)
@@ -143,6 +145,8 @@ const save = () => {
     id: cProp.value.formData.id,
     email: cProp.value.formData.email,
     phone: cProp.value.formData.phone,
+    username: disabled ? cProp.value.formData.username : "",
+    password: disabled ? cProp.value.formData.password : "",
     realname: cProp.value.formData.realname,
     organizations: OrganizationModelNode.value.flatMap(
       (item) =>
@@ -195,7 +199,7 @@ const changeGender = (val: any) => {
       <el-row>
         <el-col :span="12">
           <el-form-item prop="username" label="账号">
-            <el-input v-model="cProp.formData.username" placeholder="请输入账号" disabled />
+            <el-input v-model="cProp.formData.username" placeholder="请输入账号" :disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -217,6 +221,11 @@ const changeGender = (val: any) => {
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="12" v-if="!disabled">
+          <el-form-item prop="password" label="密码">
+            <el-input type="password" show-password clearable v-model="cProp.formData.password">请输入密码：</el-input>
+          </el-form-item>
+        </el-col>
         <el-col :span="12">
           <el-form-item prop="gender" label="性别">
             <el-switch @change="changeGender" inline-prompt v-model="gender" active-text="男" inactive-text="女" />
@@ -225,7 +234,7 @@ const changeGender = (val: any) => {
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item prop="organizations" label="组织">
+          <el-form-item prop="organizations" clearable label="组织">
             <el-tree-select
               v-loading="OrganizationSelectLoading"
               v-model="OrganizationModelNode"

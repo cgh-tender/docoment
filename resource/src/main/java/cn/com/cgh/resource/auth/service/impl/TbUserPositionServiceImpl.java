@@ -1,11 +1,9 @@
 package cn.com.cgh.resource.auth.service.impl;
 
-import cn.com.cgh.romantic.pojo.resource.TbCfgGroup;
-import cn.com.cgh.romantic.pojo.resource.TbCfgPosition;
-import cn.com.cgh.romantic.pojo.resource.TbUserGroup;
-import cn.com.cgh.romantic.pojo.resource.TbUserPosition;
 import cn.com.cgh.resource.auth.mapper.TbUserPositionMapper;
 import cn.com.cgh.resource.auth.service.ITbUserPositionService;
+import cn.com.cgh.romantic.pojo.resource.TbCfgPosition;
+import cn.com.cgh.romantic.pojo.resource.TbUserPosition;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class TbUserPositionServiceImpl extends ServiceImpl<TbUserPositionMapper, TbUserPosition> implements ITbUserPositionService {
     @Override
+    @Transactional
     public int deleteByUserId(Long userId) {
         LambdaUpdateWrapper<TbUserPosition> delete = new LambdaUpdateWrapper<>();
         delete.eq(TbUserPosition::getUserId, userId);

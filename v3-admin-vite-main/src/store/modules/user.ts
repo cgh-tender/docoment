@@ -20,10 +20,19 @@ export const useUserStore = defineStore("user", () => {
   const token = ref<string>(getToken() || "")
   const roles = ref<string[]>([])
   const username = ref<string>("")
+  const admin = ref<boolean>(false)
+  const admins = ref<string[]>([])
 
   const permissionStore = usePermissionStoreHook()
   const tagsViewStore = useTagsViewStore()
   const settingsStore = useSettingsStore()
+
+  /**
+   * 是否 admin 用户 true 是 false 否
+   */
+  const isAdmin = (v: string): boolean => {
+    return admins.value.indexOf(v) !== -1
+  }
 
   /** 设置角色数组 */
   const setRoles = (value: string[]) => {
@@ -90,6 +99,8 @@ export const useUserStore = defineStore("user", () => {
   const getInfo = async () => {
     const { data } = await getUserInfoApi()
     username.value = data.username
+    admins.value = import.meta.env.VITE_ADMIN_USER?.split(",")
+    admin.value = admins.value.indexOf(data.username) !== -1
     // 验证返回的 roles 是否为一个非空数组，否则塞入一个没有任何作用的默认角色，防止路由守卫逻辑进入无限循环
     roles.value = data.roles?.length > 0 ? data.roles : routeSettings.defaultRoles
   }
@@ -109,14 +120,21 @@ export const useUserStore = defineStore("user", () => {
     await router.push("/")
   }
   /** 登出 */
-  const logout = async (): Promise<string> => {
-    const { message } = await logOutApi()
-    removeToken()
-    token.value = ""
-    roles.value = []
-    cleanRouter()
-    _resetTagsView()
-    return message
+  const logout = async () => {
+    return logOutApi()
+      .then(() => {
+        removeToken()
+        token.value = ""
+        roles.value = []
+        cleanRouter()
+        _resetTagsView()
+      })
+      .catch(() => {
+        console.log("退出异常")
+      })
+      .finally(() => {
+        location.reload()
+      })
   }
   /** 重置 Token */
   const resetToken = () => {
@@ -132,7 +150,20 @@ export const useUserStore = defineStore("user", () => {
     }
   }
 
-  return { token, roles, username, setRoles, login, getInfo, changeRoles, logout, resetToken, flushRoute }
+  return {
+    token,
+    roles,
+    username,
+    setRoles,
+    login,
+    getInfo,
+    changeRoles,
+    logout,
+    resetToken,
+    flushRoute,
+    admin,
+    isAdmin
+  }
 })
 
 /** 在 setup 外使用 */

@@ -12,7 +12,6 @@ interface Props {
 
 const prop = defineProps<Props>()
 const LocalOpenUpdatePassword = ref(prop.openUpdatePassword)
-console.log(LocalOpenUpdatePassword.value)
 
 const emit = defineEmits(["update:openUpdatePassword"])
 

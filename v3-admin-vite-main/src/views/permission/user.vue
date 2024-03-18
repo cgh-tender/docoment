@@ -1,13 +1,16 @@
 <script lang="ts" setup>
 import { computed, ref, watchEffect } from "vue"
 import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
-import { deleteUserById, getUserTable } from "@/api/permission/user"
+import { deleteUserById, getUserStatus, getUserTable } from "@/api/permission/user"
 import { usePagination } from "@/hooks/usePagination"
 import { ElMessage, type FormInstance } from "element-plus"
 import { Compass, Delete, Edit, Lock, More, Refresh, Search, Unlock, View, ZoomIn } from "@element-plus/icons-vue"
 import updatePassword from "@/views/permission/components/user/updatePassword.vue"
 import AddOrUpdate from "@/views/permission/components/user/addOrUpdate.vue"
 import { useFullscreenLoading } from "@/hooks/useFullscreenLoading"
+import { useUserStoreHook } from "@/store/modules/user"
+import { SelectOption } from "@/hooks/useFetchSelect"
+import UpdateUserStatus from "@/views/permission/components/user/updateUserStatus.vue"
 
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
@@ -16,8 +19,10 @@ const handleUpdatePassword = ref<boolean>(false)
 const titleName = ref<string>("")
 const tableData = ref<DefaultUserTableData[]>([])
 const lock = ref<boolean>(false)
-const adminUser = import.meta.env.VITE_ADMIN_USER
-const adminUsers: string[] = adminUser.split(",")
+const { admin, isAdmin } = useUserStoreHook()
+const userStatus = ref<SelectOption[]>([])
+const dialogUserStatus = ref<boolean>(false)
+
 const searchData = computed<GetBaseUserTableData>(() => {
   return {
     currentPage: paginationData.currentPage,
@@ -28,8 +33,6 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
   currentPage: 1,
   pageSize: 2
 })
-
-const formRef = ref<FormInstance | null>(null)
 
 const initFormData: DefaultUserTableData = {
   createTime: "",
@@ -53,13 +56,25 @@ const formData = ref<DefaultUserTableData>(initFormData)
  * @param row
  */
 const handleUpdate = (row: DefaultUserTableData) => {
-  if (!adminUsers.indexOf(<string>row.username)) {
+  if (!isAdmin(<string>row.username)) {
     ElMessage.error("该用户为系统管理员，无法修改！")
-    return
+  } else {
+    titleName.value = "修改用户"
+    formData.value = row
+    dialogVisible.value = true
   }
-  titleName.value = "修改用户"
-  formData.value = row
+}
+
+const handleAdd = () => {
+  titleName.value = "新增用户"
+  formData.value = initFormData
   dialogVisible.value = true
+}
+
+if (admin) {
+  getUserStatus().then((data) => {
+    userStatus.value = data.data
+  })
 }
 
 /**
@@ -120,11 +135,21 @@ const handleOpen = (row: DefaultUserTableData) => {
 const update_password = (row: DefaultUserTableData) => {
   formData.value = row
   handleUpdatePassword.value = true
-  console.log(handleUpdatePassword.value)
 }
 
 const deleteUserRow = async (row: DefaultUserTableData) => {
   await useFullscreenLoading(deleteUserById)(row.id)
+  resetForm()
+  getTableData()
+}
+
+const handleCloseUserStatus = () => {
+  dialogUserStatus.value = false
+}
+const handleUpdateUserStatus = (row: DefaultUserTableData) => {
+  formData.value.status = row.status
+  dialogUserStatus.value = true
+  console.log(row)
 }
 
 const handleDialogVisibleClose = () => {
@@ -136,7 +161,12 @@ const handleDialogVisibleClose = () => {
 const dialogLoading = (value: boolean) => {
   loading.value = value
 }
-
+console.log(admin)
+const titp = ref<boolean>(false)
+const tagVisible = ref<boolean>(false)
+watchEffect(() => {
+  titp.value = admin && tagVisible.value
+})
 watchEffect(() => {
   paginationData
   getTableData()
@@ -155,7 +185,7 @@ watchEffect(() => {
         <el-form-item>
           <el-button type="primary" :icon="Search" @click="getTableData">查询</el-button>
           <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
-          <el-button :icon="ZoomIn" @click="resetSearch">新增</el-button>
+          <el-button :icon="ZoomIn" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -167,10 +197,22 @@ watchEffect(() => {
         <el-table-column prop="phone" label="手机" align="center" />
         <el-table-column prop="email" label="邮箱" align="center" />
         <el-table-column prop="gender" label="性别" align="center" />
-        <el-table-column prop="status" label="状态" align="center" />
+        <el-table-column prop="status" label="状态" align="center">
+          <template #default="scope">
+            <el-tag
+              @mouseenter="tagVisible = true"
+              @mouseleave="tagVisible = false"
+              type="primary"
+              effect="light"
+              @click="handleUpdateUserStatus(scope.row)"
+              :key="scope.row.id"
+              >{{ scope.row.status }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="roles" label="角色" align="center">
           <template #default="scope">
-            <el-tag type="warning" effect="plain" :key="role.id" v-for="role in scope.row.roles"
+            <el-tag type="primary" effect="light" :key="role.id" v-for="role in scope.row.roles"
               >{{ role.name }}
             </el-tag>
           </template>
@@ -227,6 +269,16 @@ watchEffect(() => {
     <transition>
       <div v-if="handleUpdatePassword">
         <updatePassword v-model:openUpdatePassword="handleUpdatePassword" v-model:user="formData" />
+      </div>
+    </transition>
+    <transition>
+      <div v-if="dialogUserStatus">
+        <update-user-status
+          @handleCloseUserStatus="handleCloseUserStatus"
+          @handleUpdateUserStatus="handleUpdateUserStatus"
+          v-model:dialogUserStatus="dialogUserStatus"
+          v-model:status="formData.status"
+        />
       </div>
     </transition>
   </div>

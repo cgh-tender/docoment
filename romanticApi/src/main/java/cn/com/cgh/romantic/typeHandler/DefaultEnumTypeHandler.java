@@ -30,7 +30,7 @@ public class DefaultEnumTypeHandler extends BaseTypeHandler<DisplayedEnum> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, DisplayedEnum parameter, JdbcType jdbcType)
             throws SQLException {
-        ps.setInt(i, parameter.getValue());
+        ps.setLong(i, parameter.getValue());
     }
 
     @Override

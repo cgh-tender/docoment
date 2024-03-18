@@ -13,12 +13,12 @@ public enum GenderStatus implements DisplayedEnum {
     /**
      * 正常
      */
-    MALE(0, "男"),
+    MALE(0L, "男"),
     /**
      * 锁定
      */
-    FEMALE(1, "女");
-    private final Integer value;
+    FEMALE(1L, "女");
+    private final Long value;
     private final String label;
 
 }
