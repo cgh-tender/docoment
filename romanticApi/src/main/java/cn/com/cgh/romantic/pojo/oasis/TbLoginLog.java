@@ -6,10 +6,13 @@ import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author cgh
@@ -31,7 +34,7 @@ public class TbLoginLog extends TbBaseEntity {
     @Schema(description = "IP地址")
     private String ipDetail;
     @Schema(description = "登出时间")
-    private Date logoutTime;
+    private LocalDateTime logoutTime;
     /**
      * 成功登录、密码错误、账号被锁定
      */

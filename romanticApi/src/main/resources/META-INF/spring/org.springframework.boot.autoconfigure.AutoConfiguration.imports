@@ -11,6 +11,7 @@ cn.com.cgh.romantic.config.WebClientConfig
 cn.com.cgh.romantic.config.WebfluxAOPConfig
 cn.com.cgh.romantic.advice.GlobalErrorWebException
 
+cn.com.cgh.romantic.util.StatusConverter
 cn.com.cgh.romantic.util.Application
 cn.com.cgh.romantic.util.SendQueue
 cn.com.cgh.romantic.util.JwtTokenUtil

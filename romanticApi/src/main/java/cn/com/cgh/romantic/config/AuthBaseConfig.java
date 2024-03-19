@@ -3,6 +3,7 @@ package cn.com.cgh.romantic.config;
 import cn.com.cgh.romantic.advice.GlobalExceptionHandler;
 import cn.com.cgh.romantic.advice.NotVoidResponseBodyAdvice;
 import cn.com.cgh.romantic.config.aspect.JsonParamArgumentResolver;
+import cn.com.cgh.romantic.util.StatusConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
@@ -11,13 +12,13 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
-import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
 
 import java.util.stream.Collectors;
@@ -28,6 +29,15 @@ import java.util.stream.Collectors;
 @Slf4j
 @EnableWebFlux
 public class AuthBaseConfig implements WebFluxConfigurer {
+    @Bean
+    public StatusConverter statusConverter(){
+        return new StatusConverter();
+    }
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverterFactory(statusConverter());
+    }
+
     @Override
     public void configureArgumentResolvers(ArgumentResolverConfigurer configurer) {
         configurer.addCustomResolver(new JsonParamArgumentResolver());

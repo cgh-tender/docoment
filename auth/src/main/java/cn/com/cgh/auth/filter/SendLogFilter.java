@@ -20,7 +20,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static cn.com.cgh.romantic.constant.RomanticConstant.*;
 import static cn.com.cgh.romantic.util.RequestUtil.CACHED_REQUEST_OBJECT_BODY_KEY;
@@ -63,7 +63,7 @@ public class SendLogFilter implements WebFilter {
                         .setOsSys(parse.getPlatform().getName() + "/" + parse.getOs().getName() + "/" + parse.getOsVersion())
                         .setLoginStatus(LoginStatus.IN);
                 loginLog.setId(id);
-                loginLog.setCreateTime(new Date());
+                loginLog.setCreateTime(LocalDateTime.now());
                 MsgPojo<Object> build = new MsgPojo().setId(id).setMsg(
                         loginLog
                 );

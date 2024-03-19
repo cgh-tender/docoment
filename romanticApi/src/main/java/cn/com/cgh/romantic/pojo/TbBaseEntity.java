@@ -5,10 +5,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
+import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author cgh
@@ -24,11 +25,11 @@ public class TbBaseEntity implements Serializable {
     private Long createBy;
     @TableField(fill = FieldFill.INSERT)
     @Schema(description = "创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description = "更新着")
     private Long updateBy;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     @Schema(description = "更新时间")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

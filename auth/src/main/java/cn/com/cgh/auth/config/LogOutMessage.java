@@ -13,7 +13,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.Topic;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author cgh
@@ -39,7 +39,7 @@ public class LogOutMessage implements RedisMessageAdvice {
             Long tokenId = Long.valueOf(users[2]);
             TbLoginLog logOut = new TbLoginLog()
                     .setLoginStatus(LoginStatus.LOGOUT)
-                    .setLogoutTime(new Date());
+                    .setLogoutTime(LocalDateTime.now());
             logOut.setId(tokenId);
             sendQueue.doSendLoginQueue(
                     new MsgPojo()

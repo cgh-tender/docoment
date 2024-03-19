@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static cn.com.cgh.romantic.constant.RomanticConstant.THREAD_LOCAL_LOG_ID;
 
@@ -41,7 +41,7 @@ public class LoginFailureHandler implements ServerAuthenticationFailureHandler {
         return Mono.justOrEmpty(id).flatMap(i -> {
             TbLoginLog loginLog = new TbLoginLog()
                     .setLoginStatus(LoginStatus.ERROR)
-                    .setLogoutTime(new Date());
+                    .setLogoutTime(LocalDateTime.now());
             loginLog.setId(Long.valueOf(i));
             log.info(JSONUtil.toJsonStr(loginLog));
             MsgPojo build = new MsgPojo().setId(loginLog.getId()).setMsg(

@@ -1,7 +1,5 @@
 package cn.com.cgh.romantic.util;
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateTime;
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.JWT;
@@ -17,7 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import java.text.MessageFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -133,12 +131,12 @@ public class JwtTokenUtil {
     private Map<String, Object> buildClaims(Long userId, String username, Map<String, String> payloads) {
         int payloadSizes = payloads == null ? 0 : payloads.size();
         Map<String, Object> payload = new HashMap<>(payloadSizes + 2);
-        DateTime now = DateTime.now();
-        DateTime newTime = now.offsetNew(DateField.MINUTE, 10);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime localDateTime = DateUtil.addSecond(now, 10);
         //签发时间
         payload.put(JWTPayload.ISSUED_AT, now);
         //过期时间
-        payload.put(JWTPayload.EXPIRES_AT, newTime);
+        payload.put(JWTPayload.EXPIRES_AT, localDateTime);
         //生效时间
         payload.put(JWTPayload.NOT_BEFORE, now);
         //载荷
@@ -217,7 +215,7 @@ public class JwtTokenUtil {
         String refreshedToken;
         try {
             JSONObject claims = getClaimsFromToken(token);
-            claims.set(JWTPayload.ISSUED_AT, new Date());
+            claims.set(JWTPayload.ISSUED_AT, LocalDateTime.now());
             refreshedToken = generateToken(claims);
         } catch (Exception e) {
             refreshedToken = null;
@@ -242,8 +240,8 @@ public class JwtTokenUtil {
      * @return 令牌
      */
     private String generateRefreshToken(Map<String, Object> claims) {
-        DateTime dateTime = (DateTime) claims.get(JWTPayload.EXPIRES_AT);
-        dateTime = dateTime.offsetNew(DateField.MINUTE, 10);
+        LocalDateTime dateTime = (LocalDateTime) claims.get(JWTPayload.EXPIRES_AT);
+        dateTime = DateUtil.addSecond(dateTime, 10);
         claims.put(JWTPayload.EXPIRES_AT, dateTime);
         return generateToken(claims);
     }

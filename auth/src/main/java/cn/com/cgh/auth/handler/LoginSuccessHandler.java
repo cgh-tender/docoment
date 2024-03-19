@@ -21,7 +21,7 @@ import org.springframework.security.web.server.authentication.ServerAuthenticati
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +60,7 @@ public class LoginSuccessHandler implements ServerAuthenticationSuccessHandler {
                         .setUserId(securityUser.getId())
                         .setLoginStatus(LoginStatus.SUCCESS);
                 loginLog.setId(Long.valueOf(id));
-                loginLog.setUpdateTime(new Date());
+                loginLog.setUpdateTime(LocalDateTime.now());
                 log.info(JSONUtil.toJsonStr(loginLog));
                 MsgPojo<Object> build = new MsgPojo().setId(securityUser.getId()).setMsg(
                         loginLog

@@ -1,12 +1,10 @@
 package cn.com.cgh.romantic.handler;
 
-import cn.com.cgh.romantic.util.IdWork;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -24,13 +22,13 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
             this.setFieldValByName("updateBy", 1L, metaObject);
         }
         if (Objects.isNull(metaObject.getValue("createTime"))) {
-            this.setFieldValByName("createTime", new Date(), metaObject);
+            this.setFieldValByName("createTime", LocalDateTime.now(), metaObject);
         }
         if (Objects.isNull(metaObject.getValue("createBy"))) {
             this.setFieldValByName("createBy", 1L, metaObject);
         }
         if (Objects.isNull(metaObject.getValue("updateTime"))) {
-            this.setFieldValByName("updateTime", new Date(), metaObject);
+            this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
         }
     }
 
@@ -40,7 +38,7 @@ public class DefaultDBFieldHandler implements MetaObjectHandler {
             this.setFieldValByName("updateBy", 1L, metaObject);
         }
         if (Objects.isNull(metaObject.getValue("updateTime"))) {
-            this.setFieldValByName("updateTime", new Date(), metaObject);
+            this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
         }
     }
 }
