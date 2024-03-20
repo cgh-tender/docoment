@@ -1,5 +1,7 @@
 /** 声明 vite 环境变量的类型（如果未声明则默认是 any） */
 declare interface ImportMetaEnv {
+  readonly VITE_CACHE_TYPE: "local" | "cookie" | "session"
+  readonly VITE_APP_PROJECT_NAME: string
   readonly VITE_BASE_CODE_API: string
   readonly VITE_APP_TITLE: string /*项目标题*/
   readonly VITE_APP_TITLE_: string /*水印内容*/

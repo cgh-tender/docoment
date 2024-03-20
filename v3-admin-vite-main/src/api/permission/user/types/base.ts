@@ -45,7 +45,7 @@ export interface Position {
  * 用户管理列表数据
  */
 export interface DefaultUserTableData {
-  id: string | number
+  id: string
   gender: string
   createTime?: string
   password?: string

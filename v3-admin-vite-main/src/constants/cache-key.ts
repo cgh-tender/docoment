@@ -1,4 +1,4 @@
-const SYSTEM_NAME = "v3-admin-vite"
+const SYSTEM_NAME = import.meta.env.VITE_APP_PROJECT_NAME
 
 /** 缓存数据时用到的 Key */
 class CacheKey {

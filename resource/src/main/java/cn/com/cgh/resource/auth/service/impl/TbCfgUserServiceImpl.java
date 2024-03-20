@@ -8,7 +8,6 @@ import cn.com.cgh.romantic.em.YesNoStatus;
 import cn.com.cgh.romantic.exception.ServiceException;
 import cn.com.cgh.romantic.pojo.resource.*;
 import cn.com.cgh.romantic.util.PermissionUserUtil;
-import cn.hutool.jwt.JWTPayload;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -42,6 +41,7 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
     private ITbCfgRoleService roleService;
     @Resource
     private PermissionUserUtil permissionService;
+
     @SneakyThrows
     @Override
     public Boolean checkPassword(String password) {
@@ -53,7 +53,7 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
     @Override
     public Boolean deleteUser(Long userId) {
         LambdaUpdateWrapper<TbCfgUser> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(TbCfgUser::getId,userId);
+        wrapper.eq(TbCfgUser::getId, userId);
         wrapper.set(TbCfgUser::getDeleted, YesNoStatus.YES);
         wrapper.set(TbCfgUser::getStatus, UserStatus.DELETE);
         baseMapper.update(wrapper);
@@ -79,11 +79,11 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
     public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int pageSize) {
         Long userId = WebfluxAOPConfig.RequestContextHolder.getUserId();
         Boolean admin = permissionService.admin(userId);
-        return baseMapper.queryUsers(new Page(currentPage,pageSize),user,admin);
+        return baseMapper.queryUsers(new Page(currentPage, pageSize), user, admin);
     }
 
     @Override
-    public String addOrUpdate(TbCfgUser user){
+    public String addOrUpdate(TbCfgUser user) {
         log.info(user.toString());
         Long id = user.getId();
 
@@ -103,32 +103,46 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
          * 职位
          */
         List<TbCfgPosition> positions = user.getPositions();
-        if (id == null){
+        if (id == null) {
             boolean save = save(user);
-            if (save){
+            if (save) {
                 id = user.getId();
-            }else{
+            } else {
                 throw new ServiceException("新增失败");
             }
-        }else{
+        } else {
             boolean save = updateById(user);
-            if (!save){
+            if (!save) {
                 throw new ServiceException("更新失败");
             }
         }
-        groupService.addOrUpdate(groups,id);
-        organizationService.addOrUpdate(organizations,id);
-        positionService.addOrUpdate(positions,id);
-        roleService.addOrUpdate(roles,id);
+        groupService.addOrUpdate(groups, id);
+        organizationService.addOrUpdate(organizations, id);
+        positionService.addOrUpdate(positions, id);
+        roleService.addOrUpdate(roles, id);
         return "success";
     }
 
+    /**
+     * 更新用户状态，并在状态为删除时，同步删除用户信息。
+     *
+     * @param id     用户ID，用于指定需要更新状态的用户。
+     * @param status 用户状态，枚举类型，表示用户的不同状态，如正常、禁用、删除等。
+     * @return 返回固定字符串"更新成功"，表示状态更新操作完成。
+     */
     @Override
-    public String upUserStatus(Long id,UserStatus status) {
+    public void upUserStatus(Long id, UserStatus status) {
+        // 使用LambdaUpdateWrapper构造更新条件，设置用户状态为参数status，并指定更新的用户ID为参数id
         LambdaUpdateWrapper<TbCfgUser> wrapper = new LambdaUpdateWrapper<>();
         wrapper.set(TbCfgUser::getStatus, status);
-        wrapper.eq(TbCfgUser::getId,id);
+        wrapper.eq(TbCfgUser::getId, id);
+        // 执行更新操作
         baseMapper.update(wrapper);
-        return "更新成功";
+
+        // 如果更新的状态为删除，则调用deleteUser方法，物理删除该用户的信息
+        if (UserStatus.DELETE == status) {
+            deleteUser(id);
+        }
     }
+
 }

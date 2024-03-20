@@ -34,5 +34,5 @@ public interface ITbCfgUserService extends IService<TbCfgUser> {
     public String addOrUpdate(@RequestBody TbCfgUser user);
 
     @PostMapping("/upUserStatus/{id}/{status}")
-    public String upUserStatus(@PathVariable Long id,@PathVariable UserStatus status);
+    public void upUserStatus(@PathVariable Long id,@PathVariable UserStatus status);
 }

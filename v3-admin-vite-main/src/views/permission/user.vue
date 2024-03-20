@@ -291,6 +291,7 @@ watchEffect(() => {
           v-model:dialogUserStatus="dialogUserStatus"
           v-model:status="formData.status"
           v-model:user-id="formData.id"
+          @getTableData="getTableData"
         />
       </div>
     </transition>

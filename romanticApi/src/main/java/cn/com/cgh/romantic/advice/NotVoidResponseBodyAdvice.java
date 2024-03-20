@@ -31,7 +31,13 @@ public class NotVoidResponseBodyAdvice {
     @Around(value = "execution(* org.springframework.web.reactive.result.method.annotation.ResponseBodyResultHandler.handleResult(..)) && args(exchange, result)", argNames = "point,exchange,result")
     public Object handleResult(ProceedingJoinPoint point, ServerWebExchange exchange, HandlerResult result) throws Throwable {
         Object body = result.getReturnValue();
-        if (body instanceof Mono || body instanceof Flux || body == null) {
+        if (body == null){
+            return point.proceed(Arrays.asList(
+                    exchange,
+                    new HandlerResult(result.getHandler(),
+                            Mono.just(new ResponseImpl().success()), result.getReturnTypeSource())
+            ).toArray());
+        }else if (body instanceof Mono || body instanceof Flux) {
             return point.proceed();
         } else if (!(body instanceof ResponseImpl)) {
             if (body instanceof Page) {

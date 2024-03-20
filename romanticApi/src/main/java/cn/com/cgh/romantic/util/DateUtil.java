@@ -36,7 +36,7 @@ public class DateUtil {
     /**
      * 日期格式 yyyy-MM-ddTHH:mm:ss
      */
-    public static final DateTimeFormatter LOCAL_DATE_TIME_YYYY_MM_DD_T_HH_MM_SS = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss");
+    public static final DateTimeFormatter LOCAL_DATE_TIME_YYYY_MM_DD_T_HH_MM_SS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     /**
      * 日期格式 yyyy-MM-dd HH:mm:ss.SSS
      */
@@ -44,7 +44,7 @@ public class DateUtil {
     /**
      * 日期格式 yyyy-MM-ddTHH:mm:ss.SSS
      */
-    public static final DateTimeFormatter LOCAL_DATE_TIME_YYYY_MM_DD_T_HH_MM_SS_SSS = DateTimeFormatter.ofPattern("yyyy-MM-ddTHH:mm:ss.SSS");
+    public static final DateTimeFormatter LOCAL_DATE_TIME_YYYY_MM_DD_T_HH_MM_SS_SSS = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
     /**
      * 日期格式 yyyyMMdd
      */

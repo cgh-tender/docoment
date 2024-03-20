@@ -6,14 +6,13 @@ import { FormRules } from "element-plus"
 import { Pointer, Refresh } from "@element-plus/icons-vue"
 
 interface Props {
-  userId: number
+  userId: string
   openUpdatePassword: boolean
 }
 
 const prop = defineProps<Props>()
 const LocalOpenUpdatePassword = ref(prop.openUpdatePassword)
 const LocalUserId = ref(prop.userId)
-console.log(LocalUserId)
 const emit = defineEmits(["update:openUpdatePassword"])
 
 const updateFormData = ref<updatePasswordData>({

@@ -9,9 +9,15 @@ import cn.com.cgh.romantic.typeHandler.MyArrayTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.BooleanTypeHandler;
 
@@ -19,6 +25,7 @@ import java.util.List;
 
 /**
  * 菜单表
+ *
  * @author cgh
  * @since 2024-01-05
  */
@@ -32,6 +39,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TbCfgResource extends TbBaseEntity {
     @Schema(description = "父菜单code")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
     @Schema(description = "菜单名称")
     private String name;

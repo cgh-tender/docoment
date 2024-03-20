@@ -68,7 +68,7 @@ export function getUserStatus() {
   })
 }
 
-export function upUserStatus(userId: number, status: number) {
+export function upUserStatus(userId: string, status: number) {
   return request<ApiResponseData<string>>({
     url: `resource/user/upUserStatus/${userId}/${status}`,
     method: "post"

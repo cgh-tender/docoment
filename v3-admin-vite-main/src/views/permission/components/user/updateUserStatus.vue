@@ -7,7 +7,7 @@ import { SelectOption } from "@/hooks/useFetchSelect"
 interface Props {
   dialogUserStatus: boolean
   status: any
-  userId: number
+  userId: string
 }
 
 const prop = defineProps<Props>()
@@ -15,13 +15,17 @@ const dialogUserStatusProp = ref(prop.dialogUserStatus)
 const statusProp = ref(prop.status)
 const LocalUserId = ref(prop.userId)
 
-const emit = defineEmits(["update:dialogUserStatus", "handleUpdateUserStatus"])
+const emit = defineEmits(["update:dialogUserStatus", "getTableData"])
 
 const updateStatus = () => {
-  if (!(statusProp instanceof String)) {
-    upUserStatus(LocalUserId.value, statusProp.value)
+  if (!/[\u4e00-\u9fff]/.test(statusProp.value)) {
+    upUserStatus(LocalUserId.value, statusProp.value).finally(() => {
+      handleClose()
+      emit("getTableData")
+    })
+  } else {
+    handleClose()
   }
-  handleClose()
 }
 
 const handleClose = () => {

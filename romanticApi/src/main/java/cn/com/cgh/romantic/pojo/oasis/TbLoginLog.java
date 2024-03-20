@@ -5,6 +5,9 @@ import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +31,8 @@ public class TbLoginLog extends TbBaseEntity {
     @Schema(description = "记录登录的用户名")
     private String username;
     @Schema(description = "记录登录的用户Id")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
     @Schema(description = "客户端IP")
     private String clientIp;

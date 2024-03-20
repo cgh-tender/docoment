@@ -4,21 +4,57 @@ import CacheKey from "@/constants/cache-key"
 import Cookies from "js-cookie"
 
 export const getToken = () => {
-  return Cookies.get(CacheKey.TOKEN)
+  if (import.meta.env.VITE_CACHE_TYPE == "cookie") {
+    return Cookies.get(CacheKey.TOKEN)
+  } else if (import.meta.env.VITE_CACHE_TYPE == "local") {
+    return localStorage.get(CacheKey.TOKEN)
+  } else {
+    return sessionStorage.getItem(CacheKey.TOKEN)
+  }
 }
 export const setToken = (token: string) => {
-  Cookies.set(CacheKey.TOKEN, token)
+  if (import.meta.env.VITE_CACHE_TYPE == "cookie") {
+    return Cookies.set(CacheKey.TOKEN, token)
+  } else if (import.meta.env.VITE_CACHE_TYPE == "local") {
+    return localStorage.setItem(CacheKey.TOKEN, token)
+  } else {
+    return sessionStorage.setItem(CacheKey.TOKEN, token)
+  }
 }
 export const removeToken = () => {
-  Cookies.remove(CacheKey.TOKEN)
+  if (import.meta.env.VITE_CACHE_TYPE == "cookie") {
+    return Cookies.remove(CacheKey.TOKEN)
+  } else if (import.meta.env.VITE_CACHE_TYPE == "local") {
+    return localStorage.removeItem(CacheKey.TOKEN)
+  } else {
+    return sessionStorage.removeItem(CacheKey.TOKEN)
+  }
 }
 
 export const getUuid = () => {
-  return Cookies.get(CacheKey.UUID)
+  if (import.meta.env.VITE_CACHE_TYPE == "cookie") {
+    return Cookies.get(CacheKey.UUID)
+  } else if (import.meta.env.VITE_CACHE_TYPE == "local") {
+    return localStorage.getItem(CacheKey.UUID)
+  } else {
+    return sessionStorage.getItem(CacheKey.UUID)
+  }
 }
 export const setUuid = (uuid: string) => {
-  Cookies.set(CacheKey.UUID, uuid)
+  if (import.meta.env.VITE_CACHE_TYPE == "cookie") {
+    return Cookies.set(CacheKey.UUID, uuid)
+  } else if (import.meta.env.VITE_CACHE_TYPE == "local") {
+    return localStorage.setItem(CacheKey.UUID, uuid)
+  } else {
+    return sessionStorage.setItem(CacheKey.UUID, uuid)
+  }
 }
 export const removeUuid = () => {
-  Cookies.remove(CacheKey.UUID)
+  if (import.meta.env.VITE_CACHE_TYPE == "cookie") {
+    return Cookies.remove(CacheKey.UUID)
+  } else if (import.meta.env.VITE_CACHE_TYPE == "local") {
+    return localStorage.removeItem(CacheKey.UUID)
+  } else {
+    return sessionStorage.removeItem(CacheKey.UUID)
+  }
 }
