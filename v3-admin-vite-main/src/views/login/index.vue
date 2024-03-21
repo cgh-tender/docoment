@@ -58,10 +58,12 @@ const handleLogin = () => {
       console.error("表单校验不通过", fields)
     }
   })
-
 }
-
+const flushCode = () => {
+  codeBaseUri.value = import.meta.env.VITE_BASE_CODE_API + "?crt_=" + new Date().getTime()
+}
 watchEffect(() => {
+  flushCode()
   loginFormData.code = ""
   // 获取验证码
   getLoginCodeApi(codeBaseUri.value).then((response) => {
@@ -73,11 +75,6 @@ watchEffect(() => {
     }
   })
 })
-function createCode() {
-  codeBaseUri.value = import.meta.env.VITE_BASE_CODE_API + "?crt_=" + new Date().getTime()
-}
-
-createCode()
 </script>
 
 <template>
@@ -121,7 +118,7 @@ createCode()
               size="large"
             >
               <template #append>
-                <el-image :src="src" @click="createCode" draggable="false">
+                <el-image :src="src" @click="flushCode" draggable="false">
                   <template #placeholder>
                     <el-icon>
                       <Picture />

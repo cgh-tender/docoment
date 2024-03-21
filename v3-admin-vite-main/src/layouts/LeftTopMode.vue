@@ -40,6 +40,7 @@ const layoutClasses = computed(() => {
 
 <style lang="scss" scoped>
 @import "@/styles/mixins.scss";
+
 $transition-time: 0.35s;
 
 .app-wrapper {
@@ -53,9 +54,11 @@ $transition-time: 0.35s;
   z-index: 1002;
   width: 100%;
   display: flex;
+
   .logo {
     width: var(--v3-sidebar-width);
   }
+
   .content {
     flex: 1;
     position: relative;
@@ -69,6 +72,7 @@ $transition-time: 0.35s;
 
 .main-container {
   min-height: 100%;
+  background-image: url("@/assets/layouts/bg.gif");
 }
 
 .sidebar-container {
@@ -94,6 +98,7 @@ $transition-time: 0.35s;
   .sidebar-container {
     width: var(--v3-sidebar-hide-width) !important;
   }
+
   .app-main {
     padding-left: var(--v3-sidebar-hide-width);
   }
@@ -103,6 +108,7 @@ $transition-time: 0.35s;
   .sidebar-container {
     padding-top: var(--v3-header-height);
   }
+
   .app-main {
     padding-top: var(--v3-header-height);
   }

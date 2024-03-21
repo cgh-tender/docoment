@@ -35,7 +35,7 @@ function createService() {
     },
     // 发送失败
     (error) => {
-      Promise.reject(error)
+      ElMessage.error(error.message)
     }
   )
   // 响应拦截（可根据具体业务作出相应的调整）
@@ -116,8 +116,14 @@ function createService() {
         default:
           break
       }
-      ElMessage.error(error.message)
-      return Promise.reject(error)
+      console.error(error.message)
+      if (error.message == "Network Error") {
+        ElMessage.error("服务异常")
+      } else if (error.message && error.message.indexOf("timeout") !== -1) {
+        ElMessage.error("请求超时")
+      } else {
+        return Promise.reject(error)
+      }
     }
   )
   return service

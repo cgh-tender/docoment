@@ -201,3 +201,19 @@ cliod/jrebel-server
 docker pull hlohaus789/g4f
 docker run -p 8888:8080 -p 1337:1337 -p 7900:7900 --shm-size="2g" hlohaus789/g4f:latest
 ```
+
+## docker 安装 postgres
+```bash
+#1.拉取镜像
+docker pull postgres
+
+#2.启动镜像
+docker run --name postgres -d -p 5432:5432 -e POSTGRES_PASSWORD=123456 postgres
+
+#3.进入容器
+docker exec -it 82ec9813d4c4 /bin/bash
+
+#4.查看数据库所有表
+select * from pg_tables;
+
+```
