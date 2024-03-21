@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue"
+import { computed, ref, watchEffect } from "vue"
 import { Refresh, Search, ZoomIn } from "@element-plus/icons-vue"
-import { GetBaseUserTableData } from "@/api/permission/user/types/base"
+import { GetBaseUserTableData, ResourceQueryPojo } from "@/api/permission/user/types/base"
 import { usePagination } from "@/hooks/usePagination"
 import { SelectOption } from "@/hooks/useFetchSelect"
 
@@ -82,51 +82,16 @@ const data = ref<SelectOption[]>([
   {
     value: "1",
     label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
   }
 ])
+
+const queryInfo = ref<ResourceQueryPojo>()
 const handleNodeClick = (data: SelectOption) => {
   console.log(data)
 }
+watchEffect(() => {
+  getResource
+})
 const getTableData = () => {}
 </script>
 
@@ -168,20 +133,30 @@ const getTableData = () => {}
 </template>
 
 <style lang="scss" scoped>
+.app-container {
+  padding: 20px 20px 0 20px;
+}
+
 .el-container {
   display: flex;
-  height: calc(100vh - 117px); /* 设置容器高度为视口高度 */
+  height: calc(100vh - 200px); /* 设置容器高度为视口高度 */
 
   .el-aside {
     padding: 20px 20px 0 0;
+
+    .el-card {
+      flex: 1 1 auto;
+      height: 100%;
+    }
   }
 
   .el-main {
     padding: 20px 0 0 0;
-  }
 
-  .el-card {
-    flex: 1 1 auto;
+    .el-card {
+      flex: 1 1 auto;
+      height: 100%;
+    }
   }
 }
 

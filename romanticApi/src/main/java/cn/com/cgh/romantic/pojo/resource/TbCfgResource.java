@@ -48,7 +48,7 @@ public class TbCfgResource extends TbBaseEntity {
     private String description;
     @Schema(description = "path")
     private String path;
-    @Schema(description = "资源类别 0 菜单 1 按钮")
+    @Schema(description = "资源类别 0 菜单 1 按钮 2 接口")
     @TableField(typeHandler = DefaultEnumTypeHandler.class)
     private ResourceStatus status;
     @Schema(description = "是否删除 1: 是，0：否")
