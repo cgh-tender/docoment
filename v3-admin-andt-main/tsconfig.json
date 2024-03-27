@@ -42,6 +42,7 @@
     "vite.config.ts",
     "vitest.config.ts",
     "node_modules/@vue/runtime-core/dist/runtime-core.d.ts",
+    "node_modules/.pnpm/@types+node@20.11.30/node_modules/@types/node/globals.d.ts"
   ],
   /** 编译器默认排除的编译文件 */
   "exclude": ["node_modules", "dist"]
