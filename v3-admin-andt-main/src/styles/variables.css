@@ -1,0 +1,148 @@
+/** 全局 CSS 变量，这种变量不仅可以在 CSS 和 SCSS 中使用，还可以导入到 JS 中使用 */
+:root {
+  /** 全局背景色 */
+  --v3-body-bg-color: #f2f3f5;
+  /** Header 区域 = NavigationBar 组件 + TagsView 组件 */
+  --v3-header-height: calc(var(--v3-navigationbar-height) + var(--v3-tagsview-height));
+  --v3-header-bg-color: #ffffff;
+  /** NavigationBar 组件 */
+  --v3-navigationbar-height: 50px;
+  /** Sidebar 组件（左侧模式全部生效、顶部模式全部不生效、混合模式非颜色部分生效） */
+  --v3-sidebar-width: 220px;
+  --v3-sidebar-hide-width: 80px;
+  --v3-sidebar-menu-item-height: 60px;
+  --v3-sidebar-menu-tip-line-bg-color: var(--el-color-primary);
+  --v3-sidebar-menu-bg-color: #001428;
+  --v3-sidebar-menu-hover-bg-color: #409eff10;
+  --v3-sidebar-menu-text-color: #c0c4cc;
+  --v3-sidebar-menu-active-text-color: #ffffff;
+  /** TagsView 组件 */
+  --v3-tagsview-height: 34px;
+  --v3-tagsview-tag-text-color: #495060;
+  --v3-tagsview-tag-active-text-color: #ffffff;
+  --v3-tagsview-tag-bg-color: #ffffff;
+  --v3-tagsview-tag-active-bg-color: var(--el-color-primary);
+  --v3-tagsview-tag-border-radius: 5px;
+  --v3-tagsview-tag-border-color: #d8dce5;
+  --v3-tagsview-tag-active-border-color: var(--el-color-primary);
+  --v3-tagsview-tag-active-before-color: #ffffff;
+  --v3-tagsview-tag-icon-hover-bg-color: #00000030;
+  --v3-tagsview-tag-icon-hover-color: #ffffff;
+  /** RightPanel 组件  */
+  --v3-rightpana-button-bg-color: #001428;
+  --v3-scroll-slot-color: #ededed;
+  --v3-scroll-scroll-color: skyblue;
+
+  .ps__rail-y {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #ededed;
+    border-radius: 6px;
+    transition: background-color .2s linear, width .2s ease-in-out;
+    -webkit-transition: background-color .2s linear, width .2s ease-in-out;
+    width: 6px;
+    /* there must be 'right' for ps__thumb-y */
+    right: 2px;
+    /* please don't change 'position' */
+    position: absolute;
+
+    .ps__thumb-y {
+      background-color: var(--v3-scroll-scroll-color);
+    }
+  }
+
+  .ps__rail-x {
+    background-color: var(--v3-scroll-slot-color);
+    width: 6px;
+    border-radius: 6px;
+    transition: background-color .2s linear, height .2s ease-in-out;
+    -webkit-transition: background-color .2s linear, height .2s ease-in-out;
+    height: 6px;
+    /* there must be 'bottom' for ps__thumb-x */
+    bottom: 2px;
+    position: absolute;
+
+    .ps__thumb-x {
+      background-color: var(--v3-scroll-scroll-color);
+    }
+  }
+
+  .ps__rail-x:hover > .ps__thumb-x,
+  .ps__rail-x:focus > .ps__thumb-x,
+  .ps__rail-x.ps--clicking .ps__thumb-x {
+    background-color: var(--v3-scroll-scroll-color);
+    height: 6px;
+  }
+
+  .ps__rail-y:hover > .ps__thumb-y,
+  .ps__rail-y:focus > .ps__thumb-y,
+  .ps__rail-y.ps--clicking .ps__thumb-y {
+    background-color: var(--v3-scroll-scroll-color);
+    width: 6px;
+  }
+
+  .VueScroller {
+    &::-webkit-scrollbar {
+      /*滚动条整体样式*/
+      width: 5px; /*高宽分别对应横竖滚动条的尺寸*/
+      height: 1px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      /*滚动条里面小方块*/
+      border-radius: 10px;
+      background-color: var(--v3-scroll-scroll-color);
+      background-image: -webkit-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.2) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        transparent 75%,
+        transparent
+      );
+    }
+
+    &::-webkit-scrollbar-track {
+      /*滚动条里面轨道*/
+      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+      background: #ededed;
+      border-radius: 10px;
+    }
+  }
+
+  ::v-slotted .ant-modal-body {
+    display: flex;
+    justify-content: space-around;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 2px;
+      background: #dee4e9;
+      border-radius: 6px; /*外层轨道*/
+    }
+
+    &::-webkit-scrollbar-thumb {
+      display: block;
+      width: 8px;
+      margin: 0 auto;
+      border-radius: 6px;
+      background: rgba(16, 122, 250, 0.5); /*内层轨道*/
+    }
+  }
+}
+
+/** 内容区放大时，将不需要的组件隐藏 */
+body.content-large {
+  /** Header 区域 = TagsView 组件 */
+  --v3-header-height: var(--v3-tagsview-height);
+  /** NavigationBar 组件 */
+  --v3-navigationbar-height: 0px;
+  /** Sidebar 组件 */
+  --v3-sidebar-width: 0px;
+  --v3-sidebar-hide-width: 0px;
+}
+
+

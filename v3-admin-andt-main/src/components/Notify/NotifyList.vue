@@ -1,0 +1,56 @@
+<script lang="ts" setup>
+import { type ListItem } from "./data"
+
+interface Props {
+  list: ListItem[]
+}
+
+const props = defineProps<Props>()
+</script>
+
+<template>
+  <a-empty v-if="props.list.length === 0" />
+  <a-card v-else v-for="(item, index) in props.list" :key="index" shadow="never" class="card-container">
+    <template #title>
+      <div class="card-header">
+        <div>
+          <span>
+            <a class="card-title" :href="item.href">{{ item.title }}</a>
+            <a-tag v-if="item.extra" :type="item.status" effect="plain" size="small">{{ item.extra }}</a-tag>
+          </span>
+          <div class="card-time">{{ item.datetime }}</div>
+        </div>
+        <a-avatar v-if="item.avatar" class="card-avatar" :src="item.avatar" />
+      </div>
+    </template>
+    <template #cover>
+      <TextContent>{{ item.description ?? "No Data" }}</TextContent>
+    </template>
+  </a-card>
+</template>
+
+<style lang="scss" scoped>
+.card-container {
+  margin-bottom: 10px;
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .card-title {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .card-time {
+      font-size: 12px;
+      color: grey;
+    }
+    .card-avatar {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .card-body {
+    font-size: 12px;
+  }
+}
+</style>

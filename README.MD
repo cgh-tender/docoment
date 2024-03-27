@@ -217,3 +217,38 @@ docker exec -it 82ec9813d4c4 /bin/bash
 select * from pg_tables;
 
 ```
+## 创建 ip
+```bash
+docker network create --driver bridge --subnet 192.170.0.0/16 --gateway 192.170.0.1 MyIPName
+# 运行命令
+# docker run --name some-zookeeper --net MyIPName --ip 192.169.0.5 --restart always -p 2181:2181 -d zookeeper
+```
+## 安装zookeeper
+```bash 
+docker pull zookeeper
+docker run --name some-zookeeper --restart always -p 2181:2181 -d zookeeper
+docker run --name some-zookeeper --restart always -p 2181:2181 -e "ZOO_PORT=2181" -d zookeeper
+
+```
+## 安装 double
+```bash
+truch Dockerfile
+
+FROM openjdk:8-jdk
+ 
+# 安装 Dubbo
+RUN curl -L https://github.com/apache/dubbo-admin/archive/refs/tags/0.6.0.zip -o dubbo-admin.zip \
+    && unzip dubbo-admin.zip \
+    && mv dubbo-admin-dubbo-admin-0.6.0/* ./ \
+    && rm dubbo-admin.zip
+ 
+# 配置 Dubbo Admin
+ENV SERVER_PORT=7001
+ENV ZK_URL=zookeeper://your-zookeeper-host:2181
+ 
+# 暴露端口
+EXPOSE 7001
+ 
+# 启动 Dubbo Admin
+CMD ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar dubbo-admin-0.2.0.jar"]
+```
