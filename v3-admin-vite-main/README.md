@@ -6,7 +6,8 @@
 
 ## ⚡ Introduction
 
-V3 Admin Vite is a free and open source middle and background management system basic solution, based on mainstream framework such as Vue3, TypeScript, Element Plus, Pinia and Vite
+V3 Admin Vite is a free and open source middle and background management system basic solution, based on mainstream
+framework such as Vue3, TypeScript, Element Plus, Pinia and Vite
 
 - Vue Cli 5.x: [v3-admin](https://github.com/un-pany/v3-admin)
 - Electron desktop: [v3-electron-vite](https://github.com/un-pany/v3-electron-vite)
@@ -14,17 +15,23 @@ V3 Admin Vite is a free and open source middle and background management system 
 China repository: [Gitee](https://gitee.com/un-pany/v3-admin-vite)
 
 ## pnpm 安装更新
+
 ```shell
 pnpm add -g pnpm
 ```
+
 ## 更新版本
+
 ```shell
 pnpm update --latest
 ```
+
 ## 清缓存
+
 ```shell
 npm cache clean --force
 ```
+
 ## 📚 Document
 
 - Chinese documentation: [link](https://juejin.cn/post/7089377403717287972)
@@ -33,7 +40,7 @@ npm cache clean --force
 ## 📺 Online preview
 
 | Location     | account             | Link                                            |
-| ------------ | ------------------- | ----------------------------------------------- |
+|--------------|---------------------|-------------------------------------------------|
 | github-pages | `admin` or `editor` | [link](https://un-pany.github.io/v3-admin-vite) |
 
 ## ❤️ Generate electricity with love
@@ -70,7 +77,8 @@ npm cache clean --force
 - **Multiple layouts**：Built-in left, top, left-top three layout modes
 - **Error page**: 403, 404
 - **Dashboard**: Display different Dashboard pages according to different users
-- **Other functions**：SVG, Dynamic Sidebar, Dynamic Breadcrumb Navigation, Tabbed Navigation, Screenfull, Adaptive Shrink Sidebar, HooK (Composables)
+- **Other functions**：SVG, Dynamic Sidebar, Dynamic Breadcrumb Navigation, Tabbed Navigation, Screenfull, Adaptive
+  Shrink Sidebar, HooK (Composables)
 
 ## 🚀 Development
 
