@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getCurrentInstance, onMounted, ref, watch, watchEffect } from "vue"
+import { getCurrentInstance, onMounted, ref, watch } from "vue"
 import { type RouteLocationNormalizedLoaded, type RouteRecordRaw, RouterLink, useRoute, useRouter } from "vue-router"
 import { type TagView, useTagsViewStore } from "@/store/modules/tags-view"
 import { usePermissionStore } from "@/store/modules/permission"
@@ -166,7 +166,7 @@ onMounted(() => {
   <div class="tags-view-container">
     <ScrollPane class="tags-view-wrapper" :tag-refs="tagRefs">
       <router-link
-        ref="tagRefs"
+        :ref="tagRefs"
         v-for="tag in tagsViewStore.visitedViews"
         :key="tag.path"
         :class="{ active: isActive(tag) }"
@@ -196,6 +196,7 @@ onMounted(() => {
   width: 100%;
   background-color: var(--v3-header-bg-color);
   box-shadow: 0 0 3px 0 #00000010;
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -211,16 +212,20 @@ onMounted(() => {
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+
       &:first-of-type {
         margin-left: 5px;
       }
+
       &:last-of-type {
         margin-right: 5px;
       }
+
       &.active {
         background-color: var(--v3-tagsview-tag-active-bg-color);
         color: var(--v3-tagsview-tag-active-text-color);
         border-color: var(--v3-tagsview-tag-active-border-color);
+
         &::before {
           content: "";
           background-color: var(--v3-tagsview-tag-active-before-color);
@@ -232,10 +237,12 @@ onMounted(() => {
           margin-right: 2px;
         }
       }
+
       .el-icon {
         margin: 0 2px;
         vertical-align: middle;
         border-radius: 50%;
+
         &:hover {
           background-color: var(--v3-tagsview-tag-icon-hover-bg-color);
           color: var(--v3-tagsview-tag-icon-hover-color);
@@ -243,6 +250,7 @@ onMounted(() => {
       }
     }
   }
+
   .contextmenu {
     margin: 0;
     background-color: #fff;
@@ -255,10 +263,12 @@ onMounted(() => {
     font-weight: 400;
     color: #333;
     box-shadow: 2px 2px 3px 0 #00000030;
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+
       &:hover {
         background-color: #eee;
       }
