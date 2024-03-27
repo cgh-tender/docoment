@@ -66,3 +66,35 @@ v3-admin-vite-main/package-lock.json
 v3-admin-vite-main/yarn.lock
 logs/*.log
 logs/*.zip
+v3-admin-andt-main/node_modules
+# Git 会忽略的文件
+
+v3-admin-andt-main/.DS_Store
+v3-admin-andt-main/dist
+v3-admin-andt-main/dist-ssr
+v3-admin-andt-main/.eslintcache
+v3-admin-andt-main/
+# Local env files
+v3-admin-andt-main/*.local
+# Logs
+v3-admin-andt-main/logs
+v3-admin-andt-main/*.log
+v3-admin-andt-main/npm-debug.log*
+v3-admin-andt-main/yarn-debug.log*
+v3-admin-andt-main/yarn-error.log*
+v3-admin-andt-main/pnpm-debug.log*
+v3-admin-andt-main/lerna-debug.log*
+# Editor directories and files
+v3-admin-andt-main/.vscode/*
+v3-admin-andt-main/!.vscode/extensions.json
+v3-admin-andt-main/!.vscode/settings.json
+v3-admin-andt-main/!.vscode/*.code-snippets
+v3-admin-andt-main/.idea
+v3-admin-andt-main/*.suo
+v3-admin-andt-main/*.ntvs*
+v3-admin-andt-main/*.njsproj
+v3-admin-andt-main/*.sln
+v3-admin-andt-main/*.sw?
+# Use the PNPM
+v3-admin-andt-main/package-lock.json
+v3-admin-andt-main/yarn.lock
