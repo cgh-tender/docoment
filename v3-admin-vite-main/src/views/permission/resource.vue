@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watchEffect } from "vue"
 import { Refresh, Search, ZoomIn } from "@element-plus/icons-vue"
-import { GetBaseUserTableData, ResourceQueryPojo } from "@/api/permission/user/types/base"
+import { GetBaseResourceTableData, ResourceQueryPojo } from "@/api/permission/user/types/base"
 import { usePagination } from "@/hooks/usePagination"
 import { SelectOption } from "@/hooks/useFetchSelect"
 
@@ -10,7 +10,7 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
   currentPage: 1,
   pageSize: 2
 })
-const searchData = computed<GetBaseUserTableData>(() => {
+const searchData = computed<GetBaseResourceTableData>(() => {
   return {
     currentPage: paginationData.currentPage,
     pageSize: paginationData.pageSize

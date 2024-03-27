@@ -2,7 +2,7 @@ import { ref } from "vue"
 import store from "@/store"
 import { defineStore } from "pinia"
 import { type RouteRecordRaw } from "vue-router"
-import router, { constantRoutes, endRoutes as endRoute, asyncRoutes as asyncRoute } from "@/router"
+import router, { asyncRoutes as asyncRoute, constantRoutes, endRoutes as endRoute } from "@/router"
 
 export const usePermissionStore = defineStore("permission", () => {
   // 汇总

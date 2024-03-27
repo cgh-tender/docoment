@@ -226,7 +226,7 @@ watchEffect(() => {
         </a-table-column>
         <a-table-column prop="roles" label="角色" align="center">
           <template #default="scope">
-            <a-tag type="primary" effect="light" :key="role.id" v-for="role in scope.row.roles">{{ role.name }} </a-tag>
+            <a-tag type="primary" effect="light" :key="role.id" v-for="role in scope.row.roles">{{ role.name }}</a-tag>
           </template>
         </a-table-column>
         <a-table-column fixed="right" label="操作" width="150" align="center">

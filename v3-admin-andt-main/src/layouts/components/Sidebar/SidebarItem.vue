@@ -121,6 +121,7 @@ const resolvePath = (routePath: string) => {
       .a-sub-menu__icon-arrow {
         display: none;
       }
+
       span {
         visibility: hidden;
       }

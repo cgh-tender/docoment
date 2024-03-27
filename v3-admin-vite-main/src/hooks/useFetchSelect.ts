@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue"
+import {onMounted, ref} from "vue"
 
 /** Select 需要的数据格式 */
 export interface SelectOption {

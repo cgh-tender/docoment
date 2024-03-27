@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "@/store/modules/settings"
-import { AppMain, NavigationBar, TagsView, Logo } from "./components"
+import { AppMain, Logo, NavigationBar, TagsView } from "./components"
 
 const settingsStore = useSettingsStore()
 
@@ -28,6 +28,7 @@ const { showTagsView, showLogo } = storeToRefs(settingsStore)
 
 <style lang="scss" scoped>
 @import "@/styles/mixins.scss";
+
 $transition-time: 0.35s;
 
 .app-wrapper {
@@ -40,11 +41,14 @@ $transition-time: 0.35s;
   top: 0;
   z-index: 1002;
   width: 100%;
+
   .logo {
     width: var(--v3-sidebar-width);
   }
+
   .content {
     display: flex;
+
     .navigation-bar {
       flex: 1;
       background: transparent;

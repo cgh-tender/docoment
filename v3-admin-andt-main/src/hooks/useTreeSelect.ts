@@ -1,5 +1,5 @@
-import { SelectOption } from "@/hooks/useFetchSelect"
-import { reactive, ref } from "vue"
+import {SelectOption} from "@/hooks/useFetchSelect"
+import {reactive, ref} from "vue"
 
 /** 入参格式，暂时只需要传递 api 函数即可 */
 interface TreeSelectProps {

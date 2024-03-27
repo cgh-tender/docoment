@@ -16,6 +16,7 @@ import "ant-design-vue/dist/reset.css"
 import "vxe-table-plugin-element/dist/style.css"
 import "@/styles/index.scss"
 import "vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css"
+
 const app = createApp(App)
 
 /** 加载插件 */

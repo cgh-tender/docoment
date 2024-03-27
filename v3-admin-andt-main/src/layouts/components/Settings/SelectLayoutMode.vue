@@ -54,6 +54,7 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
   cursor: pointer;
   border-radius: 6px;
   border: 2px solid #00000000;
+
   &:hover {
     border: 2px solid var(--el-color-primary);
   }
@@ -75,9 +76,11 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
   .el-header {
     background-color: var(--el-border-color);
   }
+
   .el-aside {
     background-color: var(--el-color-primary);
   }
+
   .a-layout-content {
     background-color: var(--el-fill-color);
   }
@@ -87,6 +90,7 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
   .el-header {
     background-color: var(--el-color-primary);
   }
+
   .a-layout-content {
     background-color: var(--el-fill-color);
   }
@@ -96,9 +100,11 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
   .el-header {
     background-color: var(--el-border-color);
   }
+
   .el-aside {
     background-color: var(--el-color-primary);
   }
+
   .a-layout-content {
     background-color: var(--el-fill-color);
   }

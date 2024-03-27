@@ -12,10 +12,13 @@
   // 侧边栏
   .sidebar-container {
     background-color: lighten($theme-bg-color, 2%);
+
     .a-menu {
       background-color: lighten($theme-bg-color, 2%) !important;
+
       .a-menu-item {
         background-color: lighten($theme-bg-color, 2%) !important;
+
         &.is-active,
         &:hover {
           background-color: lighten($theme-bg-color, 6%) !important;
@@ -23,9 +26,11 @@
         }
       }
     }
+
     .a-sub-menu__title {
       background-color: lighten($theme-bg-color, 2%) !important;
     }
+
     .a-sub-menu {
       &.is-active {
         > .a-sub-menu__title {
@@ -44,6 +49,7 @@
   // 顶部导航栏
   .navigation-bar {
     background-color: $theme-bg-color;
+
     .right-menu {
       .svg-icon {
         color: $font-color;
@@ -54,20 +60,24 @@
   // TagsView
   .tags-view-container {
     background-color: $theme-bg-color !important;
+
     .tags-view-item {
       background-color: $theme-bg-color !important;
       color: $font-color !important;
       border: 1px solid $border-color !important;
+
       &.active {
         background-color: $theme-color !important;
         color: $active-font-color !important;
         border-color: $border-color !important;
       }
     }
+
     // 右键菜单
     .contextmenu {
       background-color: lighten($theme-bg-color, 8%);
       color: $font-color;
+
       li:hover {
         background-color: lighten($theme-bg-color, 16%);
         color: $active-font-color;

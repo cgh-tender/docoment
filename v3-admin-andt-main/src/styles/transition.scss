@@ -5,10 +5,12 @@
 .fade-transform-enter-active {
   transition: all 0.5s;
 }
+
 .fade-transform-enter {
   opacity: 0;
   transform: translateX(-30px);
 }
+
 .fade-transform-leave-to {
   opacity: 0;
   transform: translateX(30px);
@@ -19,6 +21,7 @@
 .layout-logo-fade-leave-active {
   transition: opacity 1.5s;
 }
+
 .layout-logo-fade-enter-from,
 .layout-logo-fade-leave-to {
   opacity: 0;

@@ -106,14 +106,17 @@ defineExpose({ getScrollTop })
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
   cursor: pointer;
+
   .svg-icon {
     min-width: 1em;
     font-size: 18px;
   }
+
   .el-icon {
     width: 1em;
     font-size: 18px;
   }
+
   &-title {
     flex: 1;
     margin-left: 12px;

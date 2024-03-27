@@ -39,9 +39,11 @@ const { layoutMode } = storeToRefs(settingsStore)
   background-color: transparent;
   text-align: center;
   overflow: hidden;
+
   .layout-logo {
     display: none;
   }
+
   .layout-logo-text {
     height: 100%;
     vertical-align: middle;
@@ -60,6 +62,7 @@ const { layoutMode } = storeToRefs(settingsStore)
     vertical-align: middle;
     display: inline-block;
   }
+
   .layout-logo-text {
     display: none;
   }

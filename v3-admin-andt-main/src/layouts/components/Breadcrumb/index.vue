@@ -63,6 +63,7 @@ listenerRouteChange((route) => {
   font-size: 14px;
   line-height: var(--v3-navigationbar-height);
   margin-left: 8px;
+
   .no-redirect {
     color: #97a8be;
     cursor: text;

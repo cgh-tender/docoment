@@ -85,6 +85,7 @@ const handleContentLargeClick = () => {
 <style lang="scss" scoped>
 .svg-icon {
   font-size: 20px;
+
   &:focus {
     outline: none;
   }

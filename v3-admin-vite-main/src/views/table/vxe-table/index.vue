@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { nextTick, reactive, ref } from "vue"
-import { type ElMessageBoxOptions, ElMessageBox, ElMessage } from "element-plus"
+import { ElMessage, ElMessageBox, type ElMessageBoxOptions } from "element-plus"
 import { deleteTableDataApi, getTableDataApi } from "@/api/table"
 import { type GetTableResponseData } from "@/api/table/types/table"
 import RoleColumnSolts from "./tsx/RoleColumnSolts"
 import StatusColumnSolts from "./tsx/StatusColumnSolts"
 import {
+  type VxeFormInstance,
+  type VxeFormProps,
   type VxeGridInstance,
   type VxeGridProps,
   type VxeModalInstance,
-  type VxeModalProps,
-  type VxeFormInstance,
-  type VxeFormProps
+  type VxeModalProps
 } from "vxe-table"
 
 defineOptions({
@@ -31,6 +31,7 @@ interface RowMeta {
   /** vxe-table 自动添加上去的属性 */
   _VXE_ID?: string
 }
+
 const xGridDom = ref<VxeGridInstance>()
 const xGridOpt: VxeGridProps = reactive({
   loading: true,

@@ -1,4 +1,4 @@
-import { request } from "@/utils/service"
+import {request} from "@/utils/service"
 import type * as Table from "./types/table"
 
 /** 增 */

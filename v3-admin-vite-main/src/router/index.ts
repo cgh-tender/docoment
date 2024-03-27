@@ -1,5 +1,5 @@
-import { type RouteRecordRaw, createRouter } from "vue-router"
-import { history, flatMultiLevelRoutes } from "./helper"
+import { createRouter, type RouteRecordRaw } from "vue-router"
+import { flatMultiLevelRoutes, history } from "./helper"
 import routeSettings from "@/config/route"
 import { usePermissionStoreHook } from "@/store/modules/permission"
 

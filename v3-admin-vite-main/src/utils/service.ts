@@ -1,8 +1,8 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
-import { ElMessage } from "element-plus"
-import { get, merge } from "lodash-es"
-import { getToken, setUuid } from "./cache/cookies"
-import { useUserStore } from "@/store/modules/user"
+import axios, {type AxiosInstance, type AxiosRequestConfig} from "axios"
+import {ElMessage} from "element-plus"
+import {get, merge} from "lodash-es"
+import {getToken, setUuid} from "./cache/cookies"
+import {useUserStore} from "@/store/modules/user"
 
 /** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {

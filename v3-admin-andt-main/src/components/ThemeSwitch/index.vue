@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useTheme } from "@/hooks/useTheme"
 import PF from "@/icons/svg/pf.svg?component"
+
 const { themeList, activeThemeName, setTheme } = useTheme()
 </script>
 

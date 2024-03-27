@@ -118,6 +118,7 @@ const resolvePath = (routePath: string) => {
       .el-sub-menu__icon-arrow {
         display: none;
       }
+
       span {
         visibility: hidden;
       }

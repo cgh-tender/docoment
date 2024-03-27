@@ -22,7 +22,8 @@ watch(switchRoles, async (value) => {
       <span>切换权限：</span>
       <a-radio-group v-model:value="switchRoles">
         <a-radio-button value="editor">editor</a-radio-button>
-        <a-radio-button value="admin">admin</a-radio-button>>
+        <a-radio-button value="admin">admin</a-radio-button>
+        >
       </a-radio-group>
     </div>
   </div>

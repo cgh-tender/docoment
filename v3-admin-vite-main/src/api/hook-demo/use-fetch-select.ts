@@ -1,4 +1,4 @@
-import { SelectOption } from "@/hooks/useFetchSelect"
+import {SelectOption} from "@/hooks/useFetchSelect"
 
 /** 模拟接口响应数据 */
 const SELECT_RESPONSE_DATA: ApiResponseData<SelectOption[]> = {

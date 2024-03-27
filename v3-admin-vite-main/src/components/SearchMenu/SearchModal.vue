@@ -49,7 +49,9 @@ const menusData = computed(() => cloneDeep(usePermissionStore().routes))
 /** 搜索（防抖） */
 const handleSearch = debounce(() => {
   const flatMenusData = flatTree(menusData.value)
-  resultList.value = flatMenusData.filter((menu) => keyword.value ? menu.meta?.title?.toLocaleLowerCase().includes(keyword.value.toLocaleLowerCase().trim()) : false)
+  resultList.value = flatMenusData.filter((menu) =>
+    keyword.value ? menu.meta?.title?.toLocaleLowerCase().includes(keyword.value.toLocaleLowerCase().trim()) : false
+  )
   // 默认选中搜索结果的第一项
   const length = resultList.value?.length
   activeRouteName.value = length > 0 ? resultList.value[0].name : undefined
@@ -204,9 +206,11 @@ const handleReleaseUpOrDown = () => {
   .svg-icon {
     font-size: 18px;
   }
+
   .el-dialog__header {
     display: none;
   }
+
   .el-dialog__footer {
     border-top: 1px solid var(--el-border-color);
     padding: var(--el-dialog-padding-primary);

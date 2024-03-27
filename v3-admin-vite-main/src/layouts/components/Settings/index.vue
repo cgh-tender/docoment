@@ -66,6 +66,7 @@ watchEffect(() => {
 
 .setting-container {
   padding: 20px;
+
   .setting-item {
     font-size: 14px;
     color: var(--el-text-color-regular);
@@ -73,10 +74,12 @@ watchEffect(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .setting-name {
       @extend %ellipsis;
     }
   }
+
   .el-button {
     margin-top: 40px;
     width: 100%;

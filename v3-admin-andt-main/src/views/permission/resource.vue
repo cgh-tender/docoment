@@ -1,20 +1,20 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
-import { GetBaseUserTableData } from "@/api/permission/user/types/base";
-import { usePagination } from "@/hooks/usePagination";
-import { SelectOption } from "@/hooks/useFetchSelect";
+import { computed, ref } from "vue"
+import { GetBaseUserTableData } from "@/api/permission/user/types/base"
+import { usePagination } from "@/hooks/usePagination"
+import { SelectOption } from "@/hooks/useFetchSelect"
 
-const loading = ref<boolean>(false);
+const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
   currentPage: 1,
   pageSize: 2
-});
+})
 const searchData = computed<GetBaseUserTableData>(() => {
   return {
     currentPage: paginationData.currentPage,
     pageSize: paginationData.pageSize
-  };
-});
+  }
+})
 const data = ref<SelectOption[]>([
   {
     value: "1",
@@ -122,16 +122,15 @@ const data = ref<SelectOption[]>([
     value: "1",
     label: "1"
   }
-]);
+])
 const handleNodeClick = (data: SelectOption) => {
-  console.log(data);
-};
-const getTableData = () => {
-};
+  console.log(data)
+}
+const getTableData = () => {}
 // 默认选中
-const selectedKeys = ref<string[]>([]);
+const selectedKeys = ref<string[]>([])
 // 默认打开
-const expandedKeys = ref<string[]>([]);
+const expandedKeys = ref<string[]>([])
 </script>
 
 <template>

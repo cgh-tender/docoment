@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, nextTick } from "vue"
+import { nextTick, ref } from "vue"
 import { RouterLink, useRoute } from "vue-router"
 import { useSettingsStore } from "@/store/modules/settings"
 import { useRouteListener } from "@/hooks/useRouteListener"
@@ -124,25 +124,31 @@ listenerRouteChange(() => {
   user-select: none;
   display: flex;
   justify-content: space-between;
+
   .arrow {
     width: 40px;
     height: 100%;
     cursor: pointer;
+
     &.left {
       box-shadow: 5px 0 5px -6px #ccc;
     }
+
     &.right {
       box-shadow: -5px 0 5px -6px #ccc;
     }
   }
+
   .el-scrollbar {
     flex: 1;
     // 防止换行（超出宽度时，显示滚动条）
     white-space: nowrap;
+
     .scrollbar-content {
       display: inline-block;
     }
   }
+
   .screenfull {
     width: 40px;
     display: flex;
