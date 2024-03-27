@@ -102,21 +102,9 @@ $transition-time: 0.35s;
   box-shadow: var(--el-box-shadow-lighter);
 }
 
-.app-main {
-  min-height: calc(100vh - var(--v3-navigationbar-height));
-  position: relative;
-  overflow: hidden;
-}
-
-.fixed-header + .app-main {
-  padding-top: var(--v3-navigationbar-height);
-  height: 100vh;
-  overflow: auto;
-}
-
 .hasTagsView {
   .app-main {
-    min-height: calc(100vh - var(--v3-header-height));
+    min-height: calc(100vh - 1px);
   }
 
   .fixed-header + .app-main {

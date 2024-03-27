@@ -10,6 +10,7 @@ const settingsStore = useSettingsStore()
 <template>
   <section class="app-main">
     <div class="app-scrollbar">
+      <!--    <perfect-scrollbar class="app-scrollbar">-->
       <!-- key 采用 route.path 和 route.fullPath 有着不同的效果，大多数时候 path 更通用 -->
       <router-view v-slot="{ Component, route }">
         <transition name="el-fade-in" mode="out-in">
@@ -20,6 +21,7 @@ const settingsStore = useSettingsStore()
       </router-view>
       <!-- 页脚 -->
       <Footer v-if="settingsStore.showFooter" />
+      <!--    </perfect-scrollbar>-->
     </div>
     <!-- 返回顶部 -->
     <!--    <backtop />-->

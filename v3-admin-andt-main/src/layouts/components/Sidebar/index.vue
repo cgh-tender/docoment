@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import {computed, watchEffect} from "vue"
 import { useRoute } from "vue-router"
 import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
@@ -58,19 +58,28 @@ const width = computed(() => {
 const scrollbarStyle = computed(() => {
   return { height: "calc(100.5vh - var(--v3-sidebar-hide-width))" }
 })
+watchEffect(() => {
+  console.log(isCollapse.value, (isTop && !isMobile))
+})
 </script>
 
 <template>
   <div :class="{ 'has-logo': isLogo }">
     <Logo v-if="isLogo" :collapse="isCollapse" />
     <perfect-scrollbar :style="scrollbarStyle">
-      <a-menu :width="width" :id="id" :theme="activeThemeName" :mode="isTop && !isMobile ? 'vertical' : 'inline'">
+      <a-menu
+        :width="width"
+        :id="id"
+        :theme="activeThemeName"
+        :mode="isTop && !isMobile ? 'vertical' : 'inline'"
+        :inlineCollapsed="isCollapse"
+        :inlineIndent="30"
+      >
         <SidebarItem
           v-for="route in permissionStore.routes"
           :key="route.path"
           :item="route"
           :base-path="route.path"
-          :is-collapse="isCollapse"
           :is-top="isTop"
         />
       </a-menu>

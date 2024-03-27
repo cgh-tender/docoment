@@ -3,6 +3,7 @@ import { computed, ref } from "vue"
 import { GetBaseUserTableData } from "@/api/permission/user/types/base"
 import { usePagination } from "@/hooks/usePagination"
 import { SelectOption } from "@/hooks/useFetchSelect"
+import { FileSearchOutlined, ReloadOutlined, UserAddOutlined } from "@ant-design/icons-vue"
 
 const loading = ref<boolean>(false)
 const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
@@ -126,7 +127,7 @@ const data = ref<SelectOption[]>([
 const handleNodeClick = (data: SelectOption) => {
   console.log(data)
 }
-const getTableData = () => {}
+const getTableData = (event) => {}
 // 默认选中
 const selectedKeys = ref<string[]>([])
 // 默认打开
@@ -136,55 +137,61 @@ const expandedKeys = ref<string[]>([])
 <template>
   <div class="app-container" v-loading="loading">
     <a-card shadow="never">
-      <a-form ref="searchFormRef" :inline="true" :model="searchData">
+      <a-form ref="searchFormRef" layout="inline" :model:value="searchData">
         <a-form-item prop="username" label="用户名">
           <a-input v-model="searchData.username" placeholder="请输入" />
         </a-form-item>
         <a-form-item prop="phone" label="手机号">
           <a-input v-model="searchData.phone" placeholder="请输入" />
         </a-form-item>
-        <a-form-item>
-          <a-button type="primary" :icon="Search" @click="getTableData">查询</a-button>
-          <a-button :icon="Refresh">重置</a-button>
-          <a-button :icon="ZoomIn">新增</a-button>
+        <a-form-item style="position: absolute; right: 20px">
+          <a-button>
+            <template #icon>
+              <FileSearchOutlined />
+            </template>
+            查询
+          </a-button>
+          <a-button>
+            <template #icon>
+              <ReloadOutlined />
+            </template>
+            重置
+          </a-button>
+          <a-button>
+            <template #icon>
+              <UserAddOutlined />
+            </template>
+            新增
+          </a-button>
         </a-form-item>
       </a-form>
     </a-card>
-    <a-layout>
-      <a-layout-sider>
-        <perfect-scrollbar>
-          <a-card>
-            <el-tree :data="data" @node-click="handleNodeClick" />
-          </a-card>
+    <a-layout style="padding: 20px 0 0 0">
+      <perfect-scrollbar>
+        <a-layout-sider>
           <a-directory-tree
             v-model:expandedKeys="expandedKeys"
             v-model:selectedKeys="selectedKeys"
             multiple
             :tree-data="data"
           />
-        </perfect-scrollbar>
-      </a-layout-sider>
-      <a-layout-content />
+        </a-layout-sider>
+      </perfect-scrollbar>
     </a-layout>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.a-layout {
-  display: flex;
-  height: calc(100vh - var(--v3-header-height)); /* 设置容器高度为视口高度 */
+.ps {
+  height: calc(100vh - var(--v3-header-height) - 125px);
+}
 
-  .el-aside {
-    padding: 20px 20px 0 0;
-  }
+.ant-btn {
+  margin: 0 10px 0 10px;
+}
 
-  .a-layout-content {
-    padding: 20px 0 0 0;
-  }
-
-  .a-card {
-    flex: 1 1 auto;
-  }
+.ant-card .ant-card-body {
+  padding: 10px;
 }
 
 .el-tree-node__label //设置字体大小

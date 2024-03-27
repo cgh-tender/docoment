@@ -71,7 +71,11 @@ const resolvePath = (routePath: string) => {
       "
     >
       <SidebarItemLink v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
-        <a-menu-item :index="resolvePath(theOnlyOneChild.path)" :key="theOnlyOneChild.path">
+        <a-menu-item
+          :index="resolvePath(theOnlyOneChild.path)"
+          :key="theOnlyOneChild.path"
+          :label="theOnlyOneChild.meta.title"
+        >
           <SvgIcon v-if="theOnlyOneChild.meta.svgIcon" :name="theOnlyOneChild.meta.svgIcon" />
           <component v-else-if="theOnlyOneChild.meta.elIcon" :is="theOnlyOneChild.meta.elIcon" class="el-icon" />
           <ChromeOutlined v-else />
@@ -79,7 +83,11 @@ const resolvePath = (routePath: string) => {
         </a-menu-item>
       </SidebarItemLink>
     </template>
-    <a-sub-menu v-else-if="!XEUtils.isEmpty(props.item.children)" :index="resolvePath(props.item.path)">
+    <a-sub-menu
+      v-else-if="!XEUtils.isEmpty(props.item.children)"
+      :index="resolvePath(props.item.path)"
+      :label="props.item.meta?.title"
+    >
       <template #title>
         <SvgIcon v-if="props.item.meta?.svgIcon" :name="props.item.meta.svgIcon" />
         <component v-else-if="props.item.meta?.elIcon" :is="props.item.meta.elIcon" class="el-icon" />

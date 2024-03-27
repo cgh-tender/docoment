@@ -33,52 +33,52 @@
   --v3-scroll-slot-color: #ededed;
   --v3-scroll-scroll-color: skyblue;
 
-  .ps__rail-y {
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-    background: #ededed;
-    border-radius: 6px;
-    transition: background-color .2s linear, width .2s ease-in-out;
-    -webkit-transition: background-color .2s linear, width .2s ease-in-out;
-    width: 6px;
-    /* there must be 'right' for ps__thumb-y */
-    right: 2px;
-    /* please don't change 'position' */
-    position: absolute;
+  /*.ps__rail-y {*/
+  /*  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);*/
+  /*  background: #ededed;*/
+  /*  border-radius: 6px;*/
+  /*  transition: background-color .2s linear, width .2s ease-in-out;*/
+  /*  -webkit-transition: background-color .2s linear, width .2s ease-in-out;*/
+  /*  width: 6px;*/
+  /*  !* there must be 'right' for ps__thumb-y *!*/
+  /*  right: 2px;*/
+  /*  !* please don't change 'position' *!*/
+  /*  position: absolute;*/
 
-    .ps__thumb-y {
-      background-color: var(--v3-scroll-scroll-color);
-    }
-  }
+  /*  .ps__thumb-y {*/
+  /*    background-color: var(--v3-scroll-scroll-color);*/
+  /*  }*/
+  /*}*/
 
-  .ps__rail-x {
-    background-color: var(--v3-scroll-slot-color);
-    width: 6px;
-    border-radius: 6px;
-    transition: background-color .2s linear, height .2s ease-in-out;
-    -webkit-transition: background-color .2s linear, height .2s ease-in-out;
-    height: 6px;
-    /* there must be 'bottom' for ps__thumb-x */
-    bottom: 2px;
-    position: absolute;
+  /*.ps__rail-x {*/
+  /*  background-color: var(--v3-scroll-slot-color);*/
+  /*  width: 6px;*/
+  /*  border-radius: 6px;*/
+  /*  transition: background-color .2s linear, height .2s ease-in-out;*/
+  /*  -webkit-transition: background-color .2s linear, height .2s ease-in-out;*/
+  /*  height: 6px;*/
+  /*  !* there must be 'bottom' for ps__thumb-x *!*/
+  /*  bottom: 2px;*/
+  /*  position: absolute;*/
 
-    .ps__thumb-x {
-      background-color: var(--v3-scroll-scroll-color);
-    }
-  }
+  /*  .ps__thumb-x {*/
+  /*    background-color: var(--v3-scroll-scroll-color);*/
+  /*  }*/
+  /*}*/
 
-  .ps__rail-x:hover > .ps__thumb-x,
-  .ps__rail-x:focus > .ps__thumb-x,
-  .ps__rail-x.ps--clicking .ps__thumb-x {
-    background-color: var(--v3-scroll-scroll-color);
-    height: 6px;
-  }
+  /*.ps__rail-x:hover > .ps__thumb-x,*/
+  /*.ps__rail-x:focus > .ps__thumb-x,*/
+  /*.ps__rail-x.ps--clicking .ps__thumb-x {*/
+  /*  background-color: var(--v3-scroll-scroll-color);*/
+  /*  height: 6px;*/
+  /*}*/
 
-  .ps__rail-y:hover > .ps__thumb-y,
-  .ps__rail-y:focus > .ps__thumb-y,
-  .ps__rail-y.ps--clicking .ps__thumb-y {
-    background-color: var(--v3-scroll-scroll-color);
-    width: 6px;
-  }
+  /*.ps__rail-y:hover > .ps__thumb-y,*/
+  /*.ps__rail-y:focus > .ps__thumb-y,*/
+  /*.ps__rail-y.ps--clicking .ps__thumb-y {*/
+  /*  background-color: var(--v3-scroll-scroll-color);*/
+  /*  width: 6px;*/
+  /*}*/
 
   .VueScroller {
     &::-webkit-scrollbar {
