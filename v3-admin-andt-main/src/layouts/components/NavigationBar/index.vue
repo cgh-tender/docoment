@@ -95,7 +95,7 @@ const logout = () => {
     // 设置 min-width 是为了让 Sidebar 里的 el-menu 宽度自适应
     min-width: 0px;
 
-    :deep(.el-menu) {
+    :deep(.a-menu) {
       background-color: transparent;
     }
 

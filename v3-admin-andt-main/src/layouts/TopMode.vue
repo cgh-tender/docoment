@@ -39,7 +39,6 @@ $transition-time: 0.35s;
 .fixed-header {
   position: fixed;
   top: 0;
-  z-index: 1002;
   width: 100%;
 
   .logo {

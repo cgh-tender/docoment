@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { watchEffect } from "vue"
+import { h, watchEffect } from "vue"
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "@/store/modules/settings"
 import { resetConfigLayout } from "@/utils"
@@ -51,13 +51,12 @@ watchEffect(() => {
   <div class="setting-container">
     <h4>布局配置</h4>
     <SelectLayoutMode />
-    <a-divider />
     <h4>功能配置</h4>
     <div class="setting-item" v-for="(settingValue, settingName, index) in switchSettings" :key="index">
       <span class="setting-name">{{ settingName }}</span>
       <a-switch v-model="settingValue.value" :disabled="layoutMode !== 'left' && settingName === '固定 Header'" />
     </div>
-    <AButton type="primary" :icon="MinusCircleOutlined" @click="resetConfigLayout">重 置</AButton>
+    <a-button type="primary" :icon="h(MinusCircleOutlined)" @click="resetConfigLayout">重 置</a-button>
   </div>
 </template>
 
@@ -69,7 +68,7 @@ watchEffect(() => {
 
   .setting-item {
     font-size: 14px;
-    color: var(--el-text-color-regular);
+    //color: var(--el-text-color-regular);
     padding: 5px 0;
     display: flex;
     justify-content: space-between;

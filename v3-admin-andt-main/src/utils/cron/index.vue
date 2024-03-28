@@ -7,6 +7,7 @@ defineOptions({
 })
 
 const props = defineProps({
+  cronPopover: Boolean,
   cronValue: {},
   i18n: {},
   maxHeight: String,
@@ -15,13 +16,15 @@ const props = defineProps({
 })
 const emit = defineEmits(["changeCron", "close"])
 
-const sysRadio = ref(props.sysRadio)
+const prop = ref(props)
+console.log(prop)
+const propSysRadio = ref(prop.value.sysRadio)
 
 const showSecond = ref()
 const showYear = ref()
 
 watchEffect(() => {
-  const t = Number(sysRadio.value)
+  const t = Number(propSysRadio.value)
   showSecond.value = t !== 1
   showYear.value = t === 3
 })
@@ -286,7 +289,7 @@ const state = reactive({
       } ${state.monthsText || "*"} ${state.weeksText || "?"} ` +
       (showYear.value ? `${state.yearsText || "*"}` : "")
     ).trim()
-    emit("changeCron", cron)
+    // emit("changeCron", cron)
     return cron
   })
 })
@@ -298,339 +301,341 @@ const handleChange = () => {
   emit("changeCron", state.cron)
   close()
 }
-
-// const _rest = (data) => {
-//   for (const i in data) {
-//     if (data[i] instanceof Object) {
-//       _rest(data[i])
-//     } else {
-//       switch (typeof data[i]) {
-//         case "object":
-//           data[i] = []
-//           break
-//         case "string":
-//           data[i] = ""
-//           break
-//       }
-//     }
-//   }
-// }
 </script>
 <template>
-  <perfect-scrollbar>
-    <div class="vue3-cron-div">
-      <div style="margin-bottom: 20px">
-        <a-radio-group v-model:value="sysRadio">
-          <a-radio-button value="1" size="small">Linux</a-radio-button>
-          <a-radio-button value="2" size="small">Java(Spring)</a-radio-button>
-          <a-radio-button value="3" size="small">Java(Quartz)</a-radio-button>
-        </a-radio-group>
-      </div>
-      <a-tabs>
-        <a-tab-pane v-if="showSecond" :key="1">
-          <template #tab>
-            <a-button type="text" class="el-icon-date">{{ state.text?.Seconds.name }}</a-button>
-          </template>
-          <a-radio-group v-model:value="state.second.cronEvery">
-            <a-form>
-              <a-form-item>
-                <a-radio value="1">{{ state.text?.Seconds.every }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="2"
-                  >{{ state.text?.Seconds.interval[0] }}
-                  <a-input-number size="small" v-model:value="state.second.incrementIncrement" :min="1" :max="60" />
-                  {{ state.text?.Seconds.interval[1] || "" }}
-                  <a-input-number size="small" v-model:value="state.second.incrementStart" :min="0" :max="59" />
-                  {{ state.text?.Seconds.interval[2] || "" }}
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" value="3">{{ state.text?.Seconds.specific }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.second.specificSpecific" style="width: 40%">
-                  <a-select-option v-for="(val, index) in 60" :key="'1-' + index" :value="val - 1"
-                    >{{ val - 1 }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="4"
-                  >{{ state.text?.Seconds.cycle[0] }}
-                  <a-input-number size="small" v-model:value="state.second.rangeStart" :min="1" :max="60" />
-                  {{ state.text?.Seconds.cycle[1] || "" }}
-                  <a-input-number size="small" v-model:value="state.second.rangeEnd" :min="0" :max="59" />
-                  {{ state.text?.Seconds.cycle[2] || "" }}
-                </a-radio>
-              </a-form-item>
-            </a-form>
+  <a-modal
+    v-model:open="prop.cronPopover"
+    style="width: 50%"
+    :key="Math.random()"
+    @cancel="emit('close')"
+    @ok="handleChange"
+  >
+    <perfect-scrollbar>
+      <div class="vue3-cron-div">
+        <div style="margin-bottom: 20px">
+          <a-radio-group v-model:value="propSysRadio">
+            <a-radio-button value="1" size="small">Linux</a-radio-button>
+            <a-radio-button value="2" size="small">Java(Spring)</a-radio-button>
+            <a-radio-button value="3" size="small">Java(Quartz)</a-radio-button>
           </a-radio-group>
-        </a-tab-pane>
-        <a-tab-pane :key="2">
-          <template #tab>
-            <a-button type="text" class="el-icon-date">{{ state.text?.Minutes.name }}</a-button>
-          </template>
-          <a-radio-group v-model:value="state.minute.cronEvery">
-            <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
-              <a-form-item>
-                <a-radio value="1">{{ state.text?.Minutes.every }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="2"
-                  >{{ state.text?.Minutes.interval[0] }}
-                  <a-input-number size="small" v-model:value="state.minute.incrementIncrement" :min="1" :max="60" />
-                  {{ state.text?.Minutes.interval[1] }}
-                  <a-input-number size="small" v-model:value="state.minute.incrementStart" :min="0" :max="59" />
-                  {{ state.text?.Minutes.interval[2] || "" }}
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" value="3">{{ state.text?.Minutes.specific }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.minute.specificSpecific" style="width: 40%">
-                  <a-select-option v-for="(val, index) in 60" :key="'2-' + index" :value="val - 1"
-                    >{{ val - 1 }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="4"
-                  >{{ state.text?.Minutes.cycle[0] }}
-                  <a-input-number size="small" v-model:value="state.minute.rangeStart" :min="1" :max="60" />
-                  {{ state.text?.Minutes.cycle[1] }}
-                  <a-input-number size="small" v-model:value="state.minute.rangeEnd" :min="0" :max="59" />
-                  {{ state.text?.Minutes.cycle[2] }}
-                </a-radio>
-              </a-form-item>
-            </a-form>
-          </a-radio-group>
-        </a-tab-pane>
-        <a-tab-pane :key="3">
-          <template #tab>
-            <a-button type="text" class="el-icon-date">{{ state.text?.Hours.name }}</a-button>
-          </template>
-          <a-radio-group v-model:value="state.hour.cronEvery">
-            <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
-              <a-form-item>
-                <a-radio value="1">{{ state.text?.Hours.every }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="2"
-                  >{{ state.text?.Hours.interval[0] }}
-                  <a-input-number size="small" v-model:value="state.hour.incrementIncrement" :min="0" :max="23" />
-                  {{ state.text?.Hours.interval[1] }}
-                  <a-input-number size="small" v-model:value="state.hour.incrementStart" :min="0" :max="23" />
-                  {{ state.text?.Hours.interval[2] }}
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" :value="3">{{ state.text?.Hours.specific }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.hour.specificSpecific" style="width: 40%">
-                  <a-select-option v-for="(val, index) in 24" :key="'3-' + index" :value="val - 1"
-                    >{{ val - 1 }}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="4"
-                  >{{ state.text?.Hours.cycle[0] }}
-                  <a-input-number size="small" v-model:value="state.hour.rangeStart" :min="0" :max="23" />
-                  {{ state.text?.Hours.cycle[1] }}
-                  <a-input-number size="small" v-model:value="state.hour.rangeEnd" :min="0" :max="23" />
-                  {{ state.text?.Hours.cycle[2] }}
-                </a-radio>
-              </a-form-item>
-            </a-form>
-          </a-radio-group>
-        </a-tab-pane>
-        <a-tab-pane :key="4">
-          <template #tab>
-            <a-button type="text" class="el-icon-date">{{ state.text?.Day.name }}</a-button>
-          </template>
-          <a-radio-group v-model:value="state.day.cronEvery">
-            <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
-              <a-form-item>
-                <a-radio value="1">{{ state.text?.Day.every }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="2"
-                  >{{ state.text?.Day.intervalWeek[0] }}
-                  <a-input-number size="small" v-model:value="state.week.incrementIncrement" :min="1" :max="7" />
-                  {{ state.text?.Day.intervalWeek[1] }}
-                  {{ state.text?.Day.intervalWeek[2] }}
-                </a-radio>
-                <a-select size="small" v-model:value="state.week.incrementStart" style="width: 40%">
-                  <a-select-option
-                    v-for="(val, index) in 7"
-                    :key="'4-' + index"
-                    :label="state.text?.Week[val - 1]"
-                    :value="val"
-                  />
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="3"
-                  >{{ state.text?.Day.intervalDay[0] }}
-                  <a-input-number size="small" v-model:value="state.day.incrementIncrement" :min="1" :max="31" />
-                  {{ state.text?.Day.intervalDay[1] }}
-                  <a-input-number size="small" v-model:value="state.day.incrementStart" :min="1" :max="31" />
-                  {{ state.text?.Day.intervalDay[2] }}
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" :value="4">{{ state.text?.Day.specificWeek }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.week.specificSpecific" style="width: 40%">
-                  <a-select-option
-                    v-for="(val, index) in 7"
-                    :key="'5-' + index"
-                    :label="state.text?.Week[val - 1]"
-                    :value="['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][val - 1]"
-                  />
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" :value="5">{{ state.text?.Day.specificDay }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.day.specificSpecific" style="width: 40%">
-                  <a-select-option v-for="(val, index) in 31" :key="index" :value="val">{{ val }}</a-select-option>
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="6">{{ state.text?.Day.lastDay }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="7">{{ state.text?.Day.lastWeekday }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="8"
-                  >{{ state.text?.Day.lastWeek[0] }}
-                  {{ state.text?.Day.lastWeek[1] || "" }}
-                </a-radio>
-                <a-select size="small" v-model:value="state.day.cronLastSpecificDomDay" style="width: 40%">
-                  <a-select-option
-                    v-for="(val, index) in 7"
-                    :key="'6-' + index"
-                    :label="state.text?.Week[val - 1]"
-                    :value="val"
-                  />
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="9">
-                  <a-input-number size="small" v-model:value="state.day.cronDaysBeforeEomMinus" :min="1" :max="31" />
-                  {{ state.text?.Day.beforeEndMonth[0] }}
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="10"
-                  >{{ state.text?.Day.nearestWeekday[0] }}
-                  <a-input-number size="small" v-model:value="state.day.cronDaysNearestWeekday" :min="1" :max="31" />
-                  {{ state.text?.Day.nearestWeekday[1] }}
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="11"
-                  >{{ state.text?.Day.someWeekday[0] }}
-                  <a-input-number size="small" v-model:value="state.week.cronNthDayNth" :min="1" :max="5" />
-                  {{ state.text?.Day.someWeekday[1] }}
-                </a-radio>
-                <a-select size="small" v-model:value="state.week.cronNthDayDay" style="width: 40%">
-                  <a-select-option
-                    v-for="(val, index) in 7"
-                    :key="'7-' + index"
-                    :label="state.text?.Week[val - 1]"
-                    :value="val"
-                  />
-                </a-select>
-              </a-form-item>
-            </a-form>
-          </a-radio-group>
-        </a-tab-pane>
-        <a-tab-pane :key="5">
-          <template #tab>
-            <a-button type="text" class="el-icon-date">{{ state.text?.Month.name }}</a-button>
-          </template>
-          <a-radio-group v-model:value="state.month.cronEvery">
-            <a-form class="tabBody VueScroller" :style="{ 'max-height': props.maxHeight }">
-              <a-form-item>
-                <a-radio value="1">{{ state.text?.Month.every }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="2"
-                  >{{ state.text?.Month.interval[0] }}
-                  <a-input-number size="small" v-model:value="state.month.incrementIncrement" :min="0" :max="12" />
-                  {{ state.text?.Month.interval[1] }}
-                  <a-input-number size="small" v-model:value="state.month.incrementStart" :min="0" :max="12" />
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" :value="3">{{ state.text?.Month.specific }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.month.specificSpecific" style="width: 40%">
-                  <a-select-option v-for="(val, index) in 12" :key="'8-' + index" :label="val" :value="val" />
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="4"
-                  >{{ state.text?.Month.cycle[0] }}
-                  <a-input-number size="small" v-model:value="state.month.rangeStart" :min="1" :max="12" />
-                  {{ state.text?.Month.cycle[1] }}
-                  <a-input-number size="small" v-model:value="state.month.rangeEnd" :min="1" :max="12" />
-                </a-radio>
-              </a-form-item>
-            </a-form>
-          </a-radio-group>
-        </a-tab-pane>
-        <a-tab-pane v-if="showYear" :key="6">
-          <template #tab>
-            <a-button type="text" class="el-icon-date">{{ state.text?.Year.name }}</a-button>
-          </template>
-          <a-radio-group v-model:value="state.year.cronEvery">
-            <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
-              <a-form-item>
-                <a-radio value="1">{{ state.text?.Year.every }}</a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="2"
-                  >{{ state.text?.Year.interval[0] }}
-                  <a-input-number size="small" v-model:value="state.year.incrementIncrement" :min="1" :max="99" />
-                  {{ state.text?.Year.interval[1] }}
-                  <a-input-number size="small" v-model:value="state.year.incrementStart" :min="2018" :max="2118" />
-                </a-radio>
-              </a-form-item>
-              <a-form-item>
-                <a-radio class="long" :value="3">{{ state.text?.Year.specific }}</a-radio>
-                <a-select size="small" mode="multiple" v-model:value="state.year.specificSpecific" style="width: 40%">
-                  <a-select-option
-                    v-for="(val, index) in 100"
-                    :key="'9-' + index"
-                    :label="2017 + val"
-                    :value="2017 + val"
-                  />
-                </a-select>
-              </a-form-item>
-              <a-form-item>
-                <a-radio value="4"
-                  >{{ state.text?.Year.cycle[0] }}
-                  <a-input-number size="small" v-model:value="state.year.rangeStart" :min="2018" :max="2118" />
-                  {{ state.text?.Year.cycle[1] }}
-                  <a-input-number size="small" v-model:value="state.year.rangeEnd" :min="2018" :max="2118" />
-                </a-radio>
-              </a-form-item>
-            </a-form>
-          </a-radio-group>
-        </a-tab-pane>
-      </a-tabs>
-      <div class="bottom">
-        <div class="value">
-          <span> cron预览: </span>
-          <a-tag type="success">
-            {{ state.cron }}
-          </a-tag>
         </div>
-        <div class="buttonDiv">
-          <a-radio-button type="primary" size="small" @click.stop="handleChange">{{ state.text?.Save }}</a-radio-button>
-          <a-radio-button type="primary" size="small" @click="close">{{ state.text?.Close }}</a-radio-button>
+        <a-tabs>
+          <a-tab-pane v-if="showSecond" :key="1">
+            <template #tab>
+              <a-button type="text" class="el-icon-date">{{ state.text?.Seconds.name }}</a-button>
+            </template>
+            <a-radio-group v-model:value="state.second.cronEvery">
+              <a-form>
+                <a-form-item>
+                  <a-radio value="1">{{ state.text?.Seconds.every }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="2"
+                    >{{ state.text?.Seconds.interval[0] }}
+                    <a-input-number size="small" v-model:value="state.second.incrementIncrement" :min="1" :max="60" />
+                    {{ state.text?.Seconds.interval[1] || "" }}
+                    <a-input-number size="small" v-model:value="state.second.incrementStart" :min="0" :max="59" />
+                    {{ state.text?.Seconds.interval[2] || "" }}
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" value="3">{{ state.text?.Seconds.specific }}</a-radio>
+                  <a-select
+                    size="small"
+                    mode="multiple"
+                    v-model:value="state.second.specificSpecific"
+                    style="width: 40%"
+                  >
+                    <a-select-option v-for="(val, index) in 60" :key="'1-' + index" :value="val - 1"
+                      >{{ val - 1 }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="4"
+                    >{{ state.text?.Seconds.cycle[0] }}
+                    <a-input-number size="small" v-model:value="state.second.rangeStart" :min="1" :max="60" />
+                    {{ state.text?.Seconds.cycle[1] || "" }}
+                    <a-input-number size="small" v-model:value="state.second.rangeEnd" :min="0" :max="59" />
+                    {{ state.text?.Seconds.cycle[2] || "" }}
+                  </a-radio>
+                </a-form-item>
+              </a-form>
+            </a-radio-group>
+          </a-tab-pane>
+          <a-tab-pane :key="2">
+            <template #tab>
+              <a-button type="text" class="el-icon-date">{{ state.text?.Minutes.name }}</a-button>
+            </template>
+            <a-radio-group v-model:value="state.minute.cronEvery">
+              <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
+                <a-form-item>
+                  <a-radio value="1">{{ state.text?.Minutes.every }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="2"
+                    >{{ state.text?.Minutes.interval[0] }}
+                    <a-input-number size="small" v-model:value="state.minute.incrementIncrement" :min="1" :max="60" />
+                    {{ state.text?.Minutes.interval[1] }}
+                    <a-input-number size="small" v-model:value="state.minute.incrementStart" :min="0" :max="59" />
+                    {{ state.text?.Minutes.interval[2] || "" }}
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" value="3">{{ state.text?.Minutes.specific }}</a-radio>
+                  <a-select
+                    size="small"
+                    mode="multiple"
+                    v-model:value="state.minute.specificSpecific"
+                    style="width: 40%"
+                  >
+                    <a-select-option v-for="(val, index) in 60" :key="'2-' + index" :value="val - 1"
+                      >{{ val - 1 }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="4"
+                    >{{ state.text?.Minutes.cycle[0] }}
+                    <a-input-number size="small" v-model:value="state.minute.rangeStart" :min="1" :max="60" />
+                    {{ state.text?.Minutes.cycle[1] }}
+                    <a-input-number size="small" v-model:value="state.minute.rangeEnd" :min="0" :max="59" />
+                    {{ state.text?.Minutes.cycle[2] }}
+                  </a-radio>
+                </a-form-item>
+              </a-form>
+            </a-radio-group>
+          </a-tab-pane>
+          <a-tab-pane :key="3">
+            <template #tab>
+              <a-button type="text" class="el-icon-date">{{ state.text?.Hours.name }}</a-button>
+            </template>
+            <a-radio-group v-model:value="state.hour.cronEvery">
+              <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
+                <a-form-item>
+                  <a-radio value="1">{{ state.text?.Hours.every }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="2"
+                    >{{ state.text?.Hours.interval[0] }}
+                    <a-input-number size="small" v-model:value="state.hour.incrementIncrement" :min="0" :max="23" />
+                    {{ state.text?.Hours.interval[1] }}
+                    <a-input-number size="small" v-model:value="state.hour.incrementStart" :min="0" :max="23" />
+                    {{ state.text?.Hours.interval[2] }}
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" :value="3">{{ state.text?.Hours.specific }}</a-radio>
+                  <a-select size="small" mode="multiple" v-model:value="state.hour.specificSpecific" style="width: 40%">
+                    <a-select-option v-for="(val, index) in 24" :key="'3-' + index" :value="val - 1"
+                      >{{ val - 1 }}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="4"
+                    >{{ state.text?.Hours.cycle[0] }}
+                    <a-input-number size="small" v-model:value="state.hour.rangeStart" :min="0" :max="23" />
+                    {{ state.text?.Hours.cycle[1] }}
+                    <a-input-number size="small" v-model:value="state.hour.rangeEnd" :min="0" :max="23" />
+                    {{ state.text?.Hours.cycle[2] }}
+                  </a-radio>
+                </a-form-item>
+              </a-form>
+            </a-radio-group>
+          </a-tab-pane>
+          <a-tab-pane :key="4">
+            <template #tab>
+              <a-button type="text" class="el-icon-date">{{ state.text?.Day.name }}</a-button>
+            </template>
+            <a-radio-group v-model:value="state.day.cronEvery">
+              <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
+                <a-form-item>
+                  <a-radio value="1">{{ state.text?.Day.every }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="2"
+                    >{{ state.text?.Day.intervalWeek[0] }}
+                    <a-input-number size="small" v-model:value="state.week.incrementIncrement" :min="1" :max="7" />
+                    {{ state.text?.Day.intervalWeek[1] }}
+                    {{ state.text?.Day.intervalWeek[2] }}
+                  </a-radio>
+                  <a-select size="small" v-model:value="state.week.incrementStart" style="width: 40%">
+                    <a-select-option
+                      v-for="(val, index) in 7"
+                      :key="'4-' + index"
+                      :label="state.text?.Week[val - 1]"
+                      :value="val"
+                    />
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="3"
+                    >{{ state.text?.Day.intervalDay[0] }}
+                    <a-input-number size="small" v-model:value="state.day.incrementIncrement" :min="1" :max="31" />
+                    {{ state.text?.Day.intervalDay[1] }}
+                    <a-input-number size="small" v-model:value="state.day.incrementStart" :min="1" :max="31" />
+                    {{ state.text?.Day.intervalDay[2] }}
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" :value="4">{{ state.text?.Day.specificWeek }}</a-radio>
+                  <a-select size="small" mode="multiple" v-model:value="state.week.specificSpecific" style="width: 40%">
+                    <a-select-option
+                      v-for="(val, index) in 7"
+                      :key="'5-' + index"
+                      :label="state.text?.Week[val - 1]"
+                      :value="['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][val - 1]"
+                    />
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" :value="5">{{ state.text?.Day.specificDay }}</a-radio>
+                  <a-select size="small" mode="multiple" v-model:value="state.day.specificSpecific" style="width: 40%">
+                    <a-select-option v-for="(val, index) in 31" :key="index" :value="val">{{ val }}</a-select-option>
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="6">{{ state.text?.Day.lastDay }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="7">{{ state.text?.Day.lastWeekday }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="8"
+                    >{{ state.text?.Day.lastWeek[0] }}
+                    {{ state.text?.Day.lastWeek[1] || "" }}
+                  </a-radio>
+                  <a-select size="small" v-model:value="state.day.cronLastSpecificDomDay" style="width: 40%">
+                    <a-select-option
+                      v-for="(val, index) in 7"
+                      :key="'6-' + index"
+                      :label="state.text?.Week[val - 1]"
+                      :value="val"
+                    />
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="9">
+                    <a-input-number size="small" v-model:value="state.day.cronDaysBeforeEomMinus" :min="1" :max="31" />
+                    {{ state.text?.Day.beforeEndMonth[0] }}
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="10"
+                    >{{ state.text?.Day.nearestWeekday[0] }}
+                    <a-input-number size="small" v-model:value="state.day.cronDaysNearestWeekday" :min="1" :max="31" />
+                    {{ state.text?.Day.nearestWeekday[1] }}
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="11"
+                    >{{ state.text?.Day.someWeekday[0] }}
+                    <a-input-number size="small" v-model:value="state.week.cronNthDayNth" :min="1" :max="5" />
+                    {{ state.text?.Day.someWeekday[1] }}
+                  </a-radio>
+                  <a-select size="small" v-model:value="state.week.cronNthDayDay" style="width: 40%">
+                    <a-select-option
+                      v-for="(val, index) in 7"
+                      :key="'7-' + index"
+                      :label="state.text?.Week[val - 1]"
+                      :value="val"
+                    />
+                  </a-select>
+                </a-form-item>
+              </a-form>
+            </a-radio-group>
+          </a-tab-pane>
+          <a-tab-pane :key="5">
+            <template #tab>
+              <a-button type="text" class="el-icon-date">{{ state.text?.Month.name }}</a-button>
+            </template>
+            <a-radio-group v-model:value="state.month.cronEvery">
+              <a-form class="tabBody VueScroller" :style="{ 'max-height': props.maxHeight }">
+                <a-form-item>
+                  <a-radio value="1">{{ state.text?.Month.every }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="2"
+                    >{{ state.text?.Month.interval[0] }}
+                    <a-input-number size="small" v-model:value="state.month.incrementIncrement" :min="0" :max="12" />
+                    {{ state.text?.Month.interval[1] }}
+                    <a-input-number size="small" v-model:value="state.month.incrementStart" :min="0" :max="12" />
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" :value="3">{{ state.text?.Month.specific }}</a-radio>
+                  <a-select
+                    size="small"
+                    mode="multiple"
+                    v-model:value="state.month.specificSpecific"
+                    style="width: 40%"
+                  >
+                    <a-select-option v-for="(val, index) in 12" :key="'8-' + index" :label="val" :value="val" />
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="4"
+                    >{{ state.text?.Month.cycle[0] }}
+                    <a-input-number size="small" v-model:value="state.month.rangeStart" :min="1" :max="12" />
+                    {{ state.text?.Month.cycle[1] }}
+                    <a-input-number size="small" v-model:value="state.month.rangeEnd" :min="1" :max="12" />
+                  </a-radio>
+                </a-form-item>
+              </a-form>
+            </a-radio-group>
+          </a-tab-pane>
+          <a-tab-pane v-if="showYear" :key="6">
+            <template #tab>
+              <a-button type="text" class="el-icon-date">{{ state.text?.Year.name }}</a-button>
+            </template>
+            <a-radio-group v-model:value="state.year.cronEvery">
+              <a-form class="tabBody VueScroller" :style="{ 'max-height': maxHeight }">
+                <a-form-item>
+                  <a-radio value="1">{{ state.text?.Year.every }}</a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="2"
+                    >{{ state.text?.Year.interval[0] }}
+                    <a-input-number size="small" v-model:value="state.year.incrementIncrement" :min="1" :max="99" />
+                    {{ state.text?.Year.interval[1] }}
+                    <a-input-number size="small" v-model:value="state.year.incrementStart" :min="2018" :max="2118" />
+                  </a-radio>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio class="long" :value="3">{{ state.text?.Year.specific }}</a-radio>
+                  <a-select size="small" mode="multiple" v-model:value="state.year.specificSpecific" style="width: 40%">
+                    <a-select-option
+                      v-for="(val, index) in 100"
+                      :key="'9-' + index"
+                      :label="2017 + val"
+                      :value="2017 + val"
+                    />
+                  </a-select>
+                </a-form-item>
+                <a-form-item>
+                  <a-radio value="4"
+                    >{{ state.text?.Year.cycle[0] }}
+                    <a-input-number size="small" v-model:value="state.year.rangeStart" :min="2018" :max="2118" />
+                    {{ state.text?.Year.cycle[1] }}
+                    <a-input-number size="small" v-model:value="state.year.rangeEnd" :min="2018" :max="2118" />
+                  </a-radio>
+                </a-form-item>
+              </a-form>
+            </a-radio-group>
+          </a-tab-pane>
+        </a-tabs>
+        <div class="bottom">
+          <div class="value">
+            <span> cron预览: </span>
+            <a-tag type="success">
+              {{ state.cron }}
+            </a-tag>
+          </div>
         </div>
       </div>
-    </div>
-  </perfect-scrollbar>
+    </perfect-scrollbar>
+  </a-modal>
 </template>
 <style lang="scss">
 .el-icon-date {
@@ -679,6 +684,8 @@ const handleChange = () => {
   }
 
   .bottom {
+    position: relative;
+    bottom: 0;
     width: 100%;
     margin-top: 5px;
     display: flex;

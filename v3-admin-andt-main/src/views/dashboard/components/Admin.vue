@@ -1,9 +1,14 @@
 <template>
   <div class="VueScroller">
     <a-input @click="togglePopover(true)" v-model:value="cron" placeholder="cron" />
-    <a-modal v-model:open="cronPopover" style="width: 50%" :key="Math.random()">
-      <vue3Cron @changeCron="changeCron" @close="togglePopover(false)" max-height="400px" i18n="cn" sys-radio="1" />
-    </a-modal>
+    <vue3Cron
+      :cron-popover="cronPopover"
+      @changeCron="changeCron"
+      @close="togglePopover(false)"
+      max-height="400px"
+      i18n="cn"
+      sys-radio="1"
+    />
   </div>
 </template>
 

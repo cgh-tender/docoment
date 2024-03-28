@@ -1,11 +1,11 @@
-import {getConfigLayout} from "@/utils/cache/local-storage"
+import { getConfigLayout } from "@/utils/cache/local-storage"
 
 /** 项目配置类型 */
 export interface LayoutSettings {
   /** 是否显示 Settings Panel */
   showSettings: boolean
   /** 布局模式 */
-  layoutMode: "left" | "top"
+  layoutMode: "left" | "top" | "left-top"
   /** 是否显示标签栏 */
   showTagsView: boolean
   /** 是否显示 Logo */

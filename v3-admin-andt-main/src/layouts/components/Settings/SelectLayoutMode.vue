@@ -14,26 +14,26 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
 
 <template>
   <div class="select-layout-mode">
-    <a-tooltip content="左侧模式">
+    <a-tooltip title="左侧模式">
       <a-layout class="layout-mode left" :class="{ active: isLeft }" @click="layoutMode = 'left'">
-        <el-aside />
+        <a-layout-sider />
         <a-layout>
-          <el-header />
+          <a-layout-header />
           <a-layout-content />
         </a-layout>
       </a-layout>
     </a-tooltip>
-    <a-tooltip content="顶部模式">
+    <a-tooltip title="顶部模式">
       <a-layout class="layout-mode top" :class="{ active: isTop }" @click="layoutMode = 'top'">
-        <el-header />
+        <a-layout-header />
         <a-layout-content />
       </a-layout>
     </a-tooltip>
-    <a-tooltip content="混合模式">
+    <a-tooltip title="混合模式">
       <a-layout class="layout-mode left-top" :class="{ active: isLeftTop }" @click="layoutMode = 'left-top'">
-        <el-header />
+        <a-layout-header />
         <a-layout>
-          <el-aside />
+          <a-layout-sider />
           <a-layout-content />
         </a-layout>
       </a-layout>
@@ -64,20 +64,20 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
   border: 2px solid var(--el-color-primary);
 }
 
-.el-header {
+.a-layout-header {
   height: 12px;
 }
 
-.el-aside {
+.a-layout-sider {
   width: 16px;
 }
 
 .left {
-  .el-header {
+  .a-layout-header {
     background-color: var(--el-border-color);
   }
 
-  .el-aside {
+  .a-layout-sider {
     background-color: var(--el-color-primary);
   }
 
@@ -87,7 +87,7 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
 }
 
 .top {
-  .el-header {
+  .a-layout-header {
     background-color: var(--el-color-primary);
   }
 
@@ -97,11 +97,11 @@ const isLeftTop = computed(() => layoutMode.value === "left-top")
 }
 
 .left-top {
-  .el-header {
+  .a-layout-header {
     background-color: var(--el-border-color);
   }
 
-  .el-aside {
+  .a-layout-sider {
     background-color: var(--el-color-primary);
   }
 

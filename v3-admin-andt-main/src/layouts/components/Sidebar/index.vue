@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, watchEffect} from "vue"
+import { computed, watchEffect } from "vue"
 import { useRoute } from "vue-router"
 import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
@@ -52,14 +52,25 @@ const hiddenScrollbarVerticalBar = computed(() => {
 })
 const { activeThemeName } = useTheme()
 const id = import.meta.env.VITE_APP_PROJECT_NAME
-const width = computed(() => {
-  return "var(--v3-sidebar-width)"
-})
 const scrollbarStyle = computed(() => {
-  return { height: "calc(100.5vh - var(--v3-sidebar-hide-width))" }
+  return isTop.value && !isMobile.value
+    ? {
+        width: "100%",
+        height: "var(--v3-navigationbar-height)"
+      }
+    : { height: "calc(100.5vh - var(--v3-sidebar-hide-width))" }
+})
+const style = computed(() => {
+  return isTop.value && !isMobile.value
+    ? {
+        width: "100%",
+        height: "var(--v3-navigationbar-height)"
+      }
+    : { width: "var(--v3-sidebar-width)" }
 })
 watchEffect(() => {
-  console.log(isCollapse.value, (isTop && !isMobile))
+  console.log(isTop.value)
+  console.log(!isMobile.value)
 })
 </script>
 
@@ -68,10 +79,10 @@ watchEffect(() => {
     <Logo v-if="isLogo" :collapse="isCollapse" />
     <perfect-scrollbar :style="scrollbarStyle">
       <a-menu
-        :width="width"
+        :style="style"
         :id="id"
         :theme="activeThemeName"
-        :mode="isTop && !isMobile ? 'vertical' : 'inline'"
+        :mode="isTop && !isMobile ? 'horizontal' : 'inline'"
         :inlineCollapsed="isCollapse"
         :inlineIndent="30"
       >
@@ -125,7 +136,7 @@ watchEffect(() => {
   display: block;
 
   * {
-    vertical-align: middle;
+    horizontal-align: middle;
   }
 }
 

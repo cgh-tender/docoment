@@ -111,18 +111,6 @@ const resolvePath = (routePath: string) => {
   color: #ffff;
 }
 
-.svg-icon {
-  min-width: 1em;
-  margin-right: 12px;
-  font-size: 18px;
-}
-
-.el-icon {
-  width: 1em;
-  margin-right: 12px;
-  font-size: 18px;
-}
-
 .simple-mode {
   &.first-level {
     :deep(.a-sub-menu) {

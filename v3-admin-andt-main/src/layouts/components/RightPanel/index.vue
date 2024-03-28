@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from "vue"
+import { SettingOutlined } from "@ant-design/icons-vue"
 
 interface Props {
   buttonTop?: number
@@ -14,10 +15,12 @@ const show = ref(false)
 </script>
 
 <template>
-  <div class="handle-button" @click="show = true">
-    <SettingOutlined :size="24" />
-  </div>
-  <a-drawer v-model="show" size="300px" :with-header="false">
+  <a-button class="handle-button" @click="show = true">
+    <template #icon>
+      <SettingOutlined :size="24" />
+    </template>
+  </a-button>
+  <a-drawer v-model:open="show" size="300px" :with-header="false">
     <slot />
   </a-drawer>
 </template>
@@ -37,6 +40,11 @@ const show = ref(false)
   color: #fff;
   display: flex;
   align-items: center;
-  justify-content: center;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
