@@ -1,6 +1,8 @@
 package cn.com.cgh.romantic.config;
 
 import cn.com.cgh.romantic.interfac.RedisMessageAdvice;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -24,6 +26,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.util.List;
@@ -42,6 +45,7 @@ import static cn.com.cgh.romantic.constant.RomanticConstant.REDIS_CACHE_MANAGER_
 @ConditionalOnProperty(prefix = "spring", name = "data.redis.lettuce.pool.enabled",havingValue = "true")
 @EnableCaching
 @AutoConfigureBefore(value = {RedisAutoConfiguration.class})
+@Component
 public class RedisConfig {
     static {
         log.info("RedisConfig:已启动");
@@ -122,12 +126,12 @@ public class RedisConfig {
                 .fromConnectionFactory(redisConnectionFactory)
                 // 设置默认缓存配置
                 .cacheDefaults(redisCacheConfiguration);
-        if (properties.getCacheNames() != null) {
-            properties.getCacheNames().forEach(key -> redisCacheManagerBuilder.withCacheConfiguration(key, redisCacheConfiguration.entryTtl(Duration.ofSeconds(60))));
+        if (CollectionUtil.isNotEmpty(properties.getCacheNames())) {
+            log.info(JSONUtil.toJsonStr(properties.getCacheNames()));
+            properties.getCacheNames().forEach(key -> redisCacheManagerBuilder.withCacheConfiguration(key.getName(), redisCacheConfiguration.entryTtl(Duration.ofSeconds(key.getSecond()))));
         }
         // 设置自定义缓存配置，缓存名为cache_user，它的过期时间为60s
-        redisCacheManagerBuilder.withCacheConfiguration("demo", redisCacheConfiguration.entryTtl(Duration.ofSeconds(60)))
-                .transactionAware();
+        redisCacheManagerBuilder.transactionAware();
         return redisCacheManagerBuilder.build();
     }
 

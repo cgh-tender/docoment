@@ -22,6 +22,8 @@ cn.com.cgh.romantic.config.db.MybatisConfig
 cn.com.cgh.romantic.config.db.DataSourceUtil
 cn.com.cgh.romantic.config.db.CustomIdGenerator
 
+cn.com.cgh.romantic.config.aspect.ClearAndReloadCacheAspect
+cn.com.cgh.romantic.config.aspect.ClearAsynRun
 cn.com.cgh.romantic.config.aspect.DataSourceAspect
 cn.com.cgh.romantic.config.aspect.RedisRequestLockAspect
 

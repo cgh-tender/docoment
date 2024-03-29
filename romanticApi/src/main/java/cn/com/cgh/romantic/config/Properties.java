@@ -2,9 +2,8 @@ package cn.com.cgh.romantic.config;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
@@ -13,9 +12,15 @@ import java.util.List;
  */
 @Getter
 @Setter
-@Configuration
 @RefreshScope
+@ConfigurationProperties(prefix = "spring.cache")
 public class Properties {
-    @Value("${spring.cache.cache-names:resource,user,core,gateway}")
-    private List<String> cacheNames;
+    private List<Cache> cacheNames;
+
+    @Getter
+    @Setter
+    public static class Cache{
+        private String name;
+        private Integer second = 60;
+    }
 }

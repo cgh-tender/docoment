@@ -1,9 +1,11 @@
 package cn.com.cgh.romantic.pojo.resource;
 
 import cn.com.cgh.romantic.config.aspect.annotation.RequestKeyParam;
+import cn.com.cgh.romantic.em.DesensitizationEnum;
 import cn.com.cgh.romantic.em.GenderStatus;
 import cn.com.cgh.romantic.em.UserStatus;
 import cn.com.cgh.romantic.em.YesNoStatus;
+import cn.com.cgh.romantic.interfac.Desensitization;
 import cn.com.cgh.romantic.pojo.TbBaseEntity;
 import cn.com.cgh.romantic.typeHandler.DefaultEnumTypeHandler;
 import com.baomidou.mybatisplus.annotation.SqlCondition;
@@ -46,11 +48,13 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 用户姓名
      */
     @Schema(description = "用户姓名")
+    @Desensitization(type = DesensitizationEnum.CHINESE_NAME)
     private String realname;
     /**
      * 用户密码
      */
     @Schema(description = "密码")
+    @Desensitization(type = DesensitizationEnum.PASSWORD)
     private String password;
     /**
      * 用户状态
@@ -63,11 +67,13 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      */
     @Schema(description = "手机号")
     @TableField(condition = SqlCondition.LIKE)
+    @Desensitization(type = DesensitizationEnum.MOBILE_PHONE)
     private String phone;
     /**
      * 邮箱
      */
     @Schema(description = "邮箱")
+    @Desensitization(type = DesensitizationEnum.EMAIL)
     private String email;
     /**
      * 性别
