@@ -1,5 +1,3 @@
-import {PaginationData} from "@/hooks/usePagination"
-
 /**
  * 角色
  */
@@ -72,7 +70,7 @@ export interface updatePasswordData {
 /**
  * 请求用户管理列表数据入参
  */
-export interface GetBaseUserTableData extends PaginationData {
+export interface GetBaseUserTableData {
   /** 查询参数：用户名 */
   username?: string
   /** 查询参数：手机号 */

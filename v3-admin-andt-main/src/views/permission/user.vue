@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from "vue"
+import { h, ref, watchEffect } from "vue"
 import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
 import { deleteUserById, getUserStatus, getUserTable } from "@/api/permission/user"
-import { usePagination } from "@/hooks/usePagination"
-import { Compass, Delete, Edit, Lock, More, Refresh, Search, Unlock, View, ZoomIn } from "@element-plus/icons-vue"
 import updatePassword from "@/views/permission/components/user/updatePassword.vue"
 import AddOrUpdate from "@/views/permission/components/user/addOrUpdate.vue"
 import { useFullscreenLoading } from "@/hooks/useFullscreenLoading"
@@ -11,8 +9,20 @@ import { useUserStoreHook } from "@/store/modules/user"
 import { SelectOption } from "@/hooks/useFetchSelect"
 import UpdateUserStatus from "@/views/permission/components/user/updateUserStatus.vue"
 import { message } from "ant-design-vue"
+import { useTable } from "@/hooks/useTable"
+import {
+  CompassOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FundViewOutlined,
+  LockOutlined,
+  MoreOutlined,
+  ReloadOutlined,
+  SearchOutlined,
+  UnlockOutlined,
+  ZoomInOutlined
+} from "@ant-design/icons-vue"
 
-const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 const dialogDisable = ref<boolean>(false)
 const handleUpdatePassword = ref<boolean>(false)
@@ -22,16 +32,10 @@ const lock = ref<boolean>(false)
 const { admin, isAdmin } = useUserStoreHook()
 const userStatus = ref<SelectOption[]>([])
 const dialogUserStatus = ref<boolean>(false)
+const searchData = ref<GetBaseUserTableData>({})
 
-const searchData = computed<GetBaseUserTableData>(() => {
-  return {
-    currentPage: paginationData.currentPage,
-    pageSize: paginationData.pageSize
-  }
-})
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
-  currentPage: 1,
-  pageSize: 2
+const [, refresh, pagination, loading] = useTable<TableResponseData<DefaultUserTableData>>(getUserTable, searchData, {
+  immediate: false
 })
 
 const initFormData: DefaultUserTableData = {
@@ -86,34 +90,13 @@ const resetForm = () => {
 }
 
 /**
- * 该Vue template函数getTableData用于加载表格数据，
- * 通过调用getUserTable接口获取数据并更新分页和表格显示内容，
- * 同时处理loading状态，加载中为true，
- * 加载完毕后根据请求结果设置为false。
- */
-const getTableData = () => {
-  loading.value = true
-  getUserTable(searchData.value)
-    .then((res) => {
-      paginationData.total = res.total
-      tableData.value = res.records
-    })
-    .catch(() => {
-      tableData.value = []
-    })
-    .finally(() => {
-      loading.value = false
-    })
-}
-
-/**
  * 该函数用于重置搜索条件，并重新获取表格数据。
  * resetForm()函数用于重置表单数据。
  * getTableData()函数用于获取表格数据。
  */
 const resetSearch = () => {
   resetForm()
-  getTableData()
+  refresh()
 }
 
 const showUserDetail = (row: DefaultUserTableData) => {
@@ -140,7 +123,7 @@ const update_password = (row: DefaultUserTableData) => {
 const deleteUserRow = async (row: DefaultUserTableData) => {
   await useFullscreenLoading(deleteUserById)(row.id)
   resetForm()
-  getTableData()
+  refresh()
 }
 
 const handleUpdateUserStatus = (row: DefaultUserTableData) => {
@@ -151,13 +134,11 @@ const handleUpdateUserStatus = (row: DefaultUserTableData) => {
 
 const handleDialogVisibleClose = () => {
   resetForm()
-  getTableData()
+  refresh()
   dialogVisible.value = false
   dialogDisable.value = false
 }
-const dialogLoading = (value: boolean) => {
-  loading.value = value
-}
+
 const tagVisible = ref<boolean>(false)
 
 const parserTagType = (status: string) => {
@@ -175,9 +156,9 @@ const parserTagType = (status: string) => {
   }
 }
 watchEffect(() => {
-  paginationData
+  pagination
   dialogUserStatus
-  getTableData()
+  refresh()
 })
 watchEffect(() => {
   if (!handleUpdatePassword.value) {
@@ -196,9 +177,9 @@ watchEffect(() => {
           <a-input v-model="searchData.phone" placeholder="请输入" />
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" :icon="Search" @click="getTableData">查询</a-button>
-          <a-button :icon="Refresh" @click="resetSearch">重置</a-button>
-          <a-button :icon="ZoomIn" @click="handleAdd">新增</a-button>
+          <a-button type="primary" :icon="h(SearchOutlined)" @click="refresh">查询</a-button>
+          <a-button :icon="h(ReloadOutlined)" @click="resetSearch">重置</a-button>
+          <a-button :icon="h(ZoomInOutlined)" @click="handleAdd">新增</a-button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -231,20 +212,20 @@ watchEffect(() => {
         </a-table-column>
         <a-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="scope">
-            <a-button type="primary" text plain :icon="Edit" size="small" @click="handleUpdate(scope.row)"
+            <a-button type="primary" text plain :icon="h(EditOutlined)" size="small" @click="handleUpdate(scope.row)"
               >编辑
             </a-button>
             <a-dropdown @visible-change="handleOpen(scope.row)">
-              <a-button type="primary" :icon="More" text plain size="small">
+              <a-button type="primary" :icon="h(MoreOutlined)" text plain size="small">
                 <arrow-down />
               </a-button>
               <template #overlay>
                 <a-menu>
-                  <a-menu-item :icon="View" @click="showUserDetail(scope.row)">详情</a-menu-item>
-                  <a-menu-item :icon="Compass" @click="update_password(scope.row)">密码</a-menu-item>
-                  <a-menu-item :icon="Delete" @click="deleteUserRow(scope.row)">删除</a-menu-item>
-                  <a-menu-item v-if="lock" :icon="Lock">冻结</a-menu-item>
-                  <a-menu-item v-if="!lock" :icon="Unlock">解冻</a-menu-item>
+                  <a-menu-item :icon="h(FundViewOutlined)" @click="showUserDetail(scope.row)">详情</a-menu-item>
+                  <a-menu-item :icon="h(CompassOutlined)" @click="update_password(scope.row)">密码</a-menu-item>
+                  <a-menu-item :icon="h(DeleteOutlined)" @click="deleteUserRow(scope.row)">删除</a-menu-item>
+                  <a-menu-item v-if="lock" :icon="h(LockOutlined)">冻结</a-menu-item>
+                  <a-menu-item v-if="!lock" :icon="h(UnlockOutlined)">解冻</a-menu-item>
                 </a-menu>
               </template>
             </a-dropdown>
@@ -254,13 +235,13 @@ watchEffect(() => {
       <a-pagination
         background
         class="pager-wrapper"
-        :layout="paginationData.layout"
-        :page-sizes="paginationData.pageSizes"
-        :total="paginationData.total"
-        :page-size="paginationData.pageSize"
-        :currentPage="paginationData.currentPage"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        :layout="pagination.layout"
+        :page-sizes="pagination.pageSizes"
+        :total="pagination.total"
+        :page-size="pagination.pageSize"
+        :currentPage="pagination.currentPage"
+        @size-change="pagination.handleSizeChange"
+        @current-change="pagination.handleCurrentChange"
       />
     </a-card>
     <!-- 新增/修改 -->
@@ -272,7 +253,7 @@ watchEffect(() => {
           v-model:form-data="formData"
           :title-name="titleName"
           @dialogVisibleClose="handleDialogVisibleClose"
-          @dialogLoading="dialogLoading"
+          @dialogLoading="loading"
         />
       </div>
     </transition>
@@ -287,7 +268,7 @@ watchEffect(() => {
           v-model:dialogUserStatus="dialogUserStatus"
           v-model:status="formData.status"
           v-model:user-id="formData.id"
-          @getTableData="getTableData"
+          @getTableData="refresh"
         />
       </div>
     </transition>

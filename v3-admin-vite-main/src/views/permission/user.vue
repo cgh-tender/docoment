@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from "vue"
-import { DefaultUserTableData, GetBaseUserTableData } from "@/api/permission/user/types/base"
+import { ref, watchEffect } from "vue"
+import { GetBaseResourceTableData } from "@/api/permission/user/types/base"
 import { deleteUserById, getUserStatus, getUserTable } from "@/api/permission/user"
-import { usePagination } from "@/hooks/usePagination"
 import { ElMessage } from "element-plus"
 import { Compass, Delete, Edit, Lock, More, Refresh, Search, Unlock, View, ZoomIn } from "@element-plus/icons-vue"
 import updatePassword from "@/views/permission/components/user/updatePassword.vue"
@@ -11,27 +10,21 @@ import { useFullscreenLoading } from "@/hooks/useFullscreenLoading"
 import { useUserStoreHook } from "@/store/modules/user"
 import { SelectOption } from "@/hooks/useFetchSelect"
 import UpdateUserStatus from "@/views/permission/components/user/updateUserStatus.vue"
+import { useTable } from "@/hooks/useTable"
+import { DefaultUserTableData } from "@/api/permission/resource/types/base"
 
-const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
 const dialogDisable = ref<boolean>(false)
 const handleUpdatePassword = ref<boolean>(false)
 const titleName = ref<string>("")
-const tableData = ref<DefaultUserTableData[]>([])
 const lock = ref<boolean>(false)
 const { admin, isAdmin } = useUserStoreHook()
 const userStatus = ref<SelectOption[]>([])
 const dialogUserStatus = ref<boolean>(false)
 
-const searchData = computed<GetBaseUserTableData>(() => {
-  return {
-    currentPage: paginationData.currentPage,
-    pageSize: paginationData.pageSize
-  }
-})
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
-  currentPage: 1,
-  pageSize: 2
+const searchData = ref<GetBaseResourceTableData>({
+  phone: "",
+  username: ""
 })
 
 const initFormData: DefaultUserTableData = {
@@ -50,6 +43,20 @@ const initFormData: DefaultUserTableData = {
 }
 
 const formData = ref<DefaultUserTableData>(initFormData)
+
+const {
+  reset,
+  refresh,
+  currentPage,
+  total,
+  pageSize,
+  pageSizes,
+  layout,
+  handleSizeChange,
+  handleCurrentChange,
+  loading,
+  data: tableData
+} = useTable(getUserTable, searchData, {})
 
 /**
  * 该函数用于更新用户信息，通过设置相关变量的值，打开对话框以供用户修改用户信息。
@@ -86,34 +93,13 @@ const resetForm = () => {
 }
 
 /**
- * 该Vue template函数getTableData用于加载表格数据，
- * 通过调用getUserTable接口获取数据并更新分页和表格显示内容，
- * 同时处理loading状态，加载中为true，
- * 加载完毕后根据请求结果设置为false。
- */
-const getTableData = () => {
-  loading.value = true
-  getUserTable(searchData.value)
-    .then((res) => {
-      paginationData.total = res.total
-      tableData.value = res.records
-    })
-    .catch(() => {
-      tableData.value = []
-    })
-    .finally(() => {
-      loading.value = false
-    })
-}
-
-/**
  * 该函数用于重置搜索条件，并重新获取表格数据。
  * resetForm()函数用于重置表单数据。
- * getTableData()函数用于获取表格数据。
+ * refresh()函数用于获取表格数据。
  */
 const resetSearch = () => {
   resetForm()
-  getTableData()
+  refresh()
 }
 
 const showUserDetail = (row: DefaultUserTableData) => {
@@ -140,7 +126,7 @@ const update_password = (row: DefaultUserTableData) => {
 const deleteUserRow = async (row: DefaultUserTableData) => {
   await useFullscreenLoading(deleteUserById)(row.id)
   resetForm()
-  getTableData()
+  refresh()
 }
 
 const handleUpdateUserStatus = (row: DefaultUserTableData) => {
@@ -151,7 +137,7 @@ const handleUpdateUserStatus = (row: DefaultUserTableData) => {
 
 const handleDialogVisibleClose = () => {
   resetForm()
-  getTableData()
+  refresh()
   dialogVisible.value = false
   dialogDisable.value = false
 }
@@ -174,11 +160,11 @@ const parserTagType = (status: string) => {
     return "primary"
   }
 }
-watchEffect(() => {
-  paginationData
-  dialogUserStatus
-  getTableData()
-})
+// watchEffect(() => {
+//   console.log(currentPage.value)
+//   console.log(dialogUserStatus.value)
+//   refresh()
+// })
 watchEffect(() => {
   if (!handleUpdatePassword.value) {
     resetForm()
@@ -196,8 +182,8 @@ watchEffect(() => {
           <el-input v-model="searchData.phone" placeholder="请输入" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="getTableData">查询</el-button>
-          <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
+          <el-button type="primary" :icon="Search" @click="refresh">查询</el-button>
+          <el-button :icon="Refresh" @click="reset">重置</el-button>
           <el-button :icon="ZoomIn" @click="handleAdd">新增</el-button>
         </el-form-item>
       </el-form>
@@ -238,7 +224,7 @@ watchEffect(() => {
             </el-button>
             <el-dropdown @visible-change="handleOpen(scope.row)">
               <el-button type="primary" :icon="More" text plain size="small">
-                <el-icon class="el-icon--right">
+                <el-icon>
                   <arrow-down />
                 </el-icon>
               </el-button>
@@ -258,11 +244,11 @@ watchEffect(() => {
       <el-pagination
         background
         class="pager-wrapper"
-        :layout="paginationData.layout"
-        :page-sizes="paginationData.pageSizes"
-        :total="paginationData.total"
-        :page-size="paginationData.pageSize"
-        :currentPage="paginationData.currentPage"
+        :layout="layout"
+        :page-sizes="pageSizes"
+        :total="total"
+        :page-size="pageSize"
+        :currentPage="currentPage"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -291,7 +277,7 @@ watchEffect(() => {
           v-model:dialogUserStatus="dialogUserStatus"
           v-model:status="formData.status"
           v-model:user-id="formData.id"
-          @getTableData="getTableData"
+          @getTableData="refresh"
         />
       </div>
     </transition>

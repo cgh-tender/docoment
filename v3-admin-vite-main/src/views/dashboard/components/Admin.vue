@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <el-input @focus="togglePopover(true)" v-model="cron" placeholder="cron" />
-    <el-dialog v-model="cronPopover" @close="togglePopover(false)" width="40%">
-      <vue3Cron @changeCron="changeCron" @close="togglePopover(false)" max-height="400px" i18n="cn" sys-radio="1" />
-    </el-dialog>
+  <div class="app-container center">
+    <div>
+      <el-input @focus="togglePopover(true)" v-model="cron" placeholder="cron" />
+      <el-dialog v-model="cronPopover" @close="togglePopover(false)" width="40%">
+        <vue3Cron @changeCron="changeCron" @close="togglePopover(false)" max-height="400px" i18n="cn" sys-radio="1" />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -26,7 +28,5 @@ const togglePopover = (bol: boolean) => {
 .center {
   height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
 }
 </style>

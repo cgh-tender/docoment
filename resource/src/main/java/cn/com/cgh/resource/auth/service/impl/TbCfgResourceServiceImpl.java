@@ -3,6 +3,8 @@ package cn.com.cgh.resource.auth.service.impl;
 import cn.com.cgh.romantic.pojo.resource.TbCfgResource;
 import cn.com.cgh.resource.auth.mapper.TbCfgResourceMapper;
 import cn.com.cgh.resource.auth.service.ITbCfgResourceService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,5 +26,10 @@ public class TbCfgResourceServiceImpl extends ServiceImpl<TbCfgResourceMapper, T
     @Override
     public List<TbCfgResource> queryTbCfgResourceList() {
         return tbCfgResourceMapper.queryTbCfgResourceList(0L);
+    }
+
+    @Override
+    public Page<TbCfgResource> queryResourceList(int currentPage, int pageSize) {
+        return tbCfgResourceMapper.queryResourceList(new Page<>(currentPage,pageSize));
     }
 }

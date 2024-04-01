@@ -1,19 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue"
 import { GetBaseUserTableData } from "@/api/permission/user/types/base"
-import { usePagination } from "@/hooks/usePagination"
 import { SelectOption } from "@/hooks/useFetchSelect"
 import { FileSearchOutlined, ReloadOutlined, UserAddOutlined } from "@ant-design/icons-vue"
 
 const loading = ref<boolean>(false)
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
-  currentPage: 1,
-  pageSize: 2
-})
+
 const searchData = computed<GetBaseUserTableData>(() => {
   return {
-    currentPage: paginationData.currentPage,
-    pageSize: paginationData.pageSize
+    currentPage: pagination.currentPage,
+    pageSize: pagination.pageSize
   }
 })
 const data = ref<SelectOption[]>([
@@ -124,10 +120,6 @@ const data = ref<SelectOption[]>([
     label: "1"
   }
 ])
-const handleNodeClick = (data: SelectOption) => {
-  console.log(data)
-}
-const getTableData = (event) => {}
 // 默认选中
 const selectedKeys = ref<string[]>([])
 // 默认打开

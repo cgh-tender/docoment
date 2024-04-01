@@ -7,8 +7,12 @@ interface ApiResponseData<T> {
   type?: string
 }
 
-interface TableResponseData<T> extends ApiResponseData<T> {
+interface TableResponseData<T> {
+  // 基础数据
+  code: number
   // 分页
   total: number
   records: T[]
+  message?: string
+  type?: string
 }

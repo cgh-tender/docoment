@@ -22,4 +22,7 @@
     <select id="queryTbCfgResourceList" resultMap="base">
         select id,name,parent_id,before_enter,before_route_leave,redirect,keep_alive,component,meta,alias,path from tb_cfg_resource where status = 0 and parent_id = ${parentId} and deleted = 0 order by sort
     </select>
+    <select id="queryResourceList" resultType="cn.com.cgh.romantic.pojo.resource.TbCfgResource">
+        select * from tb_cfg_resource
+    </select>
 </mapper>

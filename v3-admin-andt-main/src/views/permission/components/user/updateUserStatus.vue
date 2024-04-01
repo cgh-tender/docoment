@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import {ref} from "vue"
-import {Refresh} from "@element-plus/icons-vue"
-import {getUserStatus, upUserStatus} from "@/api/permission/user"
-import {SelectOption} from "@/hooks/useFetchSelect"
+import { ref } from "vue"
+import { getUserStatus, upUserStatus } from "@/api/permission/user"
+import { SelectOption } from "@/hooks/useFetchSelect"
 
 interface Props {
   dialogUserStatus: boolean
@@ -39,11 +38,11 @@ getUserStatus().then((data) => {
 </script>
 
 <template>
-  <a-dialog v-model="dialogUserStatusProp" title="更新用户状态" width="500" :before-close="handleClose">
+  <a-modal v-model="dialogUserStatusProp" title="更新用户状态" width="500" :before-close="handleClose">
     <a-card shadow="never" class="search-wrapper">
       <a-form-item label="请输选择更新状态">
         <a-select v-model="statusProp">
-          <a-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statusList"/>
+          <a-option :key="item.value" :label="item.label" :value="item.value" v-for="item in statusList" />
         </a-select>
       </a-form-item>
       <template #footer>
@@ -52,7 +51,7 @@ getUserStatus().then((data) => {
         </div>
       </template>
     </a-card>
-    </a-modal>
+  </a-modal>
 </template>
 
 <style scoped lang="scss">

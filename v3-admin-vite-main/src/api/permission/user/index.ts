@@ -17,7 +17,7 @@ export function checkPassword(params: checkPasswordRule) {
   })
 }
 
-export function addOrUpdateUser(data: DefaultUserTableData) {
+export function addOrUpdateUser(data: GetBaseUserTableData) {
   return request<ApiResponseData<string>>({
     url: "resource/user",
     method: "post",

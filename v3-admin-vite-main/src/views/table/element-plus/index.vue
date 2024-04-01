@@ -1,18 +1,33 @@
 <script lang="ts" setup>
-import { reactive, ref, watch } from "vue"
+import { reactive, ref } from "vue"
 import { createTableDataApi, deleteTableDataApi, getTableDataApi, updateTableDataApi } from "@/api/table"
 import { type GetTableData } from "@/api/table/types/table"
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from "element-plus"
 import { CirclePlus, Delete, Download, Refresh, RefreshRight, Search } from "@element-plus/icons-vue"
-import { usePagination } from "@/hooks/usePagination"
+import { useTable } from "@/hooks/useTable"
 
 defineOptions({
   // 命名当前组件
   name: "ElementPlus"
 })
 
-const loading = ref<boolean>(false)
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination()
+const searchData = ref({
+  username: "",
+  phone: ""
+})
+const {
+  data: tableData,
+  total,
+  currentPage,
+  refresh,
+  reset,
+  loading,
+  layout,
+  pageSizes,
+  pageSize,
+  handleSizeChange,
+  handleCurrentChange
+} = useTable(getTableDataApi, searchData, {})
 
 //#region 增
 const dialogVisible = ref<boolean>(false)
@@ -32,7 +47,7 @@ const handleCreate = () => {
         createTableDataApi(formData)
           .then(() => {
             ElMessage.success("新增成功")
-            getTableData()
+            refresh()
           })
           .finally(() => {
             dialogVisible.value = false
@@ -44,7 +59,7 @@ const handleCreate = () => {
         })
           .then(() => {
             ElMessage.success("修改成功")
-            getTableData()
+            refresh()
           })
           .finally(() => {
             dialogVisible.value = false
@@ -71,7 +86,7 @@ const handleDelete = (row: GetTableData) => {
   }).then(() => {
     deleteTableDataApi(row.id).then(() => {
       ElMessage.success("删除成功")
-      getTableData()
+      refresh()
     })
   })
 }
@@ -87,42 +102,7 @@ const handleUpdate = (row: GetTableData) => {
 //#endregion
 
 //#region 查
-const tableData = ref<GetTableData[]>([])
 const searchFormRef = ref<FormInstance | null>(null)
-const searchData = reactive({
-  username: "",
-  phone: ""
-})
-const getTableData = () => {
-  loading.value = true
-  getTableDataApi({
-    currentPage: paginationData.currentPage,
-    size: paginationData.pageSize,
-    username: searchData.username || undefined,
-    phone: searchData.phone || undefined
-  })
-    .then((res) => {
-      paginationData.total = res.data.total
-      tableData.value = res.data.list
-    })
-    .catch(() => {
-      tableData.value = []
-    })
-    .finally(() => {
-      loading.value = false
-    })
-}
-const handleSearch = () => {
-  paginationData.currentPage === 1 ? getTableData() : (paginationData.currentPage = 1)
-}
-const resetSearch = () => {
-  searchFormRef.value?.resetFields()
-  handleSearch()
-}
-//#endregion
-
-/** 监听分页参数的变化 */
-watch([() => paginationData.currentPage, () => paginationData.pageSize], getTableData, { immediate: true })
 </script>
 
 <template>
@@ -136,8 +116,8 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
           <el-input v-model="searchData.phone" placeholder="请输入" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="handleSearch">查询</el-button>
-          <el-button :icon="Refresh" @click="resetSearch">重置</el-button>
+          <el-button type="primary" :icon="Search" @click="refresh">查询</el-button>
+          <el-button :icon="Refresh" @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -152,7 +132,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
             <el-button type="primary" :icon="Download" circle />
           </el-tooltip>
           <el-tooltip content="刷新当前页">
-            <el-button type="primary" :icon="RefreshRight" circle @click="getTableData" />
+            <el-button type="primary" :icon="RefreshRight" circle @click="refresh" />
           </el-tooltip>
         </div>
       </div>
@@ -186,11 +166,11 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       <div class="pager-wrapper">
         <el-pagination
           background
-          :layout="paginationData.layout"
-          :page-sizes="paginationData.pageSizes"
-          :total="paginationData.total"
-          :page-size="paginationData.pageSize"
-          :currentPage="paginationData.currentPage"
+          :layout="layout"
+          :page-sizes="pageSizes"
+          :total="total"
+          :page-size="pageSize"
+          :currentPage="currentPage"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />

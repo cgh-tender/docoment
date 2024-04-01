@@ -2,6 +2,7 @@ package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.resource.auth.service.ITbCfgResourceService;
 import cn.com.cgh.romantic.pojo.resource.TbCfgResource;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,15 @@ public class TbCfgResourceController {
     @GetMapping()
     public List<TbCfgResource> queryMenu() {
         return ITbCfgResourceService.queryTbCfgResourceList();
+    }
+    @GetMapping("/queryResourceTree")
+    public List<TbCfgResource> queryResourceTree() {
+        return ITbCfgResourceService.queryTbCfgResourceList();
+    }
+
+    @GetMapping("/queryResourceList")
+    public Page<TbCfgResource> queryResourceList(int currentPage, int pageSize) {
+        return ITbCfgResourceService.queryResourceList(currentPage,pageSize);
     }
 
 

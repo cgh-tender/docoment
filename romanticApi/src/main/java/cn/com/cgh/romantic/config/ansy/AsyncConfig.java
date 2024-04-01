@@ -58,14 +58,4 @@ public class AsyncConfig implements AsyncConfigurer {
             }
         };
     }
-
-    @Bean
-    public AsyncConfigurerSupport asyncConfigurer() {
-        return new AsyncConfigurerSupport() {
-            @Override
-            public Executor getAsyncExecutor() {
-                return new ConcurrentTaskExecutor(taskExecutor);
-            }
-        };
-    }
 }

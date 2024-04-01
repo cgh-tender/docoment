@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue"
-import { FormProps, FormRules } from "element-plus"
 import { DefaultUserTableData, Group, Organization, Position, Role } from "@/api/permission/user/types/base"
-import { CircleClose } from "@element-plus/icons-vue"
 import { useTreeFunction } from "@/hooks/useTreeSelect"
 import { SelectNode, SelectOption, useFetchSelect } from "@/hooks/useFetchSelect"
 import { addOrUpdateUser, loadOrganization, loadPosition, loadRole, queryUserGroup } from "@/api/permission/user"

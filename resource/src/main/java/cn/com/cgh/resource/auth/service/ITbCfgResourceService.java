@@ -1,6 +1,7 @@
 package cn.com.cgh.resource.auth.service;
 
 import cn.com.cgh.romantic.pojo.resource.TbCfgResource;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -16,4 +17,6 @@ import java.util.List;
 public interface ITbCfgResourceService extends IService<TbCfgResource> {
 
     List<TbCfgResource> queryTbCfgResourceList();
+
+    Page<TbCfgResource> queryResourceList(int currentPage, int pageSize);
 }

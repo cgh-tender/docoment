@@ -54,7 +54,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      * 用户密码
      */
     @Schema(description = "密码")
-    @Desensitization(type = DesensitizationEnum.PASSWORD)
+//    @Desensitization(type = DesensitizationEnum.PASSWORD)
     private String password;
     /**
      * 用户状态

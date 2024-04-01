@@ -10,10 +10,6 @@ export interface UpdateTableRequestData {
 }
 
 export interface GetTableRequestData {
-  /** 当前页码 */
-  currentPage: number
-  /** 查询条数 */
-  size: number
   /** 查询参数：用户名 */
   username?: string
   /** 查询参数：手机号 */
@@ -30,7 +26,4 @@ export interface GetTableData {
   username: string
 }
 
-export type GetTableResponseData = ApiResponseData<{
-  list: GetTableData[]
-  total: number
-}>
+export type GetTableResponseData = TableResponseData<GetTableData>

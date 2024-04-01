@@ -1,21 +1,24 @@
 <script lang="ts" setup>
-import { computed, ref, watchEffect } from "vue"
+import { ref } from "vue"
 import { Refresh, Search, ZoomIn } from "@element-plus/icons-vue"
-import { GetBaseResourceTableData, ResourceQueryPojo } from "@/api/permission/user/types/base"
-import { usePagination } from "@/hooks/usePagination"
 import { SelectOption } from "@/hooks/useFetchSelect"
+import { useTable } from "@/hooks/useTable"
+import { getResourceTable } from "@/api/permission/resource"
 
-const loading = ref<boolean>(false)
-const { paginationData, handleCurrentChange, handleSizeChange } = usePagination({
-  currentPage: 1,
-  pageSize: 2
+const searchData = ref({
+  // 菜单id
+  id: "",
+  // 菜单名称
+  name: "",
+  // 菜单资源类别
+  status: ""
 })
-const searchData = computed<GetBaseResourceTableData>(() => {
-  return {
-    currentPage: paginationData.currentPage,
-    pageSize: paginationData.pageSize
-  }
-})
+const { loading, refresh, total, currentPage, handleCurrentChange, handleSizeChange, reset } = useTable(
+  getResourceTable,
+  searchData,
+  {}
+)
+
 const data = ref<SelectOption[]>([
   {
     value: "1",
@@ -26,138 +29,84 @@ const data = ref<SelectOption[]>([
         label: "1"
       }
     ]
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
-  },
-  {
-    value: "1",
-    label: "1"
   }
 ])
-
-const queryInfo = ref<ResourceQueryPojo>()
-const handleNodeClick = (data: SelectOption) => {
-  console.log(data)
-}
-watchEffect(() => {
-  getResource
-})
-const getTableData = () => {}
 </script>
 
 <template>
   <div class="app-container" v-loading="loading">
     <el-card shadow="never">
       <el-form ref="searchFormRef" :inline="true" :model="searchData">
-        <el-form-item prop="username" label="用户名">
-          <el-input v-model="searchData.username" placeholder="请输入" />
+        <el-form-item prop="id" label="菜单CODE">
+          <el-input v-model="searchData.id" placeholder="请输入菜单code" />
         </el-form-item>
-        <el-form-item prop="phone" label="手机号">
-          <el-input v-model="searchData.phone" placeholder="请输入" />
+        <el-form-item prop="name" label="菜单名称">
+          <el-input v-model="searchData.name" placeholder="请输入菜单名称" />
+        </el-form-item>
+        <el-form-item prop="status" label="菜单类型">
+          <el-input v-model="searchData.status" placeholder="请选择菜单类型" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" :icon="Search" @click="getTableData">查询</el-button>
-          <el-button :icon="Refresh">重置</el-button>
+          <el-button type="primary" :icon="Search" @click="refresh">查询</el-button>
+          <el-button :icon="Refresh" @click="reset">重置</el-button>
           <el-button :icon="ZoomIn">新增</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-    <el-container>
-      <el-aside>
+    <div class="app-main">
+      <div class="app-aside">
         <el-scrollbar>
           <el-card>
-            <el-tree :data="data" @node-click="handleNodeClick" />
+            <el-tree :data="data" @node-click="refresh" />
           </el-card>
         </el-scrollbar>
-      </el-aside>
-      <el-main>
+      </div>
+      <div class="app-center">
         <el-scrollbar>
-          <el-card>
-            <el-text>ssss</el-text>
-            <el-tree :data="data" @node-click="handleNodeClick" />
-          </el-card>
+          <el-text>ssss</el-text>
+          <el-tree :data="data" @node-click="refresh" />
         </el-scrollbar>
-      </el-main>
-    </el-container>
+      </div>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .app-container {
   padding: 20px 20px 0 20px;
+
+  .app-main {
+    display: inline-flex;
+    width: 100% !important;
+
+    .app-aside {
+      background-color: var(--v3-body-bg-color);
+      height: calc(100vh - 200px);
+      width: 20%;
+      padding: 20px 20px 0 0;
+
+      .el-card {
+        flex: 1 1 auto;
+        height: 100%;
+      }
+    }
+
+    .app-center {
+      background-color: var(--v3-body-bg-color);
+      padding: 20px 0 0 0;
+      width: 80%;
+
+      .el-card {
+        flex: 1 1 auto;
+        height: 100%;
+      }
+    }
+  }
 }
 
 .el-container {
   display: flex;
   height: calc(100vh - 200px); /* 设置容器高度为视口高度 */
-
-  .el-aside {
-    padding: 20px 20px 0 0;
-
-    .el-card {
-      flex: 1 1 auto;
-      height: 100%;
-    }
-  }
-
-  .el-main {
-    padding: 20px 0 0 0;
-
-    .el-card {
-      flex: 1 1 auto;
-      height: 100%;
-    }
-  }
 }
 
 .el-tree-node__label //设置字体大小
