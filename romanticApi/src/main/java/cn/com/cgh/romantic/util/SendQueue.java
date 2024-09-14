@@ -31,7 +31,7 @@ public class SendQueue implements ApplicationRunner {
     private final ConnectionFactory connectionFactory;
     private final RabbitTemplate rabbitTemplate;
 
-    public void doSendMsg2DelayQueue(MsgPojo<Object> delayMsgVo) throws IOException, TimeoutException {
+    public void doSendMsg2DelayQueue(MsgPojo delayMsgVo) throws IOException, TimeoutException {
         // 根据id 动态生成队列名称
         String queueNameTemplate = DeclareQueueName.QUEUE_NAME_TEMPLATE.getQueueName();
         String queueName = MessageFormat.format(queueNameTemplate, delayMsgVo.getId());
@@ -49,7 +49,7 @@ public class SendQueue implements ApplicationRunner {
         }
     }
 
-    public void doSendControllerQueue(MsgPojo<Object> delayMsgVo) {
+    public void doSendControllerQueue(MsgPojo delayMsgVo) {
         String queueName = MessageFormat.format(DeclareQueueName.QUEUE_NAME_TEMPLATE.getQueueName(), "controller");
         String routingKey = queueName + DeclareQueueName.ROUTING_QUEUE_NAME_SUFFIX.getQueueName();
         // 根据id 动态生成队列名称
@@ -58,7 +58,7 @@ public class SendQueue implements ApplicationRunner {
                 JSONUtil.toJsonStr(delayMsgVo.getMsg()).getBytes(StandardCharsets.UTF_8)
         );
     }
-    public void doSendLoginQueue(MsgPojo<Object> delayMsgVo) {
+    public void doSendLoginQueue(MsgPojo delayMsgVo) {
         String queueNameTemplate = DeclareQueueName.QUEUE_NAME_TEMPLATE.getQueueName();
         String queueName = MessageFormat.format(queueNameTemplate, "login");
         String routingKey = queueName + DeclareQueueName.ROUTING_QUEUE_NAME_SUFFIX.getQueueName();

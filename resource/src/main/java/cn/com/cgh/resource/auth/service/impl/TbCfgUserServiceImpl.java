@@ -79,7 +79,7 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
     public Page<TbCfgUser> get(TbCfgUser user, int currentPage, int pageSize) {
         Long userId = WebfluxAOPConfig.RequestContextHolder.getUserId();
         Boolean admin = permissionService.admin(userId);
-        return baseMapper.queryUsers(new Page(currentPage, pageSize), user, admin);
+        return baseMapper.queryUsers(new Page<>(currentPage, pageSize), user, admin);
     }
 
     @Override

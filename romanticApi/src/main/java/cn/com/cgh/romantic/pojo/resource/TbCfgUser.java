@@ -49,7 +49,7 @@ public class TbCfgUser extends TbBaseEntity implements UserDetails {
      */
     @Schema(description = "用户姓名")
     @Desensitization(type = DesensitizationEnum.CHINESE_NAME)
-    private String realname;
+    private String realName;
     /**
      * 用户密码
      */

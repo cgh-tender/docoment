@@ -62,7 +62,7 @@ public class LoginSuccessHandler implements ServerAuthenticationSuccessHandler {
                 loginLog.setId(Long.valueOf(id));
                 loginLog.setUpdateTime(LocalDateTime.now());
                 log.info(JSONUtil.toJsonStr(loginLog));
-                MsgPojo<Object> build = new MsgPojo().setId(securityUser.getId()).setMsg(
+                MsgPojo<TbLoginLog> build = new MsgPojo<TbLoginLog>().setId(securityUser.getId()).setMsg(
                         loginLog
                 );
                 sendQueue.doSendLoginQueue(build);

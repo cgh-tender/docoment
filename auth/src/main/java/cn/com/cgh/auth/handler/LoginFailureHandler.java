@@ -44,7 +44,7 @@ public class LoginFailureHandler implements ServerAuthenticationFailureHandler {
                     .setLogoutTime(LocalDateTime.now());
             loginLog.setId(Long.valueOf(i));
             log.info(JSONUtil.toJsonStr(loginLog));
-            MsgPojo build = new MsgPojo().setId(loginLog.getId()).setMsg(
+            MsgPojo<TbLoginLog> build = new MsgPojo<TbLoginLog>().setId(loginLog.getId()).setMsg(
                     loginLog
             );
             sendQueue.doSendLoginQueue(build);

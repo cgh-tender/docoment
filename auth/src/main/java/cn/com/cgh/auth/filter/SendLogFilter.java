@@ -64,7 +64,7 @@ public class SendLogFilter implements WebFilter {
                         .setLoginStatus(LoginStatus.IN);
                 loginLog.setId(id);
                 loginLog.setCreateTime(LocalDateTime.now());
-                MsgPojo<Object> build = new MsgPojo().setId(id).setMsg(
+                MsgPojo<TbLoginLog> build = new MsgPojo<TbLoginLog>().setId(id).setMsg(
                         loginLog
                 );
                 log.info(JSONUtil.toJsonStr(build));

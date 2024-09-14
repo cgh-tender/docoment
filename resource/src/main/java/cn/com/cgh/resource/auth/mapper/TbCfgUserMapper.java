@@ -19,5 +19,5 @@ public interface TbCfgUserMapper extends BaseMapper<TbCfgUser> {
 
     TbCfgUser queryOneByUsername(@Param("username") String username);
 
-    Page<TbCfgUser> queryUsers(Page page, @Param("user") TbCfgUser user,@Param("admin")  Boolean admin);
+    Page<TbCfgUser> queryUsers(Page<TbCfgUser> page, @Param("user") TbCfgUser user,@Param("admin")  Boolean admin);
 }

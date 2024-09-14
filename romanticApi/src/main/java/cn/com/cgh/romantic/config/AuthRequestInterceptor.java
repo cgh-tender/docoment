@@ -17,6 +17,6 @@ public class AuthRequestInterceptor implements RequestInterceptor {
         String url = template.feignTarget().url();
         String path = template.path();
         // 获取请求对象
-        log.info("feign拦截器 {} {}", url, path);
+        log.info("feign拦截器 {}{}", url, path);
     }
 }

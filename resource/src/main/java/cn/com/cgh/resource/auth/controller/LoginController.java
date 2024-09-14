@@ -1,6 +1,7 @@
 package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.romantic.config.aspect.annotation.RequestLock;
+import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
 import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.resource.auth.service.ITbCfgRoleService;
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
@@ -71,7 +72,7 @@ public class LoginController {
         return "hello";
     }
     @GetMapping("/hello1")
-    public ResponseImpl hello1() {
+    public ResponseImpl<String> hello1() {
         return new ResponseImpl<String>().setData("hello1").success();
     }
     @GetMapping("/hello2")
@@ -79,8 +80,8 @@ public class LoginController {
         return Mono.just("hello2");
     }
     @GetMapping("/hello3")
-    public Mono<ResponseImpl> hello3() {
-        return Mono.just(new ResponseImpl().setData("hello3").success());
+    public Mono<ResponseImpl<String>> hello3() {
+        return Mono.just(new ResponseImpl<String>().setData("hello3").success());
     }
 
     @Autowired
@@ -90,7 +91,7 @@ public class LoginController {
     private IdWork idWork;
     @GetMapping("/send")
     public String senQuery() {
-        sendQueue.doSendControllerQueue(new MsgPojo().setId(idWork.nextId()).setMsg(
+        sendQueue.doSendControllerQueue(new MsgPojo<TbControllerLog>().setId(idWork.nextId()).setMsg(
                 new TbControllerLog()
                         .setHttpMethod(HttpMethod.GET)
                         .setRequestUrl("/send")

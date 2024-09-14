@@ -50,12 +50,12 @@
                     typeHandler="com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler"/>
     </resultMap>
     <select id="queryUsers" resultMap="UserAll">
-        select id,username,realname,phone,email,gender,status from tb_cfg_user
+        select id,username,real_name,phone,email,gender,status from tb_cfg_user
         <where>
-            <if test="user.username != null">
+            <if test="user.username != null and user.username != ''">
                 and username like concat('%',#{user.username},'%')
             </if>
-            <if test="user.realname != null">
+            <if test="user.realName != null and user.realName != ''">
                 and realname like concat('%',#{user.realname},'%')
             </if>
             <if test="admin != true">

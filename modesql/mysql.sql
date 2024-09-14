@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS tb_cfg_user
     update_time datetime(3)   NOT NULL COMMENT '更新时间',
     update_by   bigint(20) NOT NULL COMMENT '更新者',
     username        varchar(128) NOT NULL COMMENT '用户账号',
-    realname        varchar(128) NOT NULL COMMENT '用户姓名',
+    real_name        varchar(128) NOT NULL COMMENT '用户姓名',
     password        varchar(128) NOT NULL COMMENT '密码',
     phone       varchar(20) DEFAULT NULL COMMENT '手机号',
     email       varchar(20) DEFAULT NULL COMMENT '邮箱',
