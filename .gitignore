@@ -37,10 +37,10 @@ dist/.DS_Store
 dist/dist-ssr
 dist/.eslintcache
 # Local env files
-v3-admin-vite-main/*.local
+dist/*.local
 # Logs
 dist/logs
-v3-admin-vite-main/*.log
+dist/*.log
 dist/npm-debug.log*
 dist/yarn-debug.log*
 dist/yarn-error.log*
@@ -50,13 +50,13 @@ dist/lerna-debug.log*
 dist/.vscode/*
 dist/!.vscode/extensions.json
 dist/!.vscode/settings.json
-v3-admin-vite-main/!.vscode/*.code-snippets
+dist/!.vscode/*.code-snippets
 dist/.idea
-v3-admin-vite-main/*.suo
-v3-admin-vite-main/*.ntvs*
-v3-admin-vite-main/*.njsproj
-v3-admin-vite-main/*.sln
-v3-admin-vite-main/*.sw?
+dist/*.suo
+dist/*.ntvs*
+dist/*.njsproj
+dist/*.sln
+dist/*.sw?
 # Use the PNPM
 dist/package-lock.json
 dist/yarn.lock
