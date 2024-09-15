@@ -12,7 +12,6 @@
         <module>gateway</module>
         <module>core</module>
         <module>resource</module>
-        <module>jena</module>
         <module>auth</module>
         <module>romanticApi</module>
         <module>oasis</module>
