@@ -1,7 +1,10 @@
 package cn.com.cgh.auth.handler;
 
+import cn.com.cgh.romantic.util.ResponseImpl;
 import com.alibaba.fastjson2.JSON;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
@@ -18,14 +21,15 @@ import java.util.HashMap;
 public class TokenAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
-        ex.printStackTrace();
         ServerHttpResponse response = exchange.getResponse();
         // 401 未授权
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
-        response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("code", HttpStatus.UNAUTHORIZED.value());
-        map.put("message", "暂未登录，请您先进行登录");
-        return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(map))));
+        response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return response.writeWith(Mono.just(
+                response.bufferFactory().wrap(
+                        JSON.toJSONBytes(
+                                ResponseImpl.full("暂未登录，请您先进行登录").setCode(String.valueOf(HttpStatus.UNAUTHORIZED.value())).setMessage("暂未登录，请您先进行登录"))
+                )
+        ));
     }
 }

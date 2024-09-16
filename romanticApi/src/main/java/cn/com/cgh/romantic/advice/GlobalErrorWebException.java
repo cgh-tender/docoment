@@ -70,7 +70,7 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
         }
         return Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
             String message = messageStr;
-            ResponseImpl<T> builder = new ResponseImpl();
+            ResponseImpl<T> builder = ResponseImpl.full("");
             if (message != null && REGEX.matcher(message).find()) {
                 ResponseImpl<String> errorMessage = iResourceErrorController.getErrorMessage(Long.valueOf(message));
                 builder.setCode(message);
@@ -80,7 +80,7 @@ public class GlobalErrorWebException implements ErrorWebExceptionHandler {
                 message = ERROR_CONVERTERS.get(String.valueOf(statusCode)) == null ? message : String.valueOf(ERROR_CONVERTERS.get(String.valueOf(statusCode)));
             }
             builder.setMessage(message);
-            return builder.full();
+            return builder;
         }, threadPoolTaskExecutor));
 
     }

@@ -74,7 +74,11 @@ public class OAuth2Config {
         http.addFilterBefore(sendLogFilter, SecurityWebFiltersOrder.FORM_LOGIN);
         http.addFilterBefore(manageAuthenticationFilter, SecurityWebFiltersOrder.FORM_LOGIN);
         http.exceptionHandling(e -> e.accessDeniedHandler(tokenAccessDeniedHandler)
-                .authenticationEntryPoint(tokenAuthenticationEntryPoint));
+                        // 处理未授权
+                .authenticationEntryPoint(tokenAuthenticationEntryPoint)
+                //处理未认证
+                // 自定义处理JWT请求头过期或签名错误的结果
+        );
         SecurityWebFilterChain build = http.build();
         Flux<WebFilter> webFilterFlux = build.getWebFilters().doOnNext(filter -> {
             if (filter instanceof AuthenticationWebFilter) {

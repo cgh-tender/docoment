@@ -10,6 +10,8 @@ public interface RomanticConstant {
     public static final String THREAD_LOCAL_LOG_ID = "THREAD-LOCAL-LOG-ID";
     public static final String USER_AGENT = "User-Agent";
     public static final String JWT_TOKEN_HEADER = "Authorization";
+    public static final String JWT_USER_CERTIFIED_NAME =  "CertifiedName";
+    public static final String JWT_USER_CERTIFIED_ID =  "CertifiedId";
     public static final String REDIS_CACHE_MANAGER_NAME = "empRedisCacheManager";
 
     public static final String MASTER = "master";

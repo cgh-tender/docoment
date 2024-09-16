@@ -34,9 +34,8 @@ import java.util.stream.Collectors;
 @Schema(description = "用户表")
 @TableName("tb_cfg_user")
 @Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
 public class TbCfgUser extends TbBaseEntity implements UserDetails {
+    public TbCfgUser() {}
     /**
      * 用户账号
      */

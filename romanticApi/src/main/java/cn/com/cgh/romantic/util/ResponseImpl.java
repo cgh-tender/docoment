@@ -34,16 +34,29 @@ public class ResponseImpl<T> {
     private List<T> records;
     private Long total;
 
-    public ResponseImpl<T> success(){
-        if (StringUtils.isBlank(this.code)){
+    public static <T> ResponseImpl<T> ok(T data) {
+        return new ResponseImpl<T>().setData(data).success();
+    }
+
+    public static <T> ResponseImpl<T> ok() {
+        return new ResponseImpl<T>().success();
+    }
+
+    public static <T> ResponseImpl<T> full(String message) {
+        return new ResponseImpl<T>().setMessage(message).error();
+    }
+
+    private ResponseImpl<T> success() {
+        if (StringUtils.isBlank(this.code)) {
             this.code = "0";
         }
-        if (StringUtils.isBlank(this.message)){
+        if (StringUtils.isBlank(this.message)) {
             this.message = "true";
         }
         return this;
     }
-    public ResponseImpl<T> full() {
+
+    private ResponseImpl<T> error() {
         if (StringUtils.isBlank(this.code)) {
             this.code = "1";
         }
@@ -51,6 +64,10 @@ public class ResponseImpl<T> {
             this.message = "false";
         }
         return this;
+    }
+
+    public static <T> ResponseImpl<T> full() {
+        return new ResponseImpl<T>().error();
     }
 
     @Override

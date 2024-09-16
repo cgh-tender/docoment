@@ -5,6 +5,7 @@ import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 /**
  * <p>
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public interface ITbCfgUserService extends IService<TbCfgUser> {
     @GetMapping("/loadByUsername/{username}")
-    public TbCfgUser queryOneByUsername(@PathVariable String username);
+    public Mono<TbCfgUser> queryOneByUsername(@PathVariable String username);
     @GetMapping("/resetquest")
     public String resetquest();
 

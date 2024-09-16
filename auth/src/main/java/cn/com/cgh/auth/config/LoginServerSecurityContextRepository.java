@@ -38,7 +38,7 @@ public class LoginServerSecurityContextRepository implements ServerSecurityConte
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
         log.info("LoginServerSecurityContextRepository save");
-        return RequestUtil.getBody(exchange).flatMap(c -> {
+        return Mono.just(exchange).flatMap(c -> {
             String uuid = c.getRequest().getHeaders().getFirst(RomanticConstant.UUID);
             assert uuid != null;
             String uuidCacheCode = String.valueOf(redisTemplate.opsForValue().get(uuid));
@@ -54,7 +54,7 @@ public class LoginServerSecurityContextRepository implements ServerSecurityConte
                 return loginFailureHandler.sendLoginFailure(c, new ServiceException(11008));
             }
             return Mono.empty();
-        });
+        }).then(RequestUtil.getBody(exchange)).then();
     }
 
     @Override

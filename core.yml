@@ -4,9 +4,9 @@ spring:
       thread-name-prefix: custom-thread-
       pool:
         max-size: 20
-        queue-capacity: 100
+        queue-capacity: 500
         core-size: 10
-        keep-alive: 10
+        keep-alive: 60
         allow-core-thread-time-out: true
   data:
     redis:

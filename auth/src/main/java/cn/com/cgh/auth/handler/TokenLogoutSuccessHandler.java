@@ -4,6 +4,7 @@ import cn.com.cgh.romantic.util.ResponseImpl;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
@@ -23,10 +24,10 @@ public class TokenLogoutSuccessHandler implements ServerLogoutSuccessHandler {
         ServerWebExchange exchange1 = exchange.getExchange();
         ServerHttpResponse response = exchange1.getResponse();
         HttpHeaders httpHeaders = response.getHeaders();
-        httpHeaders.add("Content-Type", "application/json; charset=UTF-8");
+        response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         httpHeaders.add("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         return response.writeWith(Mono.just(response.bufferFactory().wrap(
-                JSON.toJSONBytes(new ResponseImpl().setMessage("退出成功").success())
+                JSON.toJSONBytes(ResponseImpl.full("退出成功"))
         )));
     }
 }

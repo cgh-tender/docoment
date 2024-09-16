@@ -67,27 +67,26 @@ public class GlobalExceptionHandler {
     //getRequiredType()实际要求客户端传递的数据类型
     @ExceptionHandler(TypeMismatchException.class)
     @ResponseBody
-    public Mono<ResponseImpl<String>> requestTypeMismatch(TypeMismatchException ex) {
+    public Mono<ResponseImpl> requestTypeMismatch(TypeMismatchException ex) {
         LOGGER.error("参数类型有误:{}", ex.getMessage());
-        return Mono.just(new ResponseImpl<String>().setCode("99999").setMessage("参数类型不匹配,参数" + ex.getPropertyName() + "类型应该为" + ex.getRequiredType()).full());
+        return Mono.just(ResponseImpl.full("参数类型不匹配,参数" + ex.getPropertyName() + "类型应该为" + ex.getRequiredType()).setCode("99999"));
     }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseBody
-    public Mono<ResponseImpl<String>> fileSizeLimit(MultipartException ex) {
+    public Mono<ResponseImpl> fileSizeLimit(MultipartException ex) {
         LOGGER.error("认证有误:{}", ex.getMessage());
-        return Mono.just(new ResponseImpl<String>().setCode("99999")
-                .setMessage(ex.getMessage()).full());
+        return Mono.just(ResponseImpl.full(ex.getMessage()).setCode("99999"));
     }
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseBody
-    public Mono<ResponseImpl<String>> authenticationMethod(AuthenticationException m) {
+    public Mono<ResponseImpl> authenticationMethod(AuthenticationException m) {
         LOGGER.error("超过文件上传大小限制");
         if (m.getCause() != null) {
             LOGGER.error("超过文件上传大小限制:" + m.getCause().getMessage());
         }
-        return Mono.just(new ResponseImpl<String>().setCode("99999").setMessage("超过文件大小限制,最大10MB").full());
+        return Mono.just(ResponseImpl.full("超过文件大小限制,最大10MB").setCode("99999"));
     }
 
 }

@@ -4,9 +4,11 @@ import cn.com.cgh.romantic.pojo.resource.TbCfgUser;
 import cn.com.cgh.romantic.util.ResponseImpl;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
@@ -25,7 +27,7 @@ public interface ILoginController {
     public ResponseImpl<Map> login(@RequestBody TbCfgUser user);
 
     @GetMapping("/user/loadByUsername/{username}")
-    ResponseImpl<TbCfgUser> loadUserByUsername(@PathVariable String username);
+    TbCfgUser loadUserByUsername(@PathVariable String username);
 }
 
 class ILoginControllerConfiguration {
@@ -42,7 +44,7 @@ class ILoginControllerFallback implements ILoginController {
     }
 
     @Override
-    public ResponseImpl<TbCfgUser> loadUserByUsername(String username) {
+    public TbCfgUser loadUserByUsername(String username) {
         return null;
     }
 }

@@ -26,18 +26,15 @@ public class AsyncConfig implements AsyncConfigurer {
         log.info("AsyncConfig:已启动");
     }
 
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
-
     @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 核心线程数
-        executor.setCorePoolSize(5);
+        executor.setCorePoolSize(10);
         // 最大线程数
-        executor.setMaxPoolSize(10);
+        executor.setMaxPoolSize(20);
         // 队列容量
-        executor.setQueueCapacity(20);
+        executor.setQueueCapacity(500);
         // 线程前缀名
         executor.setThreadNamePrefix("async-thread-");
         // 等待所有任务完成后关闭线程池（默认为false）

@@ -2,6 +2,7 @@ package cn.com.cgh.resource.auth.controller;
 
 import cn.com.cgh.romantic.config.aspect.annotation.RequestLock;
 import cn.com.cgh.romantic.pojo.oasis.TbLoginLog;
+import cn.com.cgh.romantic.server.auth.IAuthCheckController;
 import cn.com.cgh.romantic.util.ResponseImpl;
 import cn.com.cgh.resource.auth.service.ITbCfgRoleService;
 import cn.com.cgh.resource.auth.service.ITbCfgUserService;
@@ -19,9 +20,11 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
-import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_TOKEN_HEADER;
+import static cn.com.cgh.romantic.constant.RomanticConstant.*;
 
 /**
  * @author cgh
@@ -35,36 +38,27 @@ public class LoginController {
     private ITbCfgUserService iTbCfgUserService;
     @Autowired
     private ITbCfgRoleService iTbCfgRoleService;
-    /**
-     * 登录
-     *
-     * @param user
-     * @return
-     */
-    @PostMapping("/login")
-    @RequestLock
-    public Map login(@RequestBody TbCfgUser user) {
-        Map<String, String> map = new HashMap<>();
-        map.put("token", user.getUsername());
-        return map;
-    }
-
+    @Autowired
+    private IAuthCheckController iAuthCheckController;
     /**
      * user info
      *
      * @return
      */
     @GetMapping("/info")
-    public Map info(ServerHttpRequest request) {
-        String authorization = request.getHeaders().getFirst(JWT_TOKEN_HEADER);
-        Long userId = jwtTokenUtil.getUserIdFromToken(authorization);
-        String username = jwtTokenUtil.getUserNameFromToken(authorization);
-        Set<Long> data = iTbCfgRoleService.queryUserRoles(userId);
-        Map<String, Object> map = new HashMap<>();
-        map.put("roles", data);
-        map.put("username", username);
-        map.put("userId", userId);
-        return map;
+    public Mono<ResponseImpl<Map>> info(ServerHttpRequest request) {
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> iAuthCheckController.test())).map(t ->
+        {
+            System.out.println(t);
+            Long userId = Long.valueOf(Objects.requireNonNull(request.getHeaders().getFirst(JWT_USER_CERTIFIED_ID)));
+            String username = request.getHeaders().getFirst(JWT_USER_CERTIFIED_NAME);
+            Set<Long> data = iTbCfgRoleService.queryUserRoles(userId);
+            Map<String, Object> map = new HashMap<>();
+            map.put("roles", data);
+            map.put("username", username);
+            map.put("userId", userId);
+            return ResponseImpl.ok(map);
+        });
     }
     @GetMapping("/hello")
     @RequestLock
@@ -73,7 +67,7 @@ public class LoginController {
     }
     @GetMapping("/hello1")
     public ResponseImpl<String> hello1() {
-        return new ResponseImpl<String>().setData("hello1").success();
+        return ResponseImpl.ok("hello1");
     }
     @GetMapping("/hello2")
     public Mono<String> hello2() {
@@ -81,7 +75,7 @@ public class LoginController {
     }
     @GetMapping("/hello3")
     public Mono<ResponseImpl<String>> hello3() {
-        return Mono.just(new ResponseImpl<String>().setData("hello3").success());
+        return Mono.just(ResponseImpl.ok("hello3"));
     }
 
     @Autowired

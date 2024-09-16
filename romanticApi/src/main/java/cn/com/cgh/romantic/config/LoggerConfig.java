@@ -92,7 +92,7 @@ public class LoggerConfig implements ApplicationRunner {
     }
     private void flushThread() {
         TaskExecutionProperties.Pool pool = taskExecutionProperties.getPool();
-            taskExecutor.setMaxPoolSize(pool.getMaxSize());
+        taskExecutor.setMaxPoolSize(pool.getMaxSize());
         taskExecutor.setCorePoolSize(pool.getCoreSize());
         taskExecutor.setQueueCapacity(pool.getQueueCapacity());
         taskExecutor.setKeepAliveSeconds(Math.toIntExact(pool.getKeepAlive().getSeconds()));

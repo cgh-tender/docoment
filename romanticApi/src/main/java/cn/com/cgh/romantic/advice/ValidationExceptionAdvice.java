@@ -38,7 +38,7 @@ public class ValidationExceptionAdvice {
         if (e instanceof ConstraintViolationException) {
             return this.handleConstraintViolationException(e);
         }
-        return Mono.just(new ResponseImpl<String>().setMessage(e.getMessage()).full());
+        return Mono.just(ResponseImpl.full(e.getMessage()));
     }
 
     //Controller方法的参数校验码
@@ -70,13 +70,13 @@ public class ValidationExceptionAdvice {
                 field = target.getClass().getDeclaredField(fieldName);
             }
         }
-        return Mono.just(new ResponseImpl<String>().setMessage(msg).full());
+        return Mono.just(ResponseImpl.full(msg));
     }
 
     private Mono<ResponseImpl<String>> handleConstraintViolationException(Exception e) throws Exception {
         ConstraintViolationException exception = (ConstraintViolationException) e;
         Set<ConstraintViolation<?>> violationSet = exception.getConstraintViolations();
         String msg = violationSet.stream().map(s -> s.getConstraintDescriptor().getMessageTemplate()).collect(Collectors.joining(";"));
-        return Mono.just(new ResponseImpl<String>().setMessage(msg).full());
+        return Mono.just(ResponseImpl.full(msg));
     }
 }

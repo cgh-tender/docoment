@@ -23,7 +23,6 @@ public class MySentinelGatewayBlockExceptionHandler extends SentinelGatewayBlock
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         log.error("MySentinelGatewayBlockExceptionHandler");
-        ex.printStackTrace();
         if (exchange.getResponse().isCommitted()) {
             return Mono.error(ex);
         }

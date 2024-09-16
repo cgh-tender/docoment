@@ -70,11 +70,10 @@ const hiddenScrollbarVerticalBar = computed(() => {
         <SidebarItem
           v-for="route in permissionStore.routes"
           :key="route.path"
-          :item="route"
           :base-path="route.path"
           :is-collapse="isCollapse"
           :is-top="isTop"
-        />
+         :item="route"/>
       </el-menu>
     </el-scrollbar>
   </div>

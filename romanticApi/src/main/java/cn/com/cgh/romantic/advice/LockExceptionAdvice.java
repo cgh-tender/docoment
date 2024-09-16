@@ -27,6 +27,6 @@ public class LockExceptionAdvice {
     public Mono<ResponseImpl<String>> exceptionHandler(RequestLockException e) {
         log.info("LockExceptionAdvice", e);
         // 构建并返回一个包含异常消息的响应体
-        return Mono.just(new ResponseImpl<String>().setMessage(e.getMessage()).full());
+        return Mono.just(ResponseImpl.full(e.getMessage()));
     }
 }

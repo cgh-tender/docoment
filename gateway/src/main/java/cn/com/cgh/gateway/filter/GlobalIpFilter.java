@@ -28,9 +28,10 @@ import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_TOKEN_HEADER;
+import static cn.com.cgh.romantic.constant.RomanticConstant.*;
 import static cn.com.cgh.romantic.util.JwtTokenUtil.JWT_CACHE_KEY;
 
 /**
@@ -57,6 +58,14 @@ public class GlobalIpFilter implements GlobalFilter {
         ServerHttpRequest.Builder builder = request.mutate()
                 //将获取的真实ip存入header微服务方便获取
                 .header(RomanticConstant.X_REAL_IP, hostString);
+        if (HttpMethod.OPTIONS.equals(request.getMethod())) {
+            return chain.filter(exchange);
+        }
+        boolean present = Optional.ofNullable(request.getHeaders().getFirst(JWT_USER_CERTIFIED_NAME)).isPresent();
+        if (present){
+            log.info("通过认证 ---- 请求");
+            return chain.filter(exchange);
+        }
         if (HttpMethod.OPTIONS.equals(request.getMethod())) {
             return chain.filter(exchange);
         }
@@ -100,20 +109,33 @@ public class GlobalIpFilter implements GlobalFilter {
         }
         builder.header(JWTPayload.AUDIENCE, String.valueOf(userId));
         builder.header(JWTPayload.SUBJECT, username);
-        ServerHttpRequest build = builder.build();
+        String methodName = request.getMethod().name();
 
-        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> parPermission(url, build), threadPoolTaskExecutor))
-                .then(chain.filter(exchange.mutate().request(build).build()));
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> parPermission(url, userId, username, token, methodName), threadPoolTaskExecutor))
+                .doOnNext(result -> {
+                    if (result) {
+                        builder.header(JWT_USER_CERTIFIED_NAME, username);
+                        builder.header(JWT_USER_CERTIFIED_ID, String.valueOf(userId));
+                        log.info("权限校验通过");
+                    } else {
+                        log.info("权限校验不通过");
+                    }
+                })
+                .map(result -> builder.build())
+                .flatMap(build -> {
+                    ServerWebExchange build1 = exchange.mutate().request(build).build();
+                    return chain.filter(build1);
+                });
     }
 
-    private boolean parPermission(String url, ServerHttpRequest request) {
+    private boolean parPermission(String url, long userId, String userName, String token, String methodName) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.put(JWTPayload.AUDIENCE, Collections.singletonList(request.getHeaders().getFirst(JWTPayload.AUDIENCE)));
-        map.put(JWTPayload.SUBJECT, Collections.singletonList(request.getHeaders().getFirst(JWTPayload.SUBJECT)));
-        map.put(JWT_TOKEN_HEADER, Collections.singletonList(request.getHeaders().getFirst(JWT_TOKEN_HEADER)));
+        map.put(JWTPayload.AUDIENCE, Collections.singletonList(String.valueOf(userId)));
+        map.put(JWTPayload.SUBJECT, Collections.singletonList(userName));
+        map.put(JWT_TOKEN_HEADER, Collections.singletonList(token));
         Assert.isTrue(iAuthCheckController
                 .controllerCheckAuth(
-                        new AuthCheckEntity().setUrl(url).setHttpMethod(request.getMethod().name())
+                        new AuthCheckEntity().setUrl(url).setHttpMethod(methodName)
                         , map
                 ), "500");
         return true;

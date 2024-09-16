@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Mono;
 
+import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_USER_CERTIFIED_ID;
+import static cn.com.cgh.romantic.constant.RomanticConstant.JWT_USER_CERTIFIED_NAME;
+import static com.nimbusds.jwt.JWTClaimNames.AUDIENCE;
+
 /**
  * 实现权限控制。
  *
@@ -24,8 +28,8 @@ public class MyAuthorizationManager implements ReactiveAuthorizationManager<Auth
         log.info("check Manager {}", context.getExchange().getRequest().getURI().getPath());
         if ("/controllerCheckAuth".equals(context.getExchange().getRequest().getURI().getPath())){
             MultiValueMap<String, String> queryParams = context.getExchange().getRequest().getQueryParams();
-            String userId = context.getExchange().getRequest().getHeaders().getFirst(JWTPayload.AUDIENCE);
-            String username = context.getExchange().getRequest().getHeaders().getFirst(JWTPayload.SUBJECT);
+            String userId = context.getExchange().getRequest().getHeaders().getFirst(AUDIENCE);
+            userId = null;
             if (StringUtils.isNotEmpty(userId)){
                 log.info("true");
                 return Mono.just(new AuthorizationDecision(true));

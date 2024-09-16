@@ -14,10 +14,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>
@@ -41,6 +45,8 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
     private ITbCfgRoleService roleService;
     @Resource
     private PermissionUserUtil permissionService;
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @SneakyThrows
     @Override
@@ -70,8 +76,8 @@ public class TbCfgUserServiceImpl extends ServiceImpl<TbCfgUserMapper, TbCfgUser
     }
 
     @Override
-    public TbCfgUser queryOneByUsername(String username) {
-        return baseMapper.queryOneByUsername(username);
+    public Mono<TbCfgUser> queryOneByUsername(String username) {
+        return Mono.fromFuture(CompletableFuture.supplyAsync(() -> baseMapper.queryOneByUsername(username), threadPoolTaskExecutor));
     }
 
 

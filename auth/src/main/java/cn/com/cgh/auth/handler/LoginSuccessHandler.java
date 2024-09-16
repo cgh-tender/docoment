@@ -49,7 +49,7 @@ public class LoginSuccessHandler implements ServerAuthenticationSuccessHandler {
             String id = request.getHeaders().getFirst(THREAD_LOCAL_LOG_ID);
             payload.put(JWTPayload.JWT_ID, id);
             Map<String, Object> map = jwtTokenUtil.generateTokenAndRefreshToken(securityUser.getId(), securityUser.getUsername(), payload);
-            return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(new ResponseImpl().setMessage("登录成功").setData(map).success()))));
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(JSON.toJSONBytes(ResponseImpl.ok(map).setMessage("登录成功")))));
         }).doOnSuccess(a -> {
             ServerHttpRequest request = webFilterExchange.getExchange().getRequest();
             TbCfgUser securityUser = (TbCfgUser) authentication.getPrincipal();
