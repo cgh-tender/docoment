@@ -4,6 +4,7 @@ import lombok.Getter;
 
 /**
  * 队列名称枚举
+ * @author cgh
  */
 @Getter
 public enum DeclareQueueExchange {

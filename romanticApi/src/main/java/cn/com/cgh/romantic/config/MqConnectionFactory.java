@@ -1,8 +1,10 @@
 package cn.com.cgh.romantic.config;
 
+import cn.com.cgh.romantic.util.RabbitUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
@@ -40,6 +42,12 @@ public class MqConnectionFactory {
     }
 
     @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory){
+        return new RabbitAdmin(connectionFactory);
+    }
+
+
+    @Bean
     public Jackson2JsonMessageConverter jsonConverter() {
         return new Jackson2JsonMessageConverter();
     }
@@ -48,6 +56,7 @@ public class MqConnectionFactory {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(new Jackson2JsonMessageConverter());
         template.setConfirmCallback((correlationData, ack, cause) -> {
             if (ack) {
                 log.info("消息：{}发送成功", correlationData.getId());
@@ -60,5 +69,10 @@ public class MqConnectionFactory {
             log.error("消息：{}路由失败, 失败原因为：{}", returned.getMessage().toString(), returned.getReplyText());
         });
         return template;
+    }
+    
+     @Bean
+    public RabbitUtil rabbitUtil(){
+        return new RabbitUtil();
     }
 }
